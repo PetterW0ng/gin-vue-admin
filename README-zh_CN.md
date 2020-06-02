@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/gin-1.4.0-lightBlue"/>
 <img src="https://img.shields.io/badge/vue-2.6.10-brightgreen"/>
 <img src="https://img.shields.io/badge/element--ui-2.12.0-green"/>
-<img src="https://img.shields.io/badge/gorm-1.9.10-red"/>
+<img src="https://img.shields.io/badge/gorm-1.9.12-red"/>
 </div>
 
 [English](./README.md) | 简体中文
@@ -143,16 +143,15 @@ swag init
 
 
 ## 4. 项目架构
+### 4.1 系统架构图
 
-![架构图](./docs/gin-vue-admin.png)
+![系统架构图](./docs/gin-vue-admin.png)
 
-<p style="text-align: center">架构图</p>
+### 4.2 前端详细设计图 （提供者:<a href="https://github.com/baobeisuper">baobeisuper</a>）
 
+![前端详细设计图](http://qmplusimg.henrongyi.top/naotu.png)
 
-
-![前端架构图](http://qmplusimg.henrongyi.top/naotu.png)
-
-<a style="text-align: center">前端结构图 提供者:<a href="https://github.com/baobeisuper">baobeisuper</a></p>
+### 4.3 目录结构
 
 ```
     ├─server  	     （后端文件夹）
@@ -259,3 +258,7 @@ swag init
 ## 9. 捐赠
 
 如果你觉得这个项目对你有帮助，你可以请作者喝饮料 :tropical_drink:
+
+## 10. 商用注意事项
+
+如果您将此项目用于商业用途，请遵守apatch2.0协议并保留作者技术支持声明。
