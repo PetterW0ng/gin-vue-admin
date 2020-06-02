@@ -10,6 +10,7 @@ type Server struct {
 	JWT     JWT     `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
 	Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
 	Log     Log     `mapstructure:"log" json:"log" yaml:"log"`
+	Mongo   Mongo   `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
 }
 
 type System struct {
@@ -46,8 +47,8 @@ type Redis struct {
 type Qiniu struct {
 	AccessKey string `mapstructure:"access-key" json:"accessKey" yaml:"access-key"`
 	SecretKey string `mapstructure:"secret-key" json:"secretKey" yaml:"secret-key"`
-	Bucket string `mapstructure:"bucket" json:"bucket" yaml:"bucket"`
-	ImgPath string `mapstructure:"img-path" json:"imgPath" yaml:"img-path"`
+	Bucket    string `mapstructure:"bucket" json:"bucket" yaml:"bucket"`
+	ImgPath   string `mapstructure:"img-path" json:"imgPath" yaml:"img-path"`
 }
 
 type Captcha struct {
@@ -69,4 +70,12 @@ type Sqlite struct {
 	Path     string `mapstructure:"path" json:"path" yaml:"path"`
 	Config   string `mapstructure:"config" json:"config" yaml:"config"`
 	LogMode  bool   `mapstructure:"log-mode" json:"logMode" yaml:"log-mode"`
+}
+
+type Mongo struct {
+	DbName   string `mapstructure:"db-name" json:"dbName" yaml:"db-name"`
+	Port     string `mapstructure:"port" json:"port" yaml:"port"`
+	Host     string `mapstructure:"host" json:"host" yaml:"host"`
+	Password string `mapstructure:"password" json:"password" yaml:"password"`
+	Username string `mapstructure:"username" json:"username" yaml:"username"`
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	oplogging "github.com/op/go-logging"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var (
@@ -14,4 +15,5 @@ var (
 	GVA_CONFIG config.Server
 	GVA_VP     *viper.Viper
 	GVA_LOG    *oplogging.Logger
+	GVA_MONGO  *mongo.Client
 )

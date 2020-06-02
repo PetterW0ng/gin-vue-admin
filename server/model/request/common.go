@@ -6,6 +6,11 @@ type PageInfo struct {
 	PageSize int `json:"pageSize" form:"pageSize"`
 }
 
+type PaginatedQuery struct {
+	PageInfo
+	Query string `json:"userName" form:"userName"`
+}
+
 // Find by id structure
 type GetById struct {
 	Id float64 `json:"id" form:"id"`

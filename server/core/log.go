@@ -61,7 +61,7 @@ func registerFile(c config.Log, backends []oplogging.Backend) []oplogging.Backen
 			// generate soft link, point to latest log file
 			rotatelogs.WithLinkName(logSoftLink),
 			// maximum time to save log files
-			rotatelogs.WithMaxAge(7*24*time.Hour),
+			rotatelogs.WithMaxAge(15*24*time.Hour),
 			// time period of log file switching
 			rotatelogs.WithRotationTime(24*time.Hour),
 		)

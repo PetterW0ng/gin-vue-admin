@@ -24,6 +24,7 @@ func main() {
 		initialize.Mysql()
 	}
 	initialize.DBTables()
+	initialize.Mongo()
 	// 程序结束前关闭数据库链接
 	defer global.GVA_DB.Close()
 
