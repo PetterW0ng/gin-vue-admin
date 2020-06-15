@@ -24,7 +24,9 @@ func main() {
 		initialize.Mysql()
 	}
 	initialize.DBTables()
-	initialize.Mongo()
+	if global.GVA_CONFIG.System.EnabledMongo {
+		initialize.Mongo()
+	}
 	// 程序结束前关闭数据库链接
 	defer global.GVA_DB.Close()
 

@@ -6,7 +6,7 @@ casbin:
 
 # jwt configuration
 jwt:
-    signing-key: 'qmPlus'
+    signing-key: 'wangqin_1@163.com'
 
 # mysql connect configuration
 mysql:
@@ -43,6 +43,7 @@ system:
     env: 'public'  # Change to "develop" to skip authentication for development mode
     addr: 8888
     db-type: "mysql"  # support mysql/sqlite
+    enabled-mongo: false # if true, need config mongo
 
 # captcha configuration
 captcha:
@@ -52,7 +53,7 @@ captcha:
 
 # logger configuration
 log:
-    prefix: '[GIN-VUE-ADMIN]'
+    prefix: '[WCY_INVENTORY]'
     log-file: true
     stdout: 'DEBUG'
     file: 'DEBUG'

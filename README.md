@@ -1,15 +1,4 @@
 ﻿
-<div align=center>
-<img src="http://qmplusimg.henrongyi.top/gvalogo.jpg" width=300" height="300" />
-</div>
-<div align=center>
-<img src="https://img.shields.io/badge/golang-1.12-blue"/>
-<img src="https://img.shields.io/badge/gin-1.4.0-lightBlue"/>
-<img src="https://img.shields.io/badge/vue-2.6.10-brightgreen"/>
-<img src="https://img.shields.io/badge/element--ui-2.12.0-green"/>
-<img src="https://img.shields.io/badge/gorm-1.9.12-red"/>
-</div>
-
 English | [简体中文](./README-zh_CN.md)
 
 # Project Guidelines
@@ -25,12 +14,6 @@ English | [简体中文](./README-zh_CN.md)
 [Online Demo](http://qmplus.henrongyi.top/)
 > Gin-vue-admin is a full-stack (frontend and backend separation) framework designed for management system. 
 > It integrates multiple functions, such as JWT authentication, dynamic routing, dynamic menu, casbin authentication, form generator, code generator, etc. So that you can focus more time on your business Requirements.
-
-Hi! Thank you for choosing gin-vue-admin.
-
-Gin-vue-admin is a full-stack (frontend and backend separation) framework for developers, designers and product managers.
-
-We are excited that you are interested in contributing to gin-vue-admin. Before submitting your contribution though, please make sure to take a moment and read through the following guidelines.
 
 ### 1.2 Contributing Guide
 #### 1.2.1 Issue Guidelines
@@ -56,13 +39,6 @@ We are excited that you are interested in contributing to gin-vue-admin. Before 
 - master: 2.0 dev code, for prod
 
 - develop: 2.0 dev code, for test
-
-- [gin-vue-admin_v2.0_dev](https://github.com/flipped-aurora/gin-vue-admin/tree/gin-vue-admin_v2_dev) （v2.0 is no longer compatible with v1.0）
-
-- [gin-vue-admin_v1.0_stable](https://github.com/flipped-aurora/gin-vue-admin/tree/gin-vue-admin_v1_stable) （v1.0 is kept up to date and maintained）
-
-- [gin-vue-admin_v1.0_dev](https://github.com/flipped-aurora/gin-vue-admin/tree/gin-vue-admin_v1_dev) （v1.0 is kept up to date and maintained）
-
 
 ## 2. Getting started
 ```
@@ -205,64 +181,3 @@ backend code file: model\dnModel\api.go
 - Upload file by chunk：Provides examples of file upload and large file upload by chunk.
 - Form Builder：With the help of [@form-generator](https://github.com/JakHuang/form-generator).
 - Code generator: Providing backend with basic logic and simple curd code generator.
-
-## 6. To-do list
-
-- [ ] upload & export Excel
-- [ ] e-chart
-- [ ] workflow, task transfer function
-- [ ] frontend independent mode, mock
-
-## 7. Knowledge base
-
-### 7.1 Team blog
-
-> https://www.yuque.com/flipped-aurora
->
->There are video courses about frontend framework in our blo. If you think the project is helpful to you, you can add my personal WeChat:shouzi_1994，your comments is welcomed。
-
-### 7.2 Video courses
-
-(1) Development environment course
-> Bilibili：https://www.bilibili.com/video/BV1Fg4y187Bw/
-    
-(2) Template course
-> Bilibili：https://www.bilibili.com/video/BV16K4y1r7BD/
-
-（3）2.0 version introduction and development experience
-> Bilibili：https://www.bilibili.com/video/BV1aV411d7Gm#reply2831798461
-
-(4) Golang basic course (coming soon)
-
-> https://space.bilibili.com/322210472/channel/detail?cid=108884
-
-## 8. Contacts
-### 8.1 Groups
-| QQ group |  
-|  :---:  |
-| <img src="http://qmplusimg.henrongyi.top/qq.jpg" width="180"/> |
-### QQ group: 622360840
-
-### Wechat group: add anyone above, comment "加入gin-vue-admin交流群"
-
-### 8.2 Team members
-| Jiang | Yin | Yan | Du | Yin | Song |
-|  :---:  |  :---: | :---: | :---:  |  :---: | :---: |
-| <img width="150" src="http://qmplusimg.henrongyi.top/qrjjz.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qryx.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qryr.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qrdjl.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qrygl.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qrsong.png"> |
-
-|  Nick name   | Project position  | First name  |
-|  ----  | ----  | ----  |
-| [@piexlmax](https://github.com/piexlmax)  | Project sponsor | Jiang |
-| [@granty1](https://github.com/granty1)  | Backend developer | Yin |
-| [@Ruio9244](https://github.com/Ruio9244)  | Full-stack developer | Yan |
-| [@1319612909](https://github.com/1319612909)  | UI developer |  Du |
-| [@krank666](https://github.com/krank666)  | Frontend developer | Yin |
-| [@chen-chen-up](https://github.com/chen-chen-up)  | Novice developer | Song |
-
-## 9. Donate
-
-If you find this project useful, you can buy author a glass of juice :tropical_drink:
-
-## 10. Commercial considerations
-
-If you use this project for commercial purposes, please comply with the apatch2.0 agreement and retain the author's technical support statement.

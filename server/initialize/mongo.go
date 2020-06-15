@@ -26,7 +26,7 @@ func Mongo() {
 	defer cancelPing()
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		global.GVA_LOG.Fatal(err)
+		global.GVA_LOG.Fatal("mongo server is shutdown !", err)
 	} else {
 		global.GVA_LOG.Info("ping to mongo server OK")
 		global.GVA_MONGO = client

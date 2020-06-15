@@ -1,15 +1,4 @@
 
-<div align=center>
-<img src="http://qmplusimg.henrongyi.top/gvalogo.jpg" width=300" height="300" />
-</div>
-<div align=center>
-<img src="https://img.shields.io/badge/golang-1.12-blue"/>
-<img src="https://img.shields.io/badge/gin-1.4.0-lightBlue"/>
-<img src="https://img.shields.io/badge/vue-2.6.10-brightgreen"/>
-<img src="https://img.shields.io/badge/element--ui-2.12.0-green"/>
-<img src="https://img.shields.io/badge/gorm-1.9.12-red"/>
-</div>
-
 [English](./README.md) | 简体中文
 
 # 项目文档
@@ -23,14 +12,10 @@
 ### 1.1 项目介绍
 
 [在线预览](http://qmplus.henrongyi.top/)
-> Gin-vue-admin是一个基于vue和gin开发的全栈前后端分离的后台管理系统，集成jwt鉴权，动态路由，动态菜单，casbin鉴权，表单生成器，代码生成器等功能，提供多种示例文件，让您把更多时间专注在业务开发上。
+>Talent inventory tool , TIT 人才盘点工具是北医脑健康用来对市场上现有孤独症康复师的调查 
 
 ### 1.2 贡献指南
-Hi! 首先感谢你使用 gin-vue-admin。
 
-Gin-vue-admin 是一套为后台管理平台准备的一整套前后端分离架构式的开源框架，旨在快速搭建后台管理系统。
-
-Gin-vue-admin 的成长离不开大家的支持，如果你愿意为 gin-vue-admin 贡献代码或提供建议，请阅读以下内容。
 
 #### 1.2.1 Issue 规范
 - issue 仅用于提交 Bug 或 Feature 以及设计相关的内容，其它内容可能会被直接关闭。如果你在使用时产生了疑问，请到 Slack 或 [Gitter](https://gitter.im/ElemeFE/element) 里咨询。
@@ -53,12 +38,6 @@ Gin-vue-admin 的成长离不开大家的支持，如果你愿意为 gin-vue-adm
 - master: 2.0, 用于生产环境
 
 - develop: 2.0, 用于测试环境
-
-- [gin-vue-admin_v2.0_dev](https://github.com/flipped-aurora/gin-vue-admin/tree/gin-vue-admin_v2_dev) （v2.0 不再兼容 v1.0）
-
-- [gin-vue-admin_v1.0_stable](https://github.com/flipped-aurora/gin-vue-admin/tree/gin-vue-admin_v1_stable) （v1.0 稳定版，会持续更新和维护）
-
-- [gin-vue-admin_v1.0_dev](https://github.com/flipped-aurora/gin-vue-admin/tree/gin-vue-admin_v1_dev) （v1.0 稳定版，会持续更新和维护）
 
 
 ## 2. 使用说明
@@ -203,62 +182,3 @@ swag init
 - 分片长传：提供文件分片上传和大文件分片上传功能示例。
 - 表单生成器：表单生成器借助 [@form-generator](https://github.com/JakHuang/form-generator)。
 - 代码生成器：后台基础逻辑以及简单curd的代码生成器。 
-
-## 6. 计划任务
-
-- [ ] 导入，导出Excel
-- [ ] Echart图表支持
-- [ ] 工作流，任务交接功能开发
-- [ ] 单独前端使用模式以及数据模拟
-
-## 7. 知识库 
-## 7.1 团队博客
-
-> https://www.yuque.com/flipped-aurora
->
->内有前端框架教学视频。如果觉得项目对您有所帮助可以添加我的个人微信:shouzi_1994，欢迎您提出宝贵的需求。
-
-## 7.2 教学视频
-
-（1）环境搭建
-> Bilibili：https://www.bilibili.com/video/BV1Fg4y187Bw/ (v1.0版本视频，v2.0操作相同目录不同)
-    
-（2）模板使用
-> Bilibili：https://www.bilibili.com/video/BV16K4y1r7BD/ (v1.0版本视频，v2.0操作相同目录不同)
-
-（3）2.0目录以及开发体验
-> Bilibili：https://www.bilibili.com/video/BV1aV411d7Gm#reply2831798461
-
-（4）golang基础教学视频录制中...
-> https://space.bilibili.com/322210472/channel/detail?cid=108884
-
-## 8. 联系方式
-### 8.1 技术群
-| QQ群 |  
-|  :---:  |
-| <img src="http://qmplusimg.henrongyi.top/qq.jpg" width="180"/> |
-
-### QQ交流群：622360840
-### 微信交流群：可以添加上面任意一位开发者，备注"加入gin-vue-admin交流群"
-
-### 8.2 项目组成员
-| 蒋 | 尹 | 严 | 杜 | 印 | 宋 |
-|  :---:  |  :---: | :---: | :---:  |  :---: | :---: |
-| <img width="150" src="http://qmplusimg.henrongyi.top/qrjjz.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qryx.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qryr.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qrdjl.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qrygl.png"> | <img width="150" src="http://qmplusimg.henrongyi.top/qrsong.png"> |
-
-|  昵称   | 项目职务  | 姓  |
-|  ----  | ----  | ----  |
-| [@piexlmax](https://github.com/piexlmax)  | 项目发起者 | 蒋 |
-| [@granty1](https://github.com/granty1)  | 后台开发 | 印 |
-| [@Ruio9244](https://github.com/Ruio9244)  | 全栈开发 | 严 |
-| [@1319612909](https://github.com/1319612909)  | 前端UI开发 |  杜 |
-| [@krank666](https://github.com/krank666)  | 前端开发 | 尹 |
-| [@chen-chen-up](https://github.com/chen-chen-up)  | 新手开发 | 宋 |
-
-## 9. 捐赠
-
-如果你觉得这个项目对你有帮助，你可以请作者喝饮料 :tropical_drink:
-
-## 10. 商用注意事项
-
-如果您将此项目用于商业用途，请遵守apatch2.0协议并保留作者技术支持声明。
