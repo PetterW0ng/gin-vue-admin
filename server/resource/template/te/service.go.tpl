@@ -9,7 +9,7 @@ import (
 // @title    Create{{.StructName}}
 // @description   create a {{.StructName}}
 // @param     {{.Abbreviation}}               model.{{.StructName}}
-// @auth                     （2020/04/05  20:22）
+// @auth      weiqin
 // @return    err             error
 
 func Create{{.StructName}}({{.Abbreviation}} model.{{.StructName}}) (err error) {
@@ -19,7 +19,7 @@ func Create{{.StructName}}({{.Abbreviation}} model.{{.StructName}}) (err error) 
 
 // @title    Delete{{.StructName}}
 // @description   delete a {{.StructName}}
-// @auth                     （2020/04/05  20:22）
+// @auth      weiqin
 // @param     {{.Abbreviation}}               model.{{.StructName}}
 // @return                    error
 
@@ -31,7 +31,7 @@ func Delete{{.StructName}}({{.Abbreviation}} model.{{.StructName}}) (err error) 
 // @title    Update{{.StructName}}
 // @description   update a {{.StructName}}
 // @param     {{.Abbreviation}}          *model.{{.StructName}}
-// @auth                     （2020/04/05  20:22）
+// @auth      weiqin
 // @return                    error
 
 func Update{{.StructName}}({{.Abbreviation}} *model.{{.StructName}}) (err error) {
@@ -41,7 +41,7 @@ func Update{{.StructName}}({{.Abbreviation}} *model.{{.StructName}}) (err error)
 
 // @title    Get{{.StructName}}
 // @description   get the info of a {{.StructName}}
-// @auth                     （2020/04/05  20:22）
+// @auth     weiqin
 // @param     id              uint
 // @return                    error
 // @return    {{.StructName}}        {{.StructName}}
@@ -53,7 +53,7 @@ func Get{{.StructName}}(id uint) (err error, {{.Abbreviation}} model.{{.StructNa
 
 // @title    Get{{.StructName}}InfoList
 // @description   get {{.StructName}} list by pagination, 分页获取用户列表
-// @auth                     （2020/04/05  20:22）
+// @auth      weiqin
 // @param     info            PageInfo
 // @return                    error
 

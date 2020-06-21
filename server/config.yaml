@@ -39,7 +39,7 @@ redis:
 
 # system configuration
 system:
-    use-multipoint: false
+    use-multipoint: true
     env: 'public'  # Change to "develop" to skip authentication for development mode
     addr: 8888
     db-type: "mysql"  # support mysql/sqlite
@@ -65,3 +65,8 @@ mongo:
     host: localhost
     port: 27017
     db-name: certificate
+
+dayu:
+    signName: '北医脑健康'
+    secretKey: 'd47ae0eec39bd5d6abb631ef7e56b21f'
+    appkey: '23296309'

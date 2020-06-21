@@ -13,3 +13,9 @@ type CustomClaims struct {
 	AuthorityId string
 	jwt.StandardClaims
 }
+
+type TitUserClaims struct {
+	ID       uint
+	Telphone string
+	jwt.StandardClaims
+}

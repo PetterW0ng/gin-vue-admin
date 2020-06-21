@@ -14,7 +14,7 @@ import (
 // @return    conf            Server
 
 func GetSystemConfig() (err error, conf config.Server) {
-	return nil, global.GVA_CONFIG
+	return nil, conf
 }
 
 // @title    SetSystemConfig

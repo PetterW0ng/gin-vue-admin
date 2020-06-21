@@ -11,6 +11,7 @@ type Server struct {
 	Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
 	Log     Log     `mapstructure:"log" json:"log" yaml:"log"`
 	Mongo   Mongo   `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
+	Dayu    Dayu    `mapstructure:"dayu" json:"dayu" yaml:"dayu"`
 }
 
 type System struct {
@@ -79,4 +80,10 @@ type Mongo struct {
 	Host     string `mapstructure:"host" json:"host" yaml:"host"`
 	Password string `mapstructure:"password" json:"password" yaml:"password"`
 	Username string `mapstructure:"username" json:"username" yaml:"username"`
+}
+
+type Dayu struct {
+	Appkey    string `mapstructure:"appkey" json:"appkey" yaml:"appkey"`
+	SecretKey string `mapstructure:"secretKey" json:"secretKey" yaml:"secretKey"`
+	SignName  string `mapstructure:"signName" json:"signName" yaml:"signName"`
 }

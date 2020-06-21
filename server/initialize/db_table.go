@@ -19,6 +19,14 @@ func DBTables() {
 		model.ExaFile{},
 		model.ExaFileChunk{},
 		model.ExaCustomer{},
+		model.SysDict{},
+		model.TitUser{},
+		model.TitUserBaseinfo{},
+		model.TitUserTopicAnswer{},
+		model.TitTrainingInfo{},
+		model.TitTopic{},
+		model.TitTopicOption{},
+		model.TitTopicRelated{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }
