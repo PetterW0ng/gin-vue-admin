@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"fmt"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
@@ -115,7 +116,7 @@ func GetTitUserBaseinfoList(c *gin.Context) {
 }
 
 var userBaseinfoRules utils.Rules = utils.Rules{
-	"Schoole":          {utils.NotEmpty()},
+	"School":           {utils.NotEmpty()},
 	"MajorsStudied":    {utils.NotEmpty()},
 	"HighestEducation": {utils.NotEmpty()},
 	"SchoolSystem":     {utils.NotEmpty()},
@@ -134,9 +135,13 @@ func AddTitUserBaseinfo(c *gin.Context) {
 		response.FailWithMessage(verifyErr.Error(), c)
 		return
 	}
-	userBaseinfo := model.TitUserBaseinfo{TitUserId: currentUser.ID, Schoole: ubt.Schoole, MajorsStudied: ubt.MajorsStudied, HighestEducation: ubt.HighestEducation,
-		SchoolSystem: ubt.SchoolSystem, WorkingState: ubt.WorkingState, TrainingNumber: ubt.TrainingNumber, TrainingFee: ubt.TrainingFee, Company: ubt.Company,
-		Area: ubt.Area, JobTitle: ubt.JobTitle, ServiceType: ubt.ServiceType, Income: ubt.Income, Benefits: ubt.Benefits, ChildType: ubt.ChildType, ChildAge: ubt.ChildAge}
+
+	trainingNumber, _ := json.Marshal(ubt.TrainingNumber)
+	benefits, _ := json.Marshal(ubt.Benefits)
+	childType, _ := json.Marshal(ubt.ChildType)
+	userBaseinfo := model.TitUserBaseinfo{TitUserId: currentUser.ID, School: ubt.School, MajorsStudied: ubt.MajorsStudied, HighestEducation: ubt.HighestEducation,
+		SchoolSystem: ubt.SchoolSystem, WorkingState: ubt.WorkingState, TrainingNumber: string(trainingNumber[1 : len(trainingNumber)-1]), TrainingFee: ubt.TrainingFee, Company: ubt.Company,
+		Area: ubt.Area, JobTitle: ubt.JobTitle, ServiceType: ubt.ServiceType, Income: ubt.Income, Benefits: string(benefits[1 : len(benefits)-1]), ChildType: string(childType[1 : len(childType)-1]), ChildAge: ubt.ChildAge}
 
 	err := service.CreateTitUserBaseinfo(&userBaseinfo)
 	if err != nil {
@@ -176,41 +181,57 @@ func QueryTitUserBaseinfo(c *gin.Context) {
 			}
 			var benefits, childType, trainingTimes = strings.Split(tub.Benefits, ","), strings.Split(tub.ChildType, ","), strings.Split(tub.TrainingNumber, ",")
 			var benefitsStr, childTypeStr, trainingTimesStr string
-			for _, v := range benefits {
-				benefitsStr += dictGroup["benefits"][v] + "、"
+			for inx, v := range benefits {
+				i, _ := strconv.Atoi(v)
+				if inx == len(benefits)-1 {
+					benefitsStr += dictGroup["benefits"][i]
+				} else {
+					benefitsStr += dictGroup["benefits"][i] + "、"
+				}
 			}
-			for _, v := range trainingTimes {
-				trainingTimesStr += dictGroup["training_number"][v] + "、"
+			for inx, v := range trainingTimes {
+				i, _ := strconv.Atoi(v)
+				if inx == len(benefits)-1 {
+					trainingTimesStr += dictGroup["training_number"][i]
+				} else {
+					trainingTimesStr += dictGroup["training_number"][i] + "、"
+				}
+
 			}
-			for _, v := range childType {
-				childTypeStr += dictGroup["child_type"][v] + "、"
+			for inx, v := range childType {
+				i, _ := strconv.Atoi(v)
+				if inx == len(benefits)-1 {
+					childTypeStr += dictGroup["child_type"][i]
+				} else {
+					childTypeStr += dictGroup["child_type"][i] + "、"
+				}
 			}
 
 			tubtR := resp.TitUserBaseinfoTraining{
-				Schoole:          dictGroup["schoole"][strconv.Itoa(tub.Schoole)], // int 转 string
-				MajorsStudied:    dictGroup["study_major"][strconv.Itoa(tub.MajorsStudied)],
-				HighestEducation: dictGroup["highest_education"][strconv.Itoa(tub.HighestEducation)],
-				SchoolSystem:     dictGroup["school_system"][strconv.Itoa(tub.SchoolSystem)],
-				WorkingState:     dictGroup["working_state"][strconv.Itoa(tub.WorkingState)],
+				School:           dictGroup["school"][tub.School], // int 转 string
+				MajorsStudied:    dictGroup["study_major"][tub.MajorsStudied],
+				HighestEducation: dictGroup["highest_education"][tub.HighestEducation],
+				SchoolSystem:     dictGroup["school_system"][tub.SchoolSystem],
+				WorkingState:     dictGroup["working_state"][tub.WorkingState],
 				Company:          tub.Company,
 				Area:             area,
 				JobTitle:         tub.JobTitle,
 
-				ServiceType: dictGroup["service_type"][strconv.Itoa(tub.ServiceType)],
-				Income:      dictGroup["income"][strconv.Itoa(tub.Income)],
+				ServiceType: dictGroup["service_type"][tub.ServiceType],
+				Income:      dictGroup["income"][tub.Income],
 				Benefits:    benefitsStr,
 				ChildType:   childTypeStr,
-				ChildAge:    dictGroup["child_age"][strconv.Itoa(tub.ChildAge)],
+				ChildAge:    dictGroup["child_age"][tub.ChildAge],
 
 				TrainingNumber: trainingTimesStr,
-				TrainingFee:    dictGroup["training_fee"][strconv.Itoa(tub.TrainingFee)],
+				TrainingFee:    dictGroup["training_fee"][tub.TrainingFee],
 			}
 			// 根据 TitUserBaseinfoId 查询 training 信息
 			trainingInfos := service.QueryTrainingInfoByBaseId(tu.TitUserBaseinfoId)
 			var trainingInfosReturn []resp.TrainingInfo
 			for _, item := range trainingInfos {
 				trainingInfosReturn = append(trainingInfosReturn, resp.TrainingInfo{
-					PaymentWay:     dictGroup["payment_way"][strconv.Itoa(item.PaymentWay)],
+					PaymentWay:     dictGroup["payment_way"][item.PaymentWay],
 					TrainingCourse: item.TrainingCourse,
 					BeginTime:      item.BeginTime,
 					EndTime:        item.EndTime,
@@ -236,9 +257,9 @@ func ModifyTitUserBaseinfo(c *gin.Context) {
 		response.FailWithMessage(verifyErr.Error(), c)
 		return
 	}
-	userBaseinfo := model.TitUserBaseinfo{Model: gorm.Model{ID: uint(tu.TitUserBaseinfoId)}, TitUserId: currentUser.ID, Schoole: ubt.Schoole, MajorsStudied: ubt.MajorsStudied, HighestEducation: ubt.HighestEducation,
-		SchoolSystem: ubt.SchoolSystem, WorkingState: ubt.WorkingState, TrainingNumber: ubt.TrainingNumber, TrainingFee: ubt.TrainingFee, Company: ubt.Company,
-		Area: ubt.Area, JobTitle: ubt.JobTitle, ServiceType: ubt.ServiceType, Income: ubt.Income, Benefits: ubt.Benefits, ChildType: ubt.ChildType, ChildAge: ubt.ChildAge}
+	userBaseinfo := model.TitUserBaseinfo{Model: gorm.Model{ID: uint(tu.TitUserBaseinfoId)}, TitUserId: currentUser.ID, School: ubt.School, MajorsStudied: ubt.MajorsStudied, HighestEducation: ubt.HighestEducation,
+		SchoolSystem: ubt.SchoolSystem, WorkingState: ubt.WorkingState, TrainingNumber: fmt.Sprint(ubt.TrainingNumber), TrainingFee: ubt.TrainingFee, Company: ubt.Company,
+		Area: ubt.Area, JobTitle: ubt.JobTitle, ServiceType: ubt.ServiceType, Income: ubt.Income, Benefits: fmt.Sprint(ubt.Benefits), ChildType: fmt.Sprint(ubt.ChildType), ChildAge: ubt.ChildAge}
 
 	err := service.UpdateTitUserBaseinfo(&userBaseinfo)
 	if err != nil {

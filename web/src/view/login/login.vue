@@ -7,8 +7,7 @@
         </div>
         <div class="header">
           <a href="/">
-            <!-- <img src="~@/assets/logo.png" class="logo" alt="logo" /> -->
-            <span class="title">Gin-Vue-Admin</span>
+            <span class="title">后台管理系统</span>
           </a>
         </div>
       </div>

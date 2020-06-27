@@ -8,7 +8,7 @@ import (
 type TitUserBaseinfo struct {
 	gorm.Model
 	TitUserId        uint   `json:"titUserId" form:"titUserId" `
-	Schoole          int    `json:"schoole" form:"schoole" `
+	School           int    `json:"school" form:"school" `
 	MajorsStudied    int    `json:"majorsStudied" form:"majorsStudied" `
 	HighestEducation int    `json:"highestEducation" form:"highestEducation" `
 	SchoolSystem     int    `json:"schoolSystem" form:"schoolSystem" `

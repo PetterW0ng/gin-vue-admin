@@ -80,15 +80,15 @@ func GetAllDict() (err error, dicts []model.SysDict) {
 	return err, dicts
 }
 
-func GetGroupedDict() (dictGroup map[string]map[string]string) {
-	dictGroup = make(map[string]map[string]string)
+func GetGroupedDict() (dictGroup map[string]map[int]string) {
+	dictGroup = make(map[string]map[int]string)
 	if err, dictList := GetAllDict(); err == nil {
 		for _, value := range dictList {
 			v, ok := dictGroup[value.Code]
 			if ok {
 				v[value.PropertyValue] = value.PropertyName
 			} else {
-				v = map[string]string{}
+				v = map[int]string{}
 				v[value.PropertyValue] = value.PropertyName
 			}
 			dictGroup[value.Code] = v

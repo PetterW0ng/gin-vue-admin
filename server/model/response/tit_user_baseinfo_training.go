@@ -4,7 +4,7 @@ import "time"
 
 type TitUserBaseinfoTraining struct {
 	// 教学背景
-	Schoole          string `json:"schoole" form:"schoole" `
+	School           string `json:"school" form:"school" `
 	MajorsStudied    string `json:"majorsStudied" form:"majorsStudied" `
 	HighestEducation string `json:"highestEducation" form:"highestEducation" `
 	SchoolSystem     string `json:"schoolSystem" form:"schoolSystem" `

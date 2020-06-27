@@ -10,6 +10,7 @@ type TitUserTopicAnswer struct {
 	TitUserId           int    `json:"titUserId" form:"titUserId" `
 	TitTopicId          int    `json:"titTopicId" form:"titTopicId" `
 	TopicTitle          string `json:"topicTitle" form:"topicTitle" `
+	TopicOptionIds      string `json:"topicOptionIds" form:"topicOptionIds"`
 	TopicOptionSelected string `json:"topicOptionSelected" form:"topicOptionSelected" `
 	Answer              string `json:"answer" form:"answer" `
 	BatchNum            int    `json:"batchNum" form:"batchNum"`

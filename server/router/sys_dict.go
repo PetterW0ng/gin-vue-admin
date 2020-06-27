@@ -19,6 +19,6 @@ func InitSysDictRouter(Router *gin.RouterGroup) {
 
 func InitTitSysDictRouter(Router *gin.RouterGroup) {
 	SysDictRouter := Router.Group("dict").Use(middleware.JWTTitAuth())
-	SysDictRouter.GET("/:code", v1.FindByCode)            // 根据ID获取SysDict
-	SysDictRouter.POST("queryTitUsers", v1.QueryTitUsers) // 获取用户基本信息表单页的所有选项
+	SysDictRouter.GET("/:code", v1.FindByCode)       // 根据code 获取SysDict 列表
+	SysDictRouter.POST("baseForm", v1.QueryTitUsers) // 获取用户基本信息表单页的所有选项
 }

@@ -24,4 +24,7 @@ func InitTitUserBaseRouter(Router *gin.RouterGroup) {
 		TitUserRouter.POST("login", v1.TitUserLogin)                   // tit 用户登录
 		TitUserRouter.POST("verificationCode", v1.GetVerificationCode) // 获取验证码
 	}
+
+	TitUserRouter2 := Router.Group("user").Use(middleware.JWTTitAuth())
+	TitUserRouter2.GET("", v1.TitUser)
 }

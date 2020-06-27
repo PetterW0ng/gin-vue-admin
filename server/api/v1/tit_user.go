@@ -119,8 +119,7 @@ func GetTitUserList(c *gin.Context) {
 // TitUserRegister, 注册人员信息至人才表
 func TitUserRegister(c *gin.Context) {
 	var rr request.TitUserRegister
-	err := c.ShouldBindJSON(&rr)
-	global.GVA_LOG.Error("titUser 注册时，绑定参数失败了", err)
+	c.ShouldBindJSON(&rr)
 	error := utils.Verify(rr, utils.Rules{
 		"UserName":         {utils.NotEmpty()},
 		"Gender":           {utils.NotEmpty()},
@@ -138,7 +137,7 @@ func TitUserRegister(c *gin.Context) {
 		user := model.TitUser{Username: rr.Username, Telphone: rr.Telphone, Gender: rr.Gender, Birthday: rr.Birthday}
 		if err := service.CreateTitUser(user); err != nil {
 			global.GVA_LOG.Error("用户注册失败了", err)
-			response.Fail(c)
+			response.FailWithMessage("手机号已存在", c)
 		} else {
 			response.OkWithMessage("注册成功", c)
 		}
@@ -162,6 +161,8 @@ func TitUserLogin(c *gin.Context) {
 	if cmd.Err() == nil && cmd.Val() == lr.VerificationCode {
 		if err, u := service.FindTitUserByPhone(lr.Telphone); err == nil {
 			generateTitUserToke(c, u)
+		} else {
+			response.Fail(c)
 		}
 	} else {
 		response.FailWithMessage("验证码不正确", c)
@@ -199,6 +200,7 @@ func GetVerificationCode(c *gin.Context) {
 		response.FailWithMessage("验证码发送失败了", c)
 	} else {
 		global.GVA_REDIS.Set(param.Phone, code, time.Minute*15)
+		global.GVA_LOG.Info("%s 的验证码下发成功 code= %s", param.Phone, code)
 		response.OkWithMessage("验证码发送成功", c)
 	}
 }
@@ -232,5 +234,17 @@ func generateTitUserToke(c *gin.Context, user model.TitUser) {
 			Token:     token,
 			ExpiresAt: clams.StandardClaims.ExpiresAt * 1000,
 		}, c)
+	}
+}
+
+func TitUser(c *gin.Context) {
+	claims, _ := c.Get("claims")
+	currentUser := claims.(*request.TitUserClaims)
+	err, tu := service.GetTitUser(currentUser.ID)
+	if err != nil {
+		global.GVA_LOG.Error("查询用户信息出错", err)
+		response.FailWithMessage("用户不存在", c)
+	} else {
+		response.OkWithData(tu, c)
 	}
 }

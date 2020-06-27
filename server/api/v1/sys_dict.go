@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	GENDER, SCHOOLE, STUDY_MAJOR, EDUCATION, SCHOO_SYSTEM, WORKING_TATE, SERVICE_YPE, INCOME, BENEFITS, CHILD_TYPE, CHILD_AGE, TRAINING_NUMBER, TRAINING_FEE model.DictType = "gender", "schoole", "study_major", "education", "schoo_system", "working_tate", "service_ype", "income", "benefits", "child_type", "", "training_number", "training_fee"
+	GENDER, SCHOOL, STUDY_MAJOR, EDUCATION, SCHOO_SYSTEM, WORKING_TATE, SERVICE_YPE, INCOME, BENEFITS, CHILD_TYPE, CHILD_AGE, TRAINING_NUMBER, TRAINING_FEE model.DictType = "gender", "school", "study_major", "education", "schoo_system", "working_tate", "service_ype", "income", "benefits", "child_type", "", "training_number", "training_fee"
 )
 
 // @Tags SysDict

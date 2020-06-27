@@ -3,7 +3,7 @@ package request
 import "time"
 
 type TitUserBaseinfoTraining struct {
-	Schoole          int            `json:"schoole" form:"schoole" `
+	School           int            `json:"school" form:"school" `
 	MajorsStudied    int            `json:"majorsStudied" form:"majorsStudied" `
 	HighestEducation int            `json:"highestEducation" form:"highestEducation" `
 	SchoolSystem     int            `json:"schoolSystem" form:"schoolSystem" `
@@ -13,10 +13,10 @@ type TitUserBaseinfoTraining struct {
 	JobTitle         string         `json:"jobTitle" form:"jobTitle" `
 	ServiceType      int            `json:"serviceType" form:"serviceType" `
 	Income           int            `json:"income" form:"income" `
-	Benefits         string         `json:"benefits" form:"benefits" `
-	ChildType        string         `json:"childType" form:"childType" `
+	Benefits         []int          `json:"benefits" form:"benefits" `
+	ChildType        []int          `json:"childType" form:"childType" `
 	ChildAge         int            `json:"childAge" form:"childAge" `
-	TrainingNumber   string         `json:"trainingNumber" form:"trainingNumber" `
+	TrainingNumber   []int          `json:"trainingNumber" form:"trainingNumber" `
 	TrainingFee      int            `json:"trainingFee" form:"trainingFee" `
 	TrainingInfos    []TrainingInfo `json:"trainingInfos" form:"trainingInfos" `
 }

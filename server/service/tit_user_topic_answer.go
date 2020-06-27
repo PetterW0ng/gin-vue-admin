@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
@@ -72,7 +73,7 @@ func GetTitUserTopicAnswerInfoList(info request.PageInfo) (err error, list inter
 
 func batchAddUserTopicAnswer(userTopicAnswerRequest []model.TitUserTopicAnswer) (err error) {
 	var buffer bytes.Buffer
-	batchInsert := "INSERT INTO `tit_user_topic_answers` (`tit_user_id`,`tit_topic_id`,`topic_title`,`answer`,`score`, `order`, `topic_option_selected`, `batch_num`, `business_type`, `created_at`, `updated_at`) values "
+	batchInsert := "INSERT INTO `tit_user_topic_answers` (`tit_user_id`,`tit_topic_id`,`topic_title`,`answer`,`score`, `order`, `topic_option_selected`, `topic_option_ids`, `batch_num`, `business_type`, `created_at`, `updated_at`) values "
 	if _, err = buffer.WriteString(batchInsert); err != nil {
 		return
 	}
@@ -80,9 +81,9 @@ func batchAddUserTopicAnswer(userTopicAnswerRequest []model.TitUserTopicAnswer) 
 	now := time.Now().Format("2006-01-02 15:04:05")
 	for i, e := range userTopicAnswerRequest {
 		if i == len(userTopicAnswerRequest)-1 {
-			buffer.WriteString(fmt.Sprintf("('%d','%d','%s','%s', '%d', '%d', '%s', '%d', '%d', '%s', '%s');", e.TitUserId, e.TitTopicId, e.TopicTitle, e.Answer, e.Score, e.Order, e.TopicOptionSelected, e.BatchNum, e.BusinessType, now, now))
+			buffer.WriteString(fmt.Sprintf("('%d','%d','%s','%s', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '%s');", e.TitUserId, e.TitTopicId, e.TopicTitle, e.Answer, e.Score, e.Order, e.TopicOptionSelected, e.TopicOptionIds, e.BatchNum, e.BusinessType, now, now))
 		} else {
-			buffer.WriteString(fmt.Sprintf("('%d','%d','%s','%s', '%d', '%d', '%s', '%d', '%d', '%s', '%s'),", e.TitUserId, e.TitTopicId, e.TopicTitle, e.Answer, e.Score, e.Order, e.TopicOptionSelected, e.BatchNum, e.BusinessType, now, now))
+			buffer.WriteString(fmt.Sprintf("('%d','%d','%s','%s', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '%s'),", e.TitUserId, e.TitTopicId, e.TopicTitle, e.Answer, e.Score, e.Order, e.TopicOptionSelected, e.TopicOptionIds, e.BatchNum, e.BusinessType, now, now))
 		}
 	}
 	err = db.Exec(buffer.String()).Error
@@ -113,6 +114,7 @@ func SaveTitUserAnswer(userTopicAnswerRequest request.UserTopicAnswer, titUserId
 	for i, item := range userTopicAnswers {
 		topicId := item.TitTopicId
 		selectedOptions := item.TitTopicOptionIds
+		topicOptionIds, _ := json.Marshal(selectedOptions)
 		for _, v := range topicOptions {
 			if v.ID == uint(topicId) {
 				topicOption = v
@@ -127,6 +129,7 @@ func SaveTitUserAnswer(userTopicAnswerRequest request.UserTopicAnswer, titUserId
 			for _, op := range topicOption.TitTopicOptions {
 				if uint(v) == op.ID {
 					topicOptionSelected += op.Title + "[option]"
+					score = op.Score
 				}
 			}
 		}
@@ -136,12 +139,13 @@ func SaveTitUserAnswer(userTopicAnswerRequest request.UserTopicAnswer, titUserId
 			multipleSelect = "[多选]"
 		}
 		topicTitle := multipleSelect + topicOption.Title
-		userTopicAndAnswers[i] = model.TitUserTopicAnswer{TitUserId: int(titUserId), TitTopicId: topicId, TopicTitle: topicTitle, TopicOptionSelected: topicOptionSelected,
+		userTopicAndAnswers[i] = model.TitUserTopicAnswer{TitUserId: int(titUserId), TitTopicId: topicId, TopicTitle: topicTitle, TopicOptionIds: string(topicOptionIds[1 : len(topicOptionIds)-1]), TopicOptionSelected: topicOptionSelected,
 			Answer: item.Others, Score: score, BusinessType: businessType, Order: topicOption.Order, BatchNum: batchNum}
 	}
 	// 更新 TitUser 下 IndustryPerspectiveBatchNum、PerfessionKnowledgeBatchNum、JobInfoBatchNum 的 batchNum
 	err = batchAddUserTopicAnswer(userTopicAndAnswers)
 	if err != nil {
+		global.GVA_LOG.Error("录入用户答题情况失败", err)
 		return
 	}
 	// 更新 titUser 下关联的 basicId

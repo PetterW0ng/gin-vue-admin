@@ -8,8 +8,8 @@ import (
 type SysDict struct {
 	gorm.Model
 	ParentId      int    `json:"parentId" form:"parentId" `
-	PropertyName  string `json:"propertyName" form:"propertyName" `
-	PropertyValue string `json:"propertyValue" form:"propertyValue" `
+	PropertyName  string `json:"text" form:"propertyName" `
+	PropertyValue int    `json:"propertyValue" form:"propertyValue" `
 	SeqNumber     int    `json:"seqNumber" form:"seqNumber" `
 	CodeName      string `json:"codeName" form:"codeName" `
 	Code          string `json:"code" form:"code" `
