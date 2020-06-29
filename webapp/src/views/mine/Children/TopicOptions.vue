@@ -3,29 +3,30 @@
         <!-- 问卷题 -->
         <div v-for="(item,index) in topicAndOptions" :key="item.ID">
             <van-cell-group v-if="index == page">
-                <div class="content-title">{{index+1}}.{{item.isRequired == 2 ? "[选填]" + (item.topicType == 2 ?
+                <div class="content-title" style="padding-top: 1em">{{index+1}} . {{item.isRequired == 2 ? "[选填]" +
+                    (item.topicType == 2 ?
                     "[多选]"+item.title : item.title) : (item.topicType == 2 ? "[多选]"+item.title : item.title)}}
                 </div>
 
-                <van-radio-group v-model="selects.radio" v-if="item.topicType == 1">
-                    <van-radio v-for="(it, ix) in item.options" :name="it.ID" :key="ix"
-                               @click="handleShowOthers(e,it.title)">{{it.title}}
+                <van-radio-group v-model="selects.radio" v-if="item.topicType == 1" style="padding: 0.5em">
+                    <van-radio v-for="(it, ix) in item.options" :name="it.ID" :key="ix" style="padding: 0.3em"
+                               @click="handleShowOthers($event,it.title)">{{it.title}}
                     </van-radio>
                 </van-radio-group>
 
-                <van-checkbox-group v-model="selects.result" v-if="item.topicType == 2">
-                    <van-checkbox v-for="(it, ix) in item.options" :name="it.title" :key="ix" shape="square"
-                                  @click="handleShowOthers(e,it.title)">{{it.title}}
+                <van-checkbox-group v-model="selects.result" v-if="item.topicType == 2" style="padding: 0.5em">
+                    <van-checkbox v-for="(it, ix) in item.options" :name="it.ID" :key="ix" shape="square"
+                                  style="padding: 0.3em"
+                                  @click="handleShowOthers($event,it.title)">{{it.title}}
                     </van-checkbox>
                 </van-checkbox-group>
 
-                <van-field v-model="selects.others" v-if="item.topicType == 3 || othersSelected"
+                <van-field v-model="selects.others" v-if="item.topicType == 3 || othersSelected" style="padding: 0.5em"
                            rows="2" autosize type="textarea"
                            maxlength="50"
                            placeholder="请输入留言"
                            show-word-limit/>
-
-                <van-row>
+                <van-row style="padding-top: 1em">
                     <van-col span="6" offset="6" v-if="index != 0">
                         <van-button type="primary" size="normal" @click="toBack(index)">上一步</van-button>
                     </van-col>
@@ -33,7 +34,7 @@
                         <van-button type="primary" size="normal" @click="toNext(index,item.ID)">下一步</van-button>
                     </van-col>
                     <van-col span="6" v-if="!isShow">
-                        <van-button type="primary" size="normal" @click="saveUserAnswer">提 交</van-button>
+                        <van-button type="primary" size="normal" @click="saveUserAnswer(index)">提 交</van-button>
                     </van-col>
                 </van-row>
             </van-cell-group>
@@ -55,7 +56,6 @@
                     result: [],
                     others: ''
                 },
-
                 page: 0,
                 answers: [],  // 已答题目的列表
                 topicAndOptions: [],
@@ -63,7 +63,6 @@
             }
         },
         computed: {},
-        components: {},
         created() {
             this.getTopicAndOptions()
         },
@@ -73,9 +72,21 @@
                 this.$router.back();
             },
             handleShowOthers(e, title) {
-                debugger
-                if (title == "其他") {
-                    this.othersSelected = true
+                let tgClassName = e.currentTarget.className;
+                if (tgClassName === "van-radio") {
+                    if (title == "其他") {
+                        this.othersSelected = true
+                    } else {
+                        this.othersSelected = false
+                        this.selects.others = ""
+                    }
+                } else if (tgClassName === "van-checkbox") {
+                    if (title == "其他" && e.currentTarget.ariaChecked === "false") {
+                        this.othersSelected = true
+                    } else if (title == "其他" && e.currentTarget.ariaChecked === "true") {
+                        this.othersSelected = false
+                        this.selects.others = ""
+                    }
                 }
             },
             // 获取问卷数据
@@ -95,7 +106,10 @@
                 const result = await queryTopicList(this.businessType)
                 this.topicAndOptions = result.data.topicOptions
             },
-            async saveUserAnswer() {
+            async saveUserAnswer(index) {
+                if (!this.saveLocalAnswer(index)) {
+                    return
+                }
                 let data = {businessType: this.businessType, answers: this.answers}
                 let result = await addUserAnswer(data)
                 Toast.success("保存成功！")
@@ -104,32 +118,13 @@
             // 点击下一题
             toNext(index, id) {
                 // 1. 判断改题是否必答，是如果没有回答则无法跳转到下一题
-                var tAo = this.topicAndOptions[index]
-                var topicType = tAo.topicType
-
-                if (tAo.isRequired == 1) { // 必填项
-                    if (topicType == 1 && this.selects.radio.length == 0) {// 单选
-                        Toast.fail("该题为必填项！")
-                        return;
-                    } else if (topicType == 2 && this.selects.result.length == 0) {// 多选
-                        Toast.fail("该题为必填项！")
-                        return;
-                    } else if (topicType == 3 && this.selects.others.length == 0) {// 问答
-                        Toast.fail("该题为必填项！")
-                        return;
-                    }
-                    if (topicType == 1) {
-                        this.selects.result[0] = this.selects.radio
-                    }
+                if (!this.saveLocalAnswer(index)) {
+                    return
                 }
-
-                var answer = {topicId: tAo.ID, others: this.selects.others, optionIds: this.selects.result}
-                this.answers[index] = answer;
-
                 // 3. index ++；
                 index++;
                 // 4. 判断已答题目列表是否包含下标为index的题目，有则回显
-                var ans = this.answers[index]
+                let ans = this.answers[index]
                 if (ans !== undefined && ans !== '') {
                     this.selects.others = ans.others;
                     if (ans.others !== '') {
@@ -148,6 +143,7 @@
                     this.selects.radio = '';
                     this.selects.result = []
                     this.selects.others = ''
+                    this.othersSelected = false
                 }
                 // 5. page ++
                 this.page++;
@@ -159,13 +155,41 @@
                     return this.isShow = true
                 }
             },
+            saveLocalAnswer(index) {
+                let tAo = this.topicAndOptions[index]
+                let topicType = tAo.topicType
+                if (tAo.isRequired == 1) { // 必填项
+                    if (topicType == 1 && this.selects.radio.length == 0) {// 单选
+                        Toast.fail("该题为必填项！")
+                        return false;
+                    } else if (topicType == 2 && this.selects.result.length == 0) {// 多选
+                        Toast.fail("该题为必填项！")
+                        return false;
+                    } else if (topicType == 3 && this.selects.others.length == 0) {// 问答
+                        Toast.fail("该题为必填项！")
+                        return false;
+                    }
+                    if (topicType == 1) {
+                        this.selects.result[0] = this.selects.radio
+                    }
+                }
+
+                let answer = {topicId: tAo.ID, others: this.selects.others, optionIds: this.selects.result}
+                this.answers[index] = answer;
+                return true
+            },
             // 点击上一题
             toBack(index) {
                 // 1. index --；
                 index--;
                 // 2. 从已回答列表中获取答题数据，回显
-                var ans = this.answers[index]
+                let ans = this.answers[index]
                 this.selects.others = ans.others;
+                if (ans.others !== '') {
+                    this.othersSelected = true
+                } else {
+                    this.othersSelected = false
+                }
                 if (this.topicAndOptions[index].topicType == 1) {
                     this.selects.radio = ans.optionIds[0];
                     this.selects.result = []

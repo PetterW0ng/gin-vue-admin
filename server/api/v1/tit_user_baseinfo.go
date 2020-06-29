@@ -167,6 +167,32 @@ func AddTitUserBaseinfo(c *gin.Context) {
 	}
 }
 
+func GetTitUserBaseinfo(c *gin.Context) {
+	claims, _ := c.Get("claims")
+	currentUser := claims.(*request.TitUserClaims)
+	if err, tu := service.GetTitUser(currentUser.ID); err == nil {
+		if err, t := service.GetTitUserBaseinfo(uint(tu.TitUserBaseinfoId)); err == nil {
+			titUserBase := resp.TitUserBase{ID: t.ID, TitUserId: t.TitUserId, School: t.School, MajorsStudied: t.MajorsStudied, HighestEducation: t.HighestEducation, SchoolSystem: t.SchoolSystem, WorkingState: t.WorkingState, Company: t.Company,
+				Area: t.Area, JobTitle: t.JobTitle, ServiceType: t.ServiceType, Income: t.Income, Benefits: t.Benefits, ChildAge: t.ChildAge, ChildType: t.ChildType, TrainingNumber: t.TrainingNumber, TrainingFee: t.TrainingFee}
+			trainingInfos := service.QueryTrainingInfoByBaseId(tu.TitUserBaseinfoId)
+			var trainingInfosReturn []resp.TitTrainingInfo
+			for _, item := range trainingInfos {
+				trainingInfosReturn = append(trainingInfosReturn, resp.TitTrainingInfo{
+					TitUserBaseinfoId: item.TitUserBaseinfoId,
+					PaymentWay:        item.PaymentWay,
+					TrainingCourse:    item.TrainingCourse,
+					BeginTime:         item.BeginTime,
+					EndTime:           item.EndTime,
+				})
+			}
+			titUserBase.TrainingInfo = trainingInfosReturn
+			response.OkWithData(gin.H{"userBaseinfo": titUserBase}, c)
+			return
+		}
+	}
+	response.FailWithMessage("获取基本信息失败了", c)
+}
+
 func QueryTitUserBaseinfo(c *gin.Context) {
 	claims, _ := c.Get("claims")
 	currentUser := claims.(*request.TitUserClaims)
@@ -238,7 +264,7 @@ func QueryTitUserBaseinfo(c *gin.Context) {
 				})
 			}
 			tubtR.TrainingInfos = trainingInfosReturn
-			response.OkWithData(tubtR, c)
+			response.OkWithData(gin.H{"userBaseinfo": tubtR}, c)
 			return
 		}
 	} else {

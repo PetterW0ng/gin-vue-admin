@@ -3,7 +3,7 @@
         <!-- 教育背景 -->
         <van-cell-group v-show="currentStep == 1">
             <van-cell title="" value="" label="1.基本信息"/>
-            <van-field :value="school"
+            <van-field v-model="school"
                        label="毕业学校"
                        readonly is-link
                        @click="showSchoolPopView = true"
@@ -12,7 +12,7 @@
                        label="所修专业" is-link
                        @click="showMajorsStudiedView = true"
                        required/>
-            <van-field :value="education"
+            <van-field :value="highestEducation"
                        label="最高学历"
                        required is-link
                        @click="showEducationPopView = true"
@@ -29,7 +29,7 @@
             <van-field name="radio" required label="工作状态">
                 <template #input>
                     <van-radio-group v-model="baseinfo.workingState" direction="horizontal">
-                        <van-radio v-for="(item, index) in workingStates" :name="item.propertyValue"
+                        <van-radio v-for="(item, index) in workingStateOption" :name="item.propertyValue"
                                    :value="item.propertyValue" :key="item.propertyValue">{{item.text}}
                         </van-radio>
                     </van-radio-group>
@@ -39,39 +39,39 @@
             <van-field v-model="baseinfo.company"
                        label="工作单位"
                        required/>
-            <van-field :value="area"
+            <van-field v-model="areaSelected"
                        label="单位地域"
                        @click="showAreaPopView = true"
                        required readonly is-link/>
             <van-field v-model="baseinfo.jobTitle"
                        label="职务职位" required/>
-            <van-field :value="serviceType"
+            <van-field v-model="serviceType"
                        label="单位服务模式"
                        @click="showServiceTypePopView = true"
                        required readonly is-link/>
-            <van-field :value="income"
+            <van-field v-model="income"
                        label="月度收入水平"
                        @click="showIncomePopView = true"
                        required readonly is-link/>
-            <van-field name="benefits" label="福利待遇">
+            <van-field name="benefits" label="福利待遇" required>
                 <template #input>
                     <van-checkbox-group v-model="baseinfo.benefits" direction="horizontal">
-                        <van-checkbox v-for="(item, index) in benefits" :name="item.propertyValue"
+                        <van-checkbox v-for="(item, index) in benefitsOption" :name="item.propertyValue"
                                       :value="item.propertyValue" :key="item.propertyValue" shape="square">{{item.text}}
                         </van-checkbox>
                     </van-checkbox-group>
                 </template>
             </van-field>
-            <van-field name="childType" label="服务儿童类型">
+            <van-field name="childType" label="服务儿童类型" required>
                 <template #input>
                     <van-checkbox-group v-model="baseinfo.childType" direction="horizontal">
-                        <van-checkbox v-for="(item, index) in childType" :name="item.propertyValue"
+                        <van-checkbox v-for="(item, index) in childTypeOption" :name="item.propertyValue"
                                       :value="item.propertyValue" :key="item.propertyValue" shape="square">{{item.text}}
                         </van-checkbox>
                     </van-checkbox-group>
                 </template>
             </van-field>
-            <van-field :value="childAge"
+            <van-field v-model="childAge"
                        label="主要服务儿童年龄段"
                        @click="showChildAgePopView = true"
                        required readonly is-link/>
@@ -79,21 +79,26 @@
         <!-- 培训经历 -->
         <van-cell-group v-show="currentStep == 3">
             <van-cell title="" value="" label="3.培训经历"/>
-            <van-field name="trainingNumber" required label="我到目前为止参加培训数量（一周内的算作短期培训）">
+            <van-field required label="我到目前为止参加培训数量（一周内的算作短期培训）">
                 <template #input>
                     <van-checkbox-group v-model="baseinfo.trainingNumber" direction="horizontal">
-                        <van-checkbox v-for="(item, index) in trainingNumber" :name="item.propertyValue"
+                        <van-checkbox v-for="(item, index) in trainingNumberOption" :name="item.propertyValue"
                                       :value="item.propertyValue" :key="item.propertyValue" shape="square">{{item.text}}
                         </van-checkbox>
                     </van-checkbox-group>
                 </template>
             </van-field>
-            <van-field :value="trainingFee"
+            <van-field v-model="trainingFee"
                        label="我去年在培训上的花费"
                        @click="showTrainingFeePopView = true"
                        required readonly is-link/>
             <van-cell title="" value="" label="我以往培训详情，请描述"/>
-            <van-cell-group v-for="(item, index) in baseinfo.trainingInfos" :key="index" :title="index + 1">
+            <van-cell-group v-for="(item, index) in trainingInfos" :key="index">
+                <van-cell :title="'培训'+(index + 1)" icon="shop-o">
+                    <template #right-icon>
+                        <van-icon name="clear" style="line-height: inherit;" @click="removeTrainingInfo(index)"/>
+                    </template>
+                </van-cell>
                 <van-field v-model="item.trainingCourse"
                            label="培训课程"/>
                 <van-field v-model="item.beginTimeStr" is-link readonly @click="handleSelectTime(1, index)"
@@ -176,7 +181,7 @@
                     :columns="areaColumns"
                     @cancel="showAreaPopView = false"
                     @confirm="onConfirmArea" />-->
-            <van-area :area-list="areas" title=""
+            <van-area :area-list="areas" ref="areaSelectPicker" title="" :value="baseinfo.area"
                       @cancel="showAreaPopView = false"
                       @confirm="onConfirmArea"/>
         </van-popup>
@@ -208,7 +213,7 @@
 
 <script>
     import {mapState} from "vuex";
-    import {selectOptions, areaList, saveBaseinfo} from "../../../serve/api";
+    import {selectOptions, areaList, saveBaseinfo, initUserBaseinfo} from "../../../serve/api";
     import areas from '../../../config/area.js'
     import {Toast} from "vant";
     import Moment from "moment";
@@ -217,39 +222,30 @@
         data() {
             return {
                 showSchoolPopView: false,
-                school: '',
                 schoolColumns: [],
 
                 showMajorsStudiedView: false,
-                majorsStudied: '',
                 majorsStudiedColumns: [],
 
                 showTrainingFeePopView: false,
-                trainingFee: '',
                 trainingFeeColumns: [],
 
                 showChildAgePopView: false,
-                childAge: '',
                 childAgeColumns: [],
 
                 showIncomePopView: false,
-                income: '',
                 incomeColumns: [],
 
                 showServiceTypePopView: false,
-                serviceType: '',
                 serviceTypeColumns: [],
 
                 showAreaPopView: false,
-                area: '',
                 areaColumns: [],
 
                 showSchoolSystemPopView: false,
-                schoolSystem: '',
                 schoolSystemColumns: [],
 
                 showEducationPopView: false,
-                education: '',
                 educationColumns: [],
 
                 showPaymentWayPopView: false,
@@ -264,12 +260,14 @@
                 timePickerType: 0,
                 timePickerNum: 0,
 
-                trainingNumber: [],
-                benefits: [],
-                childType: [],
-                workingStates: [],
+                trainingNumberOption: [],
+                benefitsOption: [],
+                childTypeOption: [],
+                workingStateOption: [],
                 currentStep: 1,
                 areas: areas,
+                areaSelected: '',
+                modify: -1,
                 // 基本信息
                 baseinfo: {
                     // 教育背景
@@ -296,10 +294,41 @@
         },
         computed: {
             ...mapState(['userInfo']),
+            school() {
+                return this.getPropertyName(this.schoolColumns, this.baseinfo.school)
+            },
+            majorsStudied() {
+                return this.getPropertyName(this.majorsStudiedColumns, this.baseinfo.majorsStudied)
+            },
+            trainingFee() {
+                return this.getPropertyName(this.trainingFeeColumns, this.baseinfo.trainingFee)
+            },
+            childAge() {
+                return this.getPropertyName(this.childAgeColumns, this.baseinfo.childAge)
+            },
+            income() {
+                return this.getPropertyName(this.incomeColumns, this.baseinfo.income)
+            },
+            serviceType() {
+                return this.getPropertyName(this.serviceTypeColumns, this.baseinfo.serviceType)
+            },
+            schoolSystem() {
+                return this.getPropertyName(this.schoolSystemColumns, this.baseinfo.schoolSystem)
+            },
+            highestEducation() {
+                return this.getPropertyName(this.educationColumns, this.baseinfo.highestEducation)
+            },
+            trainingInfos() {
+                let newArr = [...this.baseinfo.trainingInfos]
+                newArr.map(el => {
+                    return el.beginTimeStr = Moment(el.beginTime).format('YYYY-MM-DD'), el.endTimeStr = Moment(el.endTime).format('YYYY-MM-DD'), el.paymentWayStr = this.getPropertyName(this.paymentWayColumns, el.paymentWay)
+                })
+                return newArr
+            }
         },
         created() {
-            this.initSelectOptions()
-            //this.initAreas()
+            this.modify = this.$route.query.modify,
+                this.initSelectOptions()
         },
         methods: {
             previous() {
@@ -308,6 +337,9 @@
             next() {
                 this.currentStep += 1
             },
+            removeTrainingInfo(index) {
+                this.baseinfo.trainingInfos.splice(index, 1)
+            },
             addTrainingInfo() {
                 this.baseinfo.trainingInfos.push({})
             },
@@ -315,10 +347,11 @@
                 this.showPaymentWayPopView = true
                 this.paymentWayNum = index
             },
-            onConfirmPaymentWay(value, index) {
+            onConfirmPaymentWay(value) {
                 this.showPaymentWayPopView = false
-                this.baseinfo.trainingInfos[this.paymentWayNum].paymentWay = value.propertyValue;
-                this.baseinfo.trainingInfos[this.paymentWayNum].paymentWayStr = value.text;
+                let trainingInfo = this.baseinfo.trainingInfos[this.paymentWayNum]
+                trainingInfo.paymentWay = value.propertyValue;
+                this.$set(this.baseinfo.trainingInfos, this.paymentWayNum, trainingInfo);
             },
             // 格式化DateTime pickView
             formatter(type, value) {
@@ -337,57 +370,49 @@
                 this.timePickerType = bOe
             },
             onConfirmDateTime(value) {
+                let trainingInfo = this.baseinfo.trainingInfos[this.timePickerNum]
                 if (this.timePickerType == 1) {
-                    this.baseinfo.trainingInfos[this.timePickerNum].beginTimeStr = Moment(value).format("YYYY-MM-DD");
-                    this.baseinfo.trainingInfos[this.timePickerNum].beginTime = Moment(value).format();
+                    trainingInfo.beginTime = Moment(value).format();
                 } else {
-                    this.baseinfo.trainingInfos[this.timePickerNum].endTimeStr = Moment(value).format("YYYY-MM-DD");
-                    this.baseinfo.trainingInfos[this.timePickerNum].endTime = Moment(value).format();
+                    trainingInfo.endTime = Moment(value).format();
                 }
+                this.$set(this.baseinfo.trainingInfos, this.timePickerNum, trainingInfo);
                 this.showDateTimePopView = false;
             },
             onConfirmSchool(value, index) {
-                this.school = value.text
                 this.baseinfo.school = value.propertyValue
                 this.showSchoolPopView = false;
             },
             onConfirmMajorsStudied(value, index) {
-                this.majorsStudied = value.text
                 this.baseinfo.majorsStudied = value.propertyValue
                 this.showMajorsStudiedView = false;
             },
             onConfirmTrainingFee(value, index) {
-                this.trainingFee = value.text
                 this.baseinfo.trainingFee = value.propertyValue
                 this.showTrainingFeePopView = false;
             },
             onConfirmChildAge(value, index) {
-                this.childAge = value.text
                 this.baseinfo.childAge = value.propertyValue
                 this.showChildAgePopView = false;
             },
             onConfirmIncome(value, index) {
-                this.income = value.text
                 this.baseinfo.income = value.propertyValue
                 this.showIncomePopView = false;
             },
             onConfirmServiceType(value, index) {
-                this.serviceType = value.text
                 this.baseinfo.serviceType = value.propertyValue
                 this.showServiceTypePopView = false;
             },
             onConfirmArea(value, indexs) {
-                this.area = value[0].name + "/" + value[1].name + "/" + value[2].name
+                this.areaSelected = value[0].name + "/" + value[1].name + "/" + value[2].name
                 this.baseinfo.area = value[2].code
                 this.showAreaPopView = false;
             },
             onConfirmSchoolSystem(value, index) {
-                this.schoolSystem = value.text
                 this.baseinfo.schoolSystem = value.propertyValue
                 this.showSchoolSystemPopView = false;
             },
             onConfirmEducation(value, index) {
-                this.education = value.text
                 this.baseinfo.highestEducation = value.propertyValue
                 this.showEducationPopView = false;
             },
@@ -396,6 +421,15 @@
                 this.$router.push({
                     'name': n
                 });
+            },
+            getPropertyName(array, id) {
+                let name = ""
+                array.forEach(element => {
+                    if (id == element.propertyValue) {
+                        name = element.text;
+                    }
+                });
+                return name
             },
             async initSelectOptions() {
                 let result = await selectOptions();
@@ -406,12 +440,29 @@
                 this.incomeColumns = result.data.dictGroup.income
                 this.serviceTypeColumns = result.data.dictGroup.service_type
                 this.schoolSystemColumns = result.data.dictGroup.school_system
-                this.educationColumns = result.data.dictGroup.highest_education
-                this.workingStates = result.data.dictGroup.working_state
-                this.childType = result.data.dictGroup.child_type
-                this.benefits = result.data.dictGroup.benefits
-                this.trainingNumber = result.data.dictGroup.training_number
                 this.paymentWayColumns = result.data.dictGroup.payment_way
+                this.educationColumns = result.data.dictGroup.highest_education
+                this.workingStateOption = result.data.dictGroup.working_state
+                this.childTypeOption = result.data.dictGroup.child_type
+                this.benefitsOption = result.data.dictGroup.benefits
+                this.trainingNumberOption = result.data.dictGroup.training_number
+                if (this.modify && this.modify == 1) {
+                    // 获取基本信息
+                    this.initUserBaseinfo();
+                }
+            },
+            async initUserBaseinfo() {
+                let result = await initUserBaseinfo()
+                // 组装数据
+                let obj = result.data.userBaseinfo
+                obj.benefits = obj.benefits.split(',').map(Number)
+                obj.childType = obj.childType.split(',').map(Number)
+                obj.trainingNumber = obj.trainingNumber.split(',').map(Number)
+                this.baseinfo = obj
+                /*let v = this.$refs.areaSelectPicker;
+                let value = v.getValues();
+                this.areaSelected = value[0].name + "/" + value[1].name + "/" + value[2].name;
+                console.log(this.baseinfo)*/
             },
             async initAreas() {
                 let result = await areaList();

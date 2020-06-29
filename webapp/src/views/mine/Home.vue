@@ -30,14 +30,12 @@
 <script type="text/javascript">
   // 引入vuex
   import {mapActions, mapState} from 'vuex'
-  import {_VERSION_} from './../../config/global'
   import {loadUserInfo} from "../../serve/api";
 
   export default {
     data() {
       return {
         // 版本信息
-        version: _VERSION_,
       }
     },
     computed: {
@@ -49,14 +47,23 @@
     methods: {
       ...mapActions(['syncuserInfo']),
       goToPage(topicType) {
-        this.$router.push({
-          path: `/topicOptions/${topicType}`,
-        })
+        if (this.userInfo[topicType + "Num"] > 0) {
+          this.$router.push({path: `/userTopicAnswer/${topicType}`})
+        } else {
+          this.$router.push({path: `/topicOptions/${topicType}`})
+        }
+        // this.$router.push({ path: `/topicOptions/${topicType}`})
       },
       goToBaseInfo() {
-        this.$router.push({
-          'name': 'baseinfo'
-        });
+        if (this.userInfo["baseinfoId"] > 0) {
+          this.$router.push({
+            'name': 'userBaseinfo'
+          });
+        } else {
+          this.$router.push({
+            'name': 'baseinfo'
+          });
+        }
       },
       async reloadUser() {
         let result = await loadUserInfo()

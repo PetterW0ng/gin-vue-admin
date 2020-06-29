@@ -21,5 +21,6 @@ func InitTitUserBasicinfoRouter(group *gin.RouterGroup) {
 	TitUserBaseinfoRouter := group.Group("userBaseinfo").Use(middleware.JWTTitAuth())
 	TitUserBaseinfoRouter.POST("create", v1.AddTitUserBaseinfo)   // 新建TitUserBaseinfo
 	TitUserBaseinfoRouter.PUT("modify", v1.ModifyTitUserBaseinfo) // 更新TitUserBaseinfo
-	TitUserBaseinfoRouter.GET("", v1.QueryTitUserBaseinfo)        // 根据ID获取 TitUserBaseinfo
+	TitUserBaseinfoRouter.GET("", v1.QueryTitUserBaseinfo)        // 根据ID获取 TitUserBaseinfo int转译后
+	TitUserBaseinfoRouter.POST("", v1.GetTitUserBaseinfo)         // 根据ID获取 TitUserBaseinfo int转译前
 }

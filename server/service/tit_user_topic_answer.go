@@ -97,10 +97,10 @@ func SaveTitUserAnswer(userTopicAnswerRequest request.UserTopicAnswer, titUserId
 
 	// 查询出根据 IitUserId 获取新增的 batchNum
 	var batchNum int
-	if businessType == 1 {
+	if businessType == 3 {
 		titUser.IndustryPerspectiveBatchNum += 1
 		batchNum = titUser.IndustryPerspectiveBatchNum
-	} else if businessType == 2 {
+	} else if businessType == 1 {
 		titUser.JobInfoBatchNum += 1
 		batchNum = titUser.JobInfoBatchNum
 	} else {
@@ -125,10 +125,14 @@ func SaveTitUserAnswer(userTopicAnswerRequest request.UserTopicAnswer, titUserId
 		// 设置 options 选项 如：熟悉孤独症的治疗原则[option]熟悉孤独症的诊断及其评估
 		var topicOptionSelected string
 		var score int
-		for _, v := range selectedOptions {
+		for i, v := range selectedOptions {
 			for _, op := range topicOption.TitTopicOptions {
 				if uint(v) == op.ID {
-					topicOptionSelected += op.Title + "[option]"
+					if i == len(selectedOptions)-1 {
+						topicOptionSelected += op.Title
+					} else {
+						topicOptionSelected += op.Title + "[option]"
+					}
 					score = op.Score
 				}
 			}
@@ -161,6 +165,5 @@ func QueryTitUserTopicAnswer(userId uint, businessType, batchNum int) (err error
 }
 
 func QueryTitUserAnalysis(userId int) (err error, surveyDimensions, standardScores, userScores, courseRecommends, bookRecommends interface{}) {
-
 	return err, nil, nil, nil, nil, nil
 }

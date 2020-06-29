@@ -14,8 +14,8 @@ type TitUser struct {
 	Birthday                    time.Time `json:"birthday" form:"birthday" `
 	Telphone                    string    `json:"telphone" form:"telphone" `
 	OpenId                      string    `json:"openId" form:"openId" `
-	TitUserBaseinfoId           int       `json:"titUserBaseinfoId" form:"titUserBaseinfoId" `
-	JobInfoBatchNum             int       `json:"jobInfoBatchNum" form:"jobInfoBatchNum" `
-	PerfessionKnowledgeBatchNum int       `json:"perfessionKnowledgeBatchNum" form:"perfessionKnowledgeBatchNum" `
-	IndustryPerspectiveBatchNum int       `json:"industryPerspectiveBatchNum" form:"industryPerspectiveBatchNum" `
+	TitUserBaseinfoId           int       `json:"baseinfoId" form:"titUserBaseinfoId" `
+	JobInfoBatchNum             int       `json:"jobInfoNum" form:"jobInfoBatchNum" `
+	PerfessionKnowledgeBatchNum int       `json:"perfessionNum" form:"perfessionKnowledgeBatchNum" `
+	IndustryPerspectiveBatchNum int       `json:"industryNum" form:"industryPerspectiveBatchNum" `
 }
