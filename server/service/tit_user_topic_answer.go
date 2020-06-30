@@ -164,6 +164,8 @@ func QueryTitUserTopicAnswer(userId uint, businessType, batchNum int) (err error
 	return
 }
 
-func QueryTitUserAnalysis(userId int) (err error, surveyDimensions, standardScores, userScores, courseRecommends, bookRecommends interface{}) {
-	return err, nil, nil, nil, nil, nil
+func GetTitTopicRelated(id int) (err error, titTopicRelated model.TitTopicRelated) {
+	db := global.GVA_DB
+	err = db.Where("id = ?", id).First(&titTopicRelated).Error
+	return
 }

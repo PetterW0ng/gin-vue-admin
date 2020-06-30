@@ -23,5 +23,6 @@ func InitTitUserTopicAnswerRouter2(Router *gin.RouterGroup) {
 		TitUserTopicAnswerRouter.POST("add", v1.AddTitUserTopicAnswer)    // 新增用户的答题记录
 		TitUserTopicAnswerRouter.GET("", v1.QueryTitUserTopicAnswer)      // 查看用户 businessType 下的记录
 		TitUserTopicAnswerRouter.GET("analysis", v1.QueryTitUserAnalysis) // 根据积分题 对用户进行分析
+		TitUserTopicAnswerRouter.GET("toStore", v1.ToStore)               // 根据积分题 对用户进行分析
 	}
 }

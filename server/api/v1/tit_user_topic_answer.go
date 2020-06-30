@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"gin-vue-admin/global"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -9,6 +10,7 @@ import (
 	"gin-vue-admin/service"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"strings"
 )
 
 // @Tags TitUserTopicAnswer
@@ -145,12 +147,80 @@ func QueryTitUserTopicAnswer(c *gin.Context) {
 	}
 }
 
-func QueryTitUserAnalysis(c *gin.Context) {
-	var userId int
-	err, surveyDimensions, standardScores, userScores, courseRecommends, bookRecommends := service.QueryTitUserAnalysis(userId)
-	if err != nil {
-		response.FailWithMessage(fmt.Sprintf("查询失败，%v", err), c)
+// ToStore 重定向至 小鹅通商店
+func ToStore(c *gin.Context) {
+	claims, _ := c.Get("claims")
+	currentUser := claims.(*request.TitUserClaims)
+	ID, _ := strconv.Atoi(c.Query("relatedId"))
+	var url string
+	err, related := service.GetTitTopicRelated(ID)
+	if err == nil {
+		url = related.ObjectLink
+		global.GVA_LOG.Info(currentUser.Telphone, "访问了连接:", url)
+		//c.Redirect(http.StatusMovedPermanently, url)
+		response.OkWithData(gin.H{"url": url}, c)
 	} else {
-		response.OkWithData(gin.H{"surveyDimensions": surveyDimensions, "standardScores": standardScores, "userScores": userScores, "courseRecommends": courseRecommends, "bookRecommends": bookRecommends}, c)
+		response.FailWithMessage(fmt.Sprintf("访问商店失败了，%v", err), c)
+	}
+}
+
+func QueryTitUserAnalysis(c *gin.Context) {
+	const PERFESSION_BUSINESS_TYPE, WORK_AGE_TOPIC, SCORED = 2, 13, 1
+	claims, _ := c.Get("claims")
+	currentUser := claims.(*request.TitUserClaims)
+
+	if err, tu := service.GetTitUser(currentUser.ID); err == nil {
+		err1, topicAnswers := service.QueryTitUserTopicAnswer(currentUser.ID, PERFESSION_BUSINESS_TYPE, tu.PerfessionKnowledgeBatchNum)
+		err2, topics := service.QueryTopicByBusinessType(PERFESSION_BUSINESS_TYPE)
+		var surveyDimensions, gtStandard, ltStandard []string
+		var standardScores, userScores []int
+		var topicRelatedList []resp.TitTopicRelated
+		if err1 == nil && err2 == nil {
+			// 找出 用户答题时选择的从业年龄
+			var workAge string
+			var ix int
+			for _, item := range topicAnswers {
+				if item.TitTopicId == WORK_AGE_TOPIC {
+					workAge = item.TopicOptionIds
+					break
+				}
+			}
+			switch workAge {
+			case "64":
+				ix = 0
+			case "65":
+				ix = 1
+			case "66":
+				ix = 2
+			default:
+				ix = -1
+			}
+			global.GVA_LOG.Info("用户的工作年限答题时选择的是：", workAge)
+			for _, item := range topics {
+				if item.IsScored != SCORED {
+					continue
+				}
+				surveyDimensions = append(surveyDimensions, item.SurveyLatitude)
+				standardScore, _ := strconv.Atoi(strings.Split(item.Score, ",")[ix])
+				standardScores = append(standardScores, standardScore)
+				for _, ans := range topicAnswers {
+					if uint(ans.TitTopicId) == item.ID {
+						userScores = append(userScores, ans.Score)
+						if ans.Score >= standardScore {
+							gtStandard = append(gtStandard, item.SurveyLatitude)
+						} else {
+							ltStandard = append(ltStandard, item.SurveyLatitude)
+							// 设置推荐的内容 课程、书籍、工具
+							for _, relatedItem := range item.TitTopicRelatedList {
+								topicRelatedList = append(topicRelatedList, resp.TitTopicRelated{ID: relatedItem.ID, TitTopicId: relatedItem.TitTopicId, RecommendType: relatedItem.RecommendType, RecommendObject: relatedItem.RecommendObject, ObjectLink: "", Remark: relatedItem.Remark})
+							}
+						}
+					}
+				}
+			}
+			response.OkWithData(gin.H{"surveyDimensions": surveyDimensions, "standardScores": standardScores, "userScores": userScores, "gtStandard": gtStandard, "ltStandard": ltStandard, "topicRelatedList": topicRelatedList}, c)
+		} else {
+			response.FailWithMessage(fmt.Sprintf("查询用户得分情况失败了，%v", err), c)
+		}
 	}
 }

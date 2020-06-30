@@ -1,27 +1,34 @@
 <template>
     <div>
-        <div v-for="(item,index) in getUserTopicAnswers" :key="index">
-            <van-cell-group>
-                <div class="content-title" style="padding-top: 1em">
-                    {{index+1}} . {{item.topicTitle}}
-                </div>
+        <van-nav-bar :title="title"
+                     :fixed=true
+                     :border=false
+                     style="height: 2.5rem"/>
+        <div class="mainDiv">
+            <div v-for="(item,index) in getUserTopicAnswers" :key="index">
+                <van-cell-group border=false>
+                    <div class="topicTitle">
+                        {{index+1}} . {{item.topicTitle}}
+                    </div>
 
-                <van-checkbox-group style="padding: 0.5em" disabled v-if="item.topicOptionSelected.length > 0">
-                    <van-checkbox v-for="(it, ix) in item.topicOptionSelected" :key="ix" checked="true"
-                                  style="padding: 0.3em">
-                        {{it}}
-                    </van-checkbox>
-                </van-checkbox-group>
+                    <van-checkbox-group disabled v-if="item.topicOptionSelected.length > 0">
+                        <van-checkbox v-for="(it, ix) in item.topicOptionSelected" :key="ix" checked="true"
+                                      class="options">
+                            {{it}}
+                        </van-checkbox>
+                    </van-checkbox-group>
 
-                <van-field style="padding: 0.5em" v-if="item.answer != ''" disabled v-model="item.answer"
-                           rows="2" autosize type="textarea"
-                           maxlength="50"
-                           placeholder="请输入留言"
-                           show-word-limit/>
-            </van-cell-group>
+                    <van-field v-if="item.answer != ''" disabled v-model="item.answer" class="options"
+                               rows="2" autosize type="textarea"
+                               maxlength="50"
+                               placeholder="请输入留言"
+                               show-word-limit/>
+                </van-cell-group>
+            </div>
+            <div class="buttonDiv">
+                <van-button class="button" type="info" size="large" @click="reAnswer">重新填写</van-button>
+            </div>
         </div>
-
-        <van-button type="primary" size="normal" @click="reAnswer">重新填写</van-button>
     </div>
 </template>
 
@@ -48,13 +55,15 @@
             getUserTopicAnswers() {
                 let newArr = [...this.userTopicAnswers]
                 newArr.map(el => {
-                    return el.topicOptionSelected = el.topicOptionSelected.split('[option]')
+                    return el.topicOptionSelected == '' ? el.topicOptionSelected = [] : el.topicOptionSelected = el.topicOptionSelected.split('[option]')
                 })
                 return newArr
+            },
+            title() {
+                return this.businessType == 3 ? "行业观点" : (this.businessType == 2 ? "专业理解" : "职业选择和体验")
             }
         },
         methods: {
-
             reAnswer() {
                 this.$router.push({path: `/topicOptions/${this.topicType}`})
             },
@@ -76,6 +85,27 @@
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+    .mainDiv {
+        padding-top: 3rem;
 
+        .topicTitle {
+            font-size: 1.1rem;
+            padding: 0.3rem;
+            line-height: 1.6rem;
+        }
+
+        .options {
+            padding: 0.7rem;
+            line-height: 1.6rem;
+        }
+
+        .buttonDiv {
+            padding: 2rem 1rem 2rem 1rem;
+
+            .button {
+                margin: 0.3rem 0rem;
+            }
+        }
+    }
 </style>

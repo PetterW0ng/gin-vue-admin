@@ -72,3 +72,9 @@ func QueryByBusinessType(businessType int) (err error, topics []model.TitTopic) 
 	err = db.Order("order").Where(" business_type = ?", businessType).Preload("TitTopicOptions").Find(&topics).Error
 	return err, topics
 }
+
+func QueryTopicByBusinessType(businessType int) (err error, topics []model.TitTopic) {
+	db := global.GVA_DB
+	err = db.Order("order").Where(" business_type = ?", businessType).Preload("TitTopicRelatedList").Find(&topics).Error
+	return err, topics
+}

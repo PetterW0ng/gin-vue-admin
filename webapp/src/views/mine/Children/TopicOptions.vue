@@ -1,46 +1,55 @@
 <template>
     <div>
-        <!-- 问卷题 -->
-        <div v-for="(item,index) in topicAndOptions" :key="item.ID">
-            <van-cell-group v-if="index == page">
-                <div class="content-title" style="padding-top: 1em">{{index+1}} . {{item.isRequired == 2 ? "[选填]" +
-                    (item.topicType == 2 ?
-                    "[多选]"+item.title : item.title) : (item.topicType == 2 ? "[多选]"+item.title : item.title)}}
-                </div>
+        <van-nav-bar :title="title"
+                     :fixed=true
+                     :border=false
+                     style="height: 2.5rem"/>
+        <div class="mainDiv">
+            <!-- 问卷题 -->
+            <div class="topicDiv" v-for="(item,index) in topicAndOptions" :key="item.ID">
+                <van-cell-group v-if="index == page" border=false>
+                    <div class="topicTitle">
+                        {{index+1}} . {{item.isRequired == 2 ? "[选填]" + (item.topicType == 2 ? "[多选]"+item.title :
+                        item.title) : (item.topicType == 2 ? "[多选]"+item.title : item.title)}}
+                    </div>
 
-                <van-radio-group v-model="selects.radio" v-if="item.topicType == 1" style="padding: 0.5em">
-                    <van-radio v-for="(it, ix) in item.options" :name="it.ID" :key="ix" style="padding: 0.3em"
-                               @click="handleShowOthers($event,it.title)">{{it.title}}
-                    </van-radio>
-                </van-radio-group>
+                    <van-radio-group v-model="selects.radio" v-if="item.topicType == 1" class="options">
+                        <van-radio v-for="(it, ix) in item.options" :name="it.ID" :key="ix" style="padding: 0.3em"
+                                   @click="handleShowOthers($event,it.title)">{{it.title}}
+                        </van-radio>
+                    </van-radio-group>
 
-                <van-checkbox-group v-model="selects.result" v-if="item.topicType == 2" style="padding: 0.5em">
-                    <van-checkbox v-for="(it, ix) in item.options" :name="it.ID" :key="ix" shape="square"
-                                  style="padding: 0.3em"
-                                  @click="handleShowOthers($event,it.title)">{{it.title}}
-                    </van-checkbox>
-                </van-checkbox-group>
+                    <van-checkbox-group v-model="selects.result" v-if="item.topicType == 2" class="options">
+                        <van-checkbox v-for="(it, ix) in item.options" :name="it.ID" :key="ix" shape="square"
+                                      style="padding: 0.3em"
+                                      @click="handleShowOthers($event,it.title)">{{it.title}}
+                        </van-checkbox>
+                    </van-checkbox-group>
 
-                <van-field v-model="selects.others" v-if="item.topicType == 3 || othersSelected" style="padding: 0.5em"
-                           rows="2" autosize type="textarea"
-                           maxlength="50"
-                           placeholder="请输入留言"
-                           show-word-limit/>
-                <van-row style="padding-top: 1em">
-                    <van-col span="6" offset="6" v-if="index != 0">
-                        <van-button type="primary" size="normal" @click="toBack(index)">上一步</van-button>
-                    </van-col>
-                    <van-col span="6" v-if="isShow">
-                        <van-button type="primary" size="normal" @click="toNext(index,item.ID)">下一步</van-button>
-                    </van-col>
-                    <van-col span="6" v-if="!isShow">
-                        <van-button type="primary" size="normal" @click="saveUserAnswer(index)">提 交</van-button>
-                    </van-col>
-                </van-row>
-            </van-cell-group>
+                    <van-field v-model="selects.others" v-if="item.topicType == 3 || othersSelected" class="options"
+                               rows="2" autosize type="textarea"
+                               maxlength="50"
+                               placeholder="请输入留言"
+                               show-word-limit/>
+                    <van-cell :value="'当前进度: ' + (index+1) + ' / '+ (topicAndOptions.length)"/>
+                    <div class="buttonDiv">
+                        <van-button class="button" type="info" size="large" @click="toBack(index)" v-if="index != 0">
+                            上一步
+                        </van-button>
+                        <van-button class="button" type="info" size="large" @click="toNext(index,item.ID)"
+                                    v-if="index != (topicAndOptions.length -1)">下一步
+                        </van-button>
+                        <van-button class="button" type="info" size="large" @click="saveUserAnswer(index)"
+                                    v-if="index == (topicAndOptions.length -1)">提 交
+                        </van-button>
+                    </div>
+                </van-cell-group>
+            </div>
+
         </div>
     </div>
 </template>
+
 <script type="text/javascript">
     import {queryTopicList, addUserAnswer} from "../../../serve/api";
     import {Toast} from "vant";
@@ -62,7 +71,11 @@
                 businessType: 0
             }
         },
-        computed: {},
+        computed: {
+            title() {
+                return this.businessType == 3 ? "行业观点" : (this.businessType == 2 ? "专业理解" : "职业选择和体验")
+            }
+        },
         created() {
             this.getTopicAndOptions()
         },
@@ -204,6 +217,30 @@
     }
 </script>
 
-<!--<style lang="less" scoped>
+<style lang="less" scoped>
+    .mainDiv {
+        padding-top: 3rem;
 
-</style>-->
+        .topicDiv {
+            .topicTitle {
+                font-size: 1.1rem;
+                padding: 0.3rem;
+                line-height: 1.6rem;
+            }
+
+            .options {
+                padding: 0.7rem;
+                line-height: 1.6rem;
+            }
+
+            .buttonDiv {
+                padding: 2rem 1rem 2rem 1rem;
+
+                .button {
+                    margin: 0.3rem 0rem;
+                }
+            }
+        }
+    }
+
+</style>

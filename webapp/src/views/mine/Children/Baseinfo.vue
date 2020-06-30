@@ -1,129 +1,133 @@
 <template>
-    <div id="Baseinfo">
-        <!-- 教育背景 -->
-        <van-cell-group v-show="currentStep == 1">
-            <van-cell title="" value="" label="1.基本信息"/>
-            <van-field v-model="school"
-                       label="毕业学校"
-                       readonly is-link
-                       @click="showSchoolPopView = true"
-                       required/>
-            <van-field :value="majorsStudied"
-                       label="所修专业" is-link
-                       @click="showMajorsStudiedView = true"
-                       required/>
-            <van-field :value="highestEducation"
-                       label="最高学历"
-                       required is-link
-                       @click="showEducationPopView = true"
-                       readonly/>
-            <van-field :value="schoolSystem"
-                       label="所上学制"
-                       required is-link
-                       @click="showSchoolSystemPopView = true"
-                       readonly/>
-        </van-cell-group>
-        <!-- 工作单位 -->
-        <van-cell-group v-show="currentStep == 2">
-            <van-cell title="" value="" label="2.工作单位"/>
-            <van-field name="radio" required label="工作状态">
-                <template #input>
-                    <van-radio-group v-model="baseinfo.workingState" direction="horizontal">
-                        <van-radio v-for="(item, index) in workingStateOption" :name="item.propertyValue"
-                                   :value="item.propertyValue" :key="item.propertyValue">{{item.text}}
-                        </van-radio>
-                    </van-radio-group>
-                </template>
-            </van-field>
-
-            <van-field v-model="baseinfo.company"
-                       label="工作单位"
-                       required/>
-            <van-field v-model="areaSelected"
-                       label="单位地域"
-                       @click="showAreaPopView = true"
-                       required readonly is-link/>
-            <van-field v-model="baseinfo.jobTitle"
-                       label="职务职位" required/>
-            <van-field v-model="serviceType"
-                       label="单位服务模式"
-                       @click="showServiceTypePopView = true"
-                       required readonly is-link/>
-            <van-field v-model="income"
-                       label="月度收入水平"
-                       @click="showIncomePopView = true"
-                       required readonly is-link/>
-            <van-field name="benefits" label="福利待遇" required>
-                <template #input>
-                    <van-checkbox-group v-model="baseinfo.benefits" direction="horizontal">
-                        <van-checkbox v-for="(item, index) in benefitsOption" :name="item.propertyValue"
-                                      :value="item.propertyValue" :key="item.propertyValue" shape="square">{{item.text}}
-                        </van-checkbox>
-                    </van-checkbox-group>
-                </template>
-            </van-field>
-            <van-field name="childType" label="服务儿童类型" required>
-                <template #input>
-                    <van-checkbox-group v-model="baseinfo.childType" direction="horizontal">
-                        <van-checkbox v-for="(item, index) in childTypeOption" :name="item.propertyValue"
-                                      :value="item.propertyValue" :key="item.propertyValue" shape="square">{{item.text}}
-                        </van-checkbox>
-                    </van-checkbox-group>
-                </template>
-            </van-field>
-            <van-field v-model="childAge"
-                       label="主要服务儿童年龄段"
-                       @click="showChildAgePopView = true"
-                       required readonly is-link/>
-        </van-cell-group>
-        <!-- 培训经历 -->
-        <van-cell-group v-show="currentStep == 3">
-            <van-cell title="" value="" label="3.培训经历"/>
-            <van-field required label="我到目前为止参加培训数量（一周内的算作短期培训）">
-                <template #input>
-                    <van-checkbox-group v-model="baseinfo.trainingNumber" direction="horizontal">
-                        <van-checkbox v-for="(item, index) in trainingNumberOption" :name="item.propertyValue"
-                                      :value="item.propertyValue" :key="item.propertyValue" shape="square">{{item.text}}
-                        </van-checkbox>
-                    </van-checkbox-group>
-                </template>
-            </van-field>
-            <van-field v-model="trainingFee"
-                       label="我去年在培训上的花费"
-                       @click="showTrainingFeePopView = true"
-                       required readonly is-link/>
-            <van-cell title="" value="" label="我以往培训详情，请描述"/>
-            <van-cell-group v-for="(item, index) in trainingInfos" :key="index">
-                <van-cell :title="'培训'+(index + 1)" icon="shop-o">
-                    <template #right-icon>
-                        <van-icon name="clear" style="line-height: inherit;" @click="removeTrainingInfo(index)"/>
-                    </template>
-                </van-cell>
-                <van-field v-model="item.trainingCourse"
-                           label="培训课程"/>
-                <van-field v-model="item.beginTimeStr" is-link readonly @click="handleSelectTime(1, index)"
-                           label="开始时间"/>
-                <van-field v-model="item.endTimeStr" is-link readonly @click="handleSelectTime(2, index)"
-                           label="结束时间"/>
-                <van-field v-model="item.paymentWayStr"
-                           label="付费方式"
-                           @click="handlePaymentWay(index)"
-                           readonly is-link/>
+    <div>
+        <van-nav-bar title="完善基本信息"
+                     :fixed=true
+                     :border=false
+                     style="height:2.5rem"/>
+        <div class="mainDiv">
+            <!-- 教育背景 -->
+            <van-cell-group v-show="currentStep == 1">
+                <van-cell title="" value="" label="1. 基本信息" class="title"/>
+                <van-field v-model="school"
+                           label="毕业学校"
+                           readonly is-link
+                           @click="showSchoolPopView = true"
+                           required/>
+                <van-field :value="majorsStudied"
+                           label="所修专业" is-link
+                           @click="showMajorsStudiedView = true"
+                           required/>
+                <van-field :value="highestEducation"
+                           label="最高学历"
+                           required is-link
+                           @click="showEducationPopView = true"
+                           readonly/>
+                <van-field :value="schoolSystem"
+                           label="所上学制"
+                           required is-link
+                           @click="showSchoolSystemPopView = true"
+                           readonly/>
             </van-cell-group>
-            <van-button plain hairline type="primary" @click="addTrainingInfo">添加培训经历</van-button>
-        </van-cell-group>
+            <!-- 工作单位 -->
+            <van-cell-group v-show="currentStep == 2">
+                <van-cell title="" value="" label="2. 工作单位"/>
+                <van-field name="radio" required label="工作状态">
+                    <template #input>
+                        <van-radio-group v-model="baseinfo.workingState" direction="horizontal">
+                            <van-radio v-for="(item, index) in workingStateOption" :name="item.propertyValue"
+                                       :value="item.propertyValue" :key="item.propertyValue">{{item.text}}
+                            </van-radio>
+                        </van-radio-group>
+                    </template>
+                </van-field>
 
-        <van-row>
-            <van-col span="6" offset="6" v-if="currentStep > 1">
-                <van-button type="primary" size="normal" @click="previous">上一步</van-button>
-            </van-col>
-            <van-col span="6" v-if="currentStep < 3">
-                <van-button type="primary" size="normal" @click="next">下一步</van-button>
-            </van-col>
-            <van-col span="6" v-if="currentStep == 3">
-                <van-button type="primary" size="normal" @click="saveBaseinfo">提 交</van-button>
-            </van-col>
-        </van-row>
+                <van-field v-model="baseinfo.company"
+                           label="工作单位"
+                           required/>
+                <van-field v-model="areaSelected"
+                           label="单位地域"
+                           @click="showAreaPopView = true"
+                           required readonly is-link/>
+                <van-field v-model="baseinfo.jobTitle"
+                           label="职务职位" required/>
+                <van-field v-model="serviceType"
+                           label="单位服务模式"
+                           @click="showServiceTypePopView = true"
+                           required readonly is-link/>
+                <van-field v-model="income"
+                           label="月度收入水平"
+                           @click="showIncomePopView = true"
+                           required readonly is-link/>
+                <van-field name="benefits" label="福利待遇" required>
+                    <template #input>
+                        <van-checkbox-group v-model="baseinfo.benefits" direction="horizontal">
+                            <van-checkbox v-for="(item, index) in benefitsOption" :name="item.propertyValue"
+                                          :value="item.propertyValue" :key="item.propertyValue" shape="square">
+                                {{item.text}}
+                            </van-checkbox>
+                        </van-checkbox-group>
+                    </template>
+                </van-field>
+                <van-field name="childType" label="服务儿童类型" required>
+                    <template #input>
+                        <van-checkbox-group v-model="baseinfo.childType" direction="horizontal">
+                            <van-checkbox v-for="(item, index) in childTypeOption" :name="item.propertyValue"
+                                          :value="item.propertyValue" :key="item.propertyValue" shape="square">
+                                {{item.text}}
+                            </van-checkbox>
+                        </van-checkbox-group>
+                    </template>
+                </van-field>
+                <van-field v-model="childAge"
+                           label="主要服务儿童年龄段"
+                           @click="showChildAgePopView = true"
+                           required readonly is-link/>
+            </van-cell-group>
+            <!-- 培训经历 -->
+            <van-cell-group v-show="currentStep == 3">
+                <van-cell title="" value="" label="3.培训经历"/>
+                <van-field required label="我到目前为止参加培训数量（一周内的算作短期培训）">
+                    <template #input>
+                        <van-checkbox-group v-model="baseinfo.trainingNumber" direction="horizontal">
+                            <van-checkbox v-for="(item, index) in trainingNumberOption" :name="item.propertyValue"
+                                          :value="item.propertyValue" :key="item.propertyValue" shape="square">
+                                {{item.text}}
+                            </van-checkbox>
+                        </van-checkbox-group>
+                    </template>
+                </van-field>
+                <van-field v-model="trainingFee"
+                           label="我去年在培训上的花费"
+                           @click="showTrainingFeePopView = true"
+                           required readonly is-link/>
+                <van-cell title="" value="" label="我以往培训详情，请描述"/>
+                <van-cell-group v-for="(item, index) in trainingInfos" :key="index">
+                    <van-cell :title="'培训'+(index + 1)" icon="shop-o">
+                        <template #right-icon>
+                            <van-icon name="clear" style="line-height: inherit;" @click="removeTrainingInfo(index)"/>
+                        </template>
+                    </van-cell>
+                    <van-field v-model="item.trainingCourse"
+                               label="培训课程"/>
+                    <van-field v-model="item.beginTimeStr" is-link readonly @click="handleSelectTime(1, index)"
+                               label="开始时间"/>
+                    <van-field v-model="item.endTimeStr" is-link readonly @click="handleSelectTime(2, index)"
+                               label="结束时间"/>
+                    <van-field v-model="item.paymentWayStr"
+                               label="付费方式"
+                               @click="handlePaymentWay(index)"
+                               readonly is-link/>
+                </van-cell-group>
+                <van-button plain hairline type="info" size="large" @click="addTrainingInfo">添加培训经历</van-button>
+            </van-cell-group>
+        </div>
+        <div class="buttonDiv">
+            <van-button class="button" type="info" size="large" @click="previous" v-if="currentStep > 1">上一步
+            </van-button>
+            <van-button class="button" type="info" size="large" @click="next" v-if="currentStep < 3">下一步</van-button>
+            <van-button class="button" type="info" size="large" @click="saveBaseinfo" v-if="currentStep == 3">提 交
+            </van-button>
+        </div>
         <!-- 弹框选项开始 -->
         <van-popup v-model="showSchoolPopView" round position="bottom">
             <van-picker show-toolbar title=""
@@ -327,8 +331,8 @@
             }
         },
         created() {
-            this.modify = this.$route.query.modify,
-                this.initSelectOptions()
+            this.modify = this.$route.query.modify
+            this.initSelectOptions()
         },
         methods: {
             previous() {
@@ -477,6 +481,20 @@
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+    .mainDiv {
+        padding: 2rem 1rem 2rem 1rem;
 
+        .title {
+            font-size: 1.8rem;
+        }
+    }
+
+    .buttonDiv {
+        padding: 2rem 1rem 2rem 1rem;
+
+        .button {
+            margin: 0.3rem 0rem;
+        }
+    }
 </style>
