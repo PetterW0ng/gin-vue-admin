@@ -4,7 +4,7 @@
                    :fixed=true
                    :border=false
                    style="height:2.5rem"/>
-      <van-cell-group border=false class="mainCellGroup">
+      <van-cell-group class="mainCellGroup">
           <van-cell-group class="childCellGroup">
               <van-button type="info" size="large" plain @click="goToBaseInfo">完善基本信息</van-button>
           </van-cell-group>

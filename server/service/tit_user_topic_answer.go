@@ -140,7 +140,7 @@ func SaveTitUserAnswer(userTopicAnswerRequest request.UserTopicAnswer, titUserId
 		// topicTitle 加上 多选 和 选填 属性
 		var multipleSelect string
 		if topicOption.TopicType == 2 {
-			multipleSelect = "[多选]"
+			multipleSelect = "【多选】"
 		}
 		topicTitle := multipleSelect + topicOption.Title
 		userTopicAndAnswers[i] = model.TitUserTopicAnswer{TitUserId: int(titUserId), TitTopicId: topicId, TopicTitle: topicTitle, TopicOptionIds: string(topicOptionIds[1 : len(topicOptionIds)-1]), TopicOptionSelected: topicOptionSelected,

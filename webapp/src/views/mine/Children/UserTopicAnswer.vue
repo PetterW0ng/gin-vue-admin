@@ -3,10 +3,10 @@
         <van-nav-bar :title="title"
                      :fixed=true
                      :border=false
-                     style="height: 2.5rem"/>
+                     style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
             <div v-for="(item,index) in getUserTopicAnswers" :key="index">
-                <van-cell-group border=false>
+                <van-cell-group :border=false>
                     <div class="topicTitle">
                         {{index+1}} . {{item.topicTitle}}
                     </div>
@@ -18,7 +18,7 @@
                         </van-checkbox>
                     </van-checkbox-group>
 
-                    <van-field v-if="item.answer != ''" disabled v-model="item.answer" class="options"
+                    <van-field v-if="item.answer != ''" disabled :value="item.answer" class="options"
                                rows="2" autosize type="textarea"
                                maxlength="50"
                                placeholder="请输入留言"
@@ -86,20 +86,24 @@
 </script>
 
 <style lang="less" scoped>
+    .van-nav-bar__title {
+        font-size: 1rem;
+    }
+
     .mainDiv {
         padding-top: 3rem;
 
         .topicTitle {
-            font-size: 1.1rem;
-            padding: 0.3rem;
-            line-height: 1.6rem;
+            font-size: 0.85rem;
+            padding: 0.3rem 1.5rem;
+            line-height: 1.4rem;
         }
 
         .options {
-            padding: 0.7rem;
-            line-height: 1.6rem;
+            font-size: 0.8rem;
+            padding: 0.2rem 2rem;
+            line-height: 1.3rem;
         }
-
         .buttonDiv {
             padding: 2rem 1rem 2rem 1rem;
 

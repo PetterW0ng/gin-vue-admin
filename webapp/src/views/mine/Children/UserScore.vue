@@ -3,7 +3,7 @@
         <van-nav-bar title="评估结果"
                      :fixed=true
                      :border=false
-                     style="height: 2.5rem"/>
+                     style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
             <!-- 雷达图 -->
             <div id="radarChartDiv" style="width: 100%;height: 400px"></div>
@@ -249,6 +249,10 @@
 </script>
 
 <style lang="less" scoped>
+    .van-nav-bar__title {
+        font-size: 1rem;
+    }
+
     .mainDiv {
         padding-top: 3rem;
     }

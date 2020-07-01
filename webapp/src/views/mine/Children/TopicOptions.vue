@@ -3,14 +3,14 @@
         <van-nav-bar :title="title"
                      :fixed=true
                      :border=false
-                     style="height: 2.5rem"/>
+                     style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
             <!-- 问卷题 -->
             <div class="topicDiv" v-for="(item,index) in topicAndOptions" :key="item.ID">
-                <van-cell-group v-if="index == page" border=false>
+                <van-cell-group v-if="index == page" :border=false>
                     <div class="topicTitle">
-                        {{index+1}} . {{item.isRequired == 2 ? "[选填]" + (item.topicType == 2 ? "[多选]"+item.title :
-                        item.title) : (item.topicType == 2 ? "[多选]"+item.title : item.title)}}
+                        {{index+1}} . {{item.isRequired == 2 ? "【选填】" + (item.topicType == 2 ? "【多选】"+item.title :
+                        item.title) : (item.topicType == 2 ? "【多选】"+item.title : item.title)}}
                     </div>
 
                     <van-radio-group v-model="selects.radio" v-if="item.topicType == 1" class="options">
@@ -29,10 +29,12 @@
                     <van-field v-model="selects.others" v-if="item.topicType == 3 || othersSelected" class="options"
                                rows="2" autosize type="textarea"
                                maxlength="50"
-                               placeholder="请输入留言"
+                               placeholder="请填写"
                                show-word-limit/>
-                    <van-cell :value="'当前进度: ' + (index+1) + ' / '+ (topicAndOptions.length)"/>
+
                     <div class="buttonDiv">
+                        <van-cell :border="false" style="padding-bottom: 0.1rem"
+                                  :value="'当前进度: ' + (index+1) + ' / '+ (topicAndOptions.length)"/>
                         <van-button class="button" type="info" size="large" @click="toBack(index)" v-if="index != 0">
                             上一步
                         </van-button>
@@ -218,26 +220,35 @@
 </script>
 
 <style lang="less" scoped>
+    .van-nav-bar__title {
+        font-size: 1rem;
+    }
+
     .mainDiv {
-        padding-top: 3rem;
+        padding-top: 3.6rem;
 
         .topicDiv {
             .topicTitle {
-                font-size: 1.1rem;
-                padding: 0.3rem;
-                line-height: 1.6rem;
+                font-size: 0.85rem;
+                padding: 0.3rem 1.5rem;
+                line-height: 1.4rem;
             }
 
             .options {
-                padding: 0.7rem;
-                line-height: 1.6rem;
+                font-size: 0.8rem;
+                padding: 0.5rem 2rem;
+                line-height: 1.3rem;
             }
 
             .buttonDiv {
-                padding: 2rem 1rem 2rem 1rem;
+                padding: 0.3rem 1rem 2rem 1rem;
 
                 .button {
-                    margin: 0.3rem 0rem;
+                    margin: 0.2rem 0rem;
+                }
+
+                .van-cell__value--alone {
+                    text-align: center;
                 }
             }
         }

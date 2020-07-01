@@ -3,12 +3,12 @@
         <van-nav-bar title="评估结果"
                      :fixed=true
                      :border=false
-                     style="height: 2.5rem"/>
+                     style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
             <div align="center">题目全部答题完毕后，</div>
             <div align="center"> 可以查看结果！</div>
 
-            <van-cell-group border=false class="mainCellGroup">
+            <van-cell-group class="mainCellGroup">
                 <van-cell-group class="childCellGroup" v-if="this.userInfo.baseinfoId == 0">
                     <van-button type="info" size="large" plain @click="goToBaseInfo">完善基本信息</van-button>
                 </van-cell-group>
@@ -61,6 +61,10 @@
 </script>
 
 <style lang="less" scoped>
+    .van-nav-bar__title {
+        font-size: 1rem;
+    }
+
     .mainDiv {
         padding-top: 10rem;
         align-content: center;

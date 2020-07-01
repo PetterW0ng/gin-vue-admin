@@ -3,11 +3,12 @@
         <van-nav-bar title="完善基本信息"
                      :fixed=true
                      :border=false
-                     style="height:2.5rem"/>
+                     style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
             <!-- 教育背景 -->
             <van-cell-group v-show="currentStep == 1">
-                <van-cell title="" value="" label="1. 基本信息" class="title"/>
+                <van-cell title="" value="" class="title" label="1. 教育背景"/>
+                <van-cell title="请填写最高学历信息" class="tips"/>
                 <van-field v-model="school"
                            label="毕业学校"
                            readonly is-link
@@ -30,10 +31,12 @@
             </van-cell-group>
             <!-- 工作单位 -->
             <van-cell-group v-show="currentStep == 2">
-                <van-cell title="" value="" label="2. 工作单位"/>
+                <van-cell title="" value="" class="title" label="2. 工作单位"/>
+                <van-cell title="请填写目前工作情况" class="tips"/>
                 <van-field name="radio" required label="工作状态">
                     <template #input>
-                        <van-radio-group v-model="baseinfo.workingState" direction="horizontal">
+                        <van-radio-group v-model="baseinfo.workingState" @change="workingStateChangeHandle"
+                                         direction="horizontal" style="display:inline-block">
                             <van-radio v-for="(item, index) in workingStateOption" :name="item.propertyValue"
                                        :value="item.propertyValue" :key="item.propertyValue">{{item.text}}
                             </van-radio>
@@ -41,26 +44,26 @@
                     </template>
                 </van-field>
 
-                <van-field v-model="baseinfo.company"
+                <van-field v-model="baseinfo.company" :disabled="disabled"
                            label="工作单位"
                            required/>
-                <van-field v-model="areaSelected"
+                <van-field v-model="areaSelected" :disabled="disabled"
                            label="单位地域"
-                           @click="showAreaPopView = true"
+                           @click="showAreaPopViewH"
                            required readonly is-link/>
-                <van-field v-model="baseinfo.jobTitle"
+                <van-field v-model="baseinfo.jobTitle" :disabled="disabled"
                            label="职务职位" required/>
-                <van-field v-model="serviceType"
-                           label="单位服务模式"
-                           @click="showServiceTypePopView = true"
+                <van-field v-model="serviceType" :disabled="disabled"
+                           label="所在单位服务模式"
+                           @click="showServiceTypePopViewH"
                            required readonly is-link/>
-                <van-field v-model="income"
-                           label="月度收入水平"
-                           @click="showIncomePopView = true"
+                <van-field v-model="income" :disabled="disabled"
+                           label="我的月度收入水平"
+                           @click="showIncomePopViewH"
                            required readonly is-link/>
-                <van-field name="benefits" label="福利待遇" required>
+                <van-field name="benefits" label="我的福利待遇情况" required>
                     <template #input>
-                        <van-checkbox-group v-model="baseinfo.benefits" direction="horizontal">
+                        <van-checkbox-group v-model="baseinfo.benefits" :disabled="disabled" direction="horizontal">
                             <van-checkbox v-for="(item, index) in benefitsOption" :name="item.propertyValue"
                                           :value="item.propertyValue" :key="item.propertyValue" shape="square">
                                 {{item.text}}
@@ -68,7 +71,7 @@
                         </van-checkbox-group>
                     </template>
                 </van-field>
-                <van-field name="childType" label="服务儿童类型" required>
+                <van-field name="childType" label="我目前服务的儿童类型" required>
                     <template #input>
                         <van-checkbox-group v-model="baseinfo.childType" direction="horizontal">
                             <van-checkbox v-for="(item, index) in childTypeOption" :name="item.propertyValue"
@@ -79,13 +82,13 @@
                     </template>
                 </van-field>
                 <van-field v-model="childAge"
-                           label="主要服务儿童年龄段"
+                           label="我目前主要服务儿童年龄段"
                            @click="showChildAgePopView = true"
                            required readonly is-link/>
             </van-cell-group>
             <!-- 培训经历 -->
             <van-cell-group v-show="currentStep == 3">
-                <van-cell title="" value="" label="3.培训经历"/>
+                <van-cell title="" value="" class="title" label="3.培训经历"/>
                 <van-field required label="我到目前为止参加培训数量（一周内的算作短期培训）">
                     <template #input>
                         <van-checkbox-group v-model="baseinfo.trainingNumber" direction="horizontal">
@@ -100,9 +103,9 @@
                            label="我去年在培训上的花费"
                            @click="showTrainingFeePopView = true"
                            required readonly is-link/>
-                <van-cell title="" value="" label="我以往培训详情，请描述"/>
+                <van-cell title="我以往培训详情，请描述"/>
                 <van-cell-group v-for="(item, index) in trainingInfos" :key="index">
-                    <van-cell :title="'培训'+(index + 1)" icon="shop-o">
+                    <van-cell :title="'培训'+(index + 1)" class="px-title" icon="shop-o">
                         <template #right-icon>
                             <van-icon name="clear" style="line-height: inherit;" @click="removeTrainingInfo(index)"/>
                         </template>
@@ -225,6 +228,7 @@
     export default {
         data() {
             return {
+                disabled: true,
                 showSchoolPopView: false,
                 schoolColumns: [],
 
@@ -259,7 +263,7 @@
                 showDateTimePopView: false,
                 currentDate: new Date('2000/01/01'),
                 minDate: new Date('1949/01/01'),
-                maxDate: new Date('2019/12/31'),
+                maxDate: new Date(),
                 //1:begin  2:end
                 timePickerType: 0,
                 timePickerNum: 0,
@@ -325,7 +329,7 @@
             trainingInfos() {
                 let newArr = [...this.baseinfo.trainingInfos]
                 newArr.map(el => {
-                    return el.beginTimeStr = Moment(el.beginTime).format('YYYY-MM-DD'), el.endTimeStr = Moment(el.endTime).format('YYYY-MM-DD'), el.paymentWayStr = this.getPropertyName(this.paymentWayColumns, el.paymentWay)
+                    return el.beginTimeStr = el.beginTime ? Moment(el.beginTime).format('YYYY-MM-DD') : "", el.endTimeStr = el.endTime ? Moment(el.endTime).format('YYYY-MM-DD') : "", el.paymentWayStr = this.getPropertyName(this.paymentWayColumns, el.paymentWay)
                 })
                 return newArr
             }
@@ -335,6 +339,28 @@
             this.initSelectOptions()
         },
         methods: {
+            workingStateChangeHandle(value) {
+                if (value == 2) {
+                    this.disabled = true
+                } else {
+                    this.disabled = false
+                }
+            },
+            showAreaPopViewH() {
+                if (!this.disabled) {
+                    this.showAreaPopView = true
+                }
+            },
+            showIncomePopViewH() {
+                if (!this.disabled) {
+                    this.showIncomePopView = true
+                }
+            },
+            showServiceTypePopViewH() {
+                if (!this.disabled) {
+                    this.showServiceTypePopView = true
+                }
+            },
             previous() {
                 this.currentStep -= 1
             },
@@ -482,14 +508,35 @@
 </script>
 
 <style lang="less" scoped>
-    .mainDiv {
-        padding: 2rem 1rem 2rem 1rem;
+    .van-nav-bar__title {
+        font-size: 1rem;
+    }
 
-        .title {
-            font-size: 1.8rem;
+    .mainDiv {
+        padding: 3.6rem 1rem 1rem 1rem;
+
+        .title .van-cell__label {
+            color: #108EE9;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .px-title .van-cell__title {
+            color: #8c939d;
+        }
+
+        .tips {
+            color: #ea0b30;
+            font-size: 0.65rem;
         }
     }
 
+    /*.van-cell__title .van-field__label{
+        font-size: 0.85rem;
+    }
+    .van-field__body{
+        font-size: 0.8rem;
+    }*/
     .buttonDiv {
         padding: 2rem 1rem 2rem 1rem;
 
