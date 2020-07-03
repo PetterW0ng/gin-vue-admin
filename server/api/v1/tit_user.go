@@ -139,7 +139,11 @@ func TitUserRegister(c *gin.Context) {
 			global.GVA_LOG.Error("用户注册失败了", err)
 			response.FailWithMessage("手机号已存在", c)
 		} else {
-			response.OkWithMessage("注册成功", c)
+			if err, u := service.FindTitUserByPhone(rr.Telphone); err == nil {
+				generateTitUserToke(c, u)
+			} else {
+				response.Fail(c)
+			}
 		}
 	} else {
 		response.FailWithMessage("验证码不正确", c)

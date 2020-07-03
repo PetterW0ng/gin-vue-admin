@@ -41,7 +41,7 @@
                 </van-cell-group>
             </van-cell-group>
             <div class="buttonDiv">
-                <van-button class="button" type="info" size="large" @click="goModifyBaseinfo">重新填写</van-button>
+                <van-button class="button" type="info" size="large" @click="goModifyBaseinfo">修改</van-button>
             </div>
         </div>
     </div>

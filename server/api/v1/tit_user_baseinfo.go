@@ -3,6 +3,7 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
+	"gin-vue-admin/global"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -154,6 +155,7 @@ func AddTitUserBaseinfo(c *gin.Context) {
 			titTrainingInfoList = append(titTrainingInfoList, model.TitTrainingInfo{TitUserBaseinfoId: int(userBaseinfo.ID), TrainingCourse: value.TrainingCourse, BeginTime: value.BeginTime, EndTime: value.EndTime, PaymentWay: value.PaymentWay})
 		}
 		if err := service.BatchAddTrainingInfo(titTrainingInfoList); err != nil {
+			global.GVA_LOG.Error("添加培训信息失败， ", err)
 			response.FailWithMessage(fmt.Sprintf("添加培训信息失败，%v", err), c)
 			return
 		}
@@ -234,7 +236,7 @@ func QueryTitUserBaseinfo(c *gin.Context) {
 			}
 
 			tubtR := resp.TitUserBaseinfoTraining{
-				School:           dictGroup["school"][tub.School], // int 转 string
+				School:           tub.School, // int 转 string
 				MajorsStudied:    dictGroup["study_major"][tub.MajorsStudied],
 				HighestEducation: dictGroup["highest_education"][tub.HighestEducation],
 				SchoolSystem:     dictGroup["school_system"][tub.SchoolSystem],
@@ -298,6 +300,7 @@ func ModifyTitUserBaseinfo(c *gin.Context) {
 			titTrainingInfoList = append(titTrainingInfoList, model.TitTrainingInfo{TitUserBaseinfoId: int(userBaseinfo.ID), TrainingCourse: value.TrainingCourse, BeginTime: value.BeginTime, EndTime: value.EndTime, PaymentWay: value.PaymentWay})
 		}
 		if err := service.BatchModifyTrainingInfo(titTrainingInfoList); err != nil {
+			global.GVA_LOG.Error("添加培训信息失败， ", err)
 			response.FailWithMessage(fmt.Sprintf("添加培训信息失败，%v", err), c)
 			return
 		}

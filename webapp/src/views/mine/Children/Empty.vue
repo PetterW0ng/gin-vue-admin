@@ -5,14 +5,27 @@
                      :border=false
                      style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
-            <div align="center">题目全部答题完毕后，</div>
-            <div align="center"> 可以查看结果！</div>
-
-            <van-cell-group class="mainCellGroup">
+            <div align="center"><img src="../../../images/mine/main.png"/></div>
+            <div align="center" class="gantan"><img src="../../../images/mine/gantan.png"/></div>
+            <div align="center" style="padding-top: 10px;font-size: 22px">还有未完成内容</div>
+            <div align="center" style="padding-top: 75px;font-size: 18px;color: #A0A0A0">填写完成后可查看评估结果</div>
+            <div align="center"><img src="../../../images/mine/xiayibu.png"/></div>
+            <div align="center" class="topicDiv" v-if="this.userInfo.baseinfoId == 0" @click="goToBaseInfo">《完善基本信息》
+            </div>
+            <div align="center" class="topicDiv" v-if="this.userInfo.jobInfoNum == 0" @click="goToPage('jobInfo')">
+                《职业选择和体验》
+            </div>
+            <div align="center" class="topicDiv" v-if="this.userInfo.perfessionNum == 0"
+                 @click="goToPage('perfession')">《专业理解》
+            </div>
+            <div align="center" class="topicDiv" v-if="this.userInfo.industryNum == 0" @click="goToPage('industry')">
+                《行业观点》
+            </div>
+            <!--<van-cell-group class="mainCellGroup">
                 <van-cell-group class="childCellGroup" v-if="this.userInfo.baseinfoId == 0">
                     <van-button type="info" size="large" plain @click="goToBaseInfo">完善基本信息</van-button>
                 </van-cell-group>
-                <!-- 订单相关-->
+                &lt;!&ndash; 订单相关&ndash;&gt;
                 <van-cell-group class="childCellGroup" v-if="this.userInfo.jobInfoNum == 0">
                     <van-button type="info" size="large" plain @click="goToPage('jobInfo')">职业选择和体验</van-button>
                 </van-cell-group>
@@ -24,7 +37,7 @@
                 <van-cell-group class="childCellGroup" v-if="this.userInfo.industryNum == 0">
                     <van-button type="info" size="large" plain @click="goToPage('industry')">行业观点</van-button>
                 </van-cell-group>
-            </van-cell-group>
+            </van-cell-group>-->
         </div>
     </div>
 </template>
@@ -36,6 +49,9 @@
         name: "emptyScore",
         computed: {
             ...mapState(['userInfo']),
+        },
+        created() {
+
         },
         methods: {
             goToPage(topicType) {
@@ -66,10 +82,19 @@
     }
 
     .mainDiv {
-        padding-top: 10rem;
+        padding-top: 5rem;
         align-content: center;
         font-size: 1.8rem;
         height: 100%;
+
+        .gantan {
+            padding-top: 62px;
+        }
+
+        .topicDiv {
+            font-size: 18px;
+            colo
+        }
 
         .mainCellGroup {
             padding: 5rem 2rem 5rem 2rem;

@@ -9,13 +9,11 @@
             <van-cell-group v-show="currentStep == 1">
                 <van-cell title="" value="" class="title" label="1. 教育背景"/>
                 <van-cell title="请填写最高学历信息" class="tips"/>
-                <van-field v-model="school"
+                <van-field v-model="baseinfo.school"
                            label="毕业学校"
-                           readonly is-link
-                           @click="showSchoolPopView = true"
                            required/>
                 <van-field :value="majorsStudied"
-                           label="所修专业" is-link
+                           label="所修专业" is-link readonly
                            @click="showMajorsStudiedView = true"
                            required/>
                 <van-field :value="highestEducation"
@@ -43,7 +41,6 @@
                         </van-radio-group>
                     </template>
                 </van-field>
-
                 <van-field v-model="baseinfo.company" :disabled="disabled"
                            label="工作单位"
                            required/>
@@ -111,24 +108,24 @@
                         </template>
                     </van-cell>
                     <van-field v-model="item.trainingCourse"
-                               label="培训课程"/>
+                               label="培训课程" required/>
                     <van-field v-model="item.beginTimeStr" is-link readonly @click="handleSelectTime(1, index)"
-                               label="开始时间"/>
+                               label="开始时间" required/>
                     <van-field v-model="item.endTimeStr" is-link readonly @click="handleSelectTime(2, index)"
-                               label="结束时间"/>
+                               label="结束时间" required/>
                     <van-field v-model="item.paymentWayStr"
                                label="付费方式"
                                @click="handlePaymentWay(index)"
-                               readonly is-link/>
+                               readonly is-link required/>
                 </van-cell-group>
                 <van-button plain hairline type="info" size="large" @click="addTrainingInfo">添加培训经历</van-button>
             </van-cell-group>
         </div>
         <div class="buttonDiv">
-            <van-button class="button" type="info" size="large" @click="previous" v-if="currentStep > 1">上一步
+            <van-button class="button" type="info" size="large" @click="saveBaseinfo" v-if="currentStep == 3">提 交
             </van-button>
             <van-button class="button" type="info" size="large" @click="next" v-if="currentStep < 3">下一步</van-button>
-            <van-button class="button" type="info" size="large" @click="saveBaseinfo" v-if="currentStep == 3">提 交
+            <van-button class="button" type="info" size="large" @click="previous" v-if="currentStep > 1">上一步
             </van-button>
         </div>
         <!-- 弹框选项开始 -->
@@ -188,7 +185,7 @@
                     :columns="areaColumns"
                     @cancel="showAreaPopView = false"
                     @confirm="onConfirmArea" />-->
-            <van-area :area-list="areas" ref="areaSelectPicker" title="" :value="baseinfo.area"
+            <van-area :area-list="areas" ref="areaSelectPicker" id="areaSelectPicker" title="" :value="baseinfo.area"
                       @cancel="showAreaPopView = false"
                       @confirm="onConfirmArea"/>
         </van-popup>
@@ -220,7 +217,7 @@
 
 <script>
     import {mapState} from "vuex";
-    import {selectOptions, areaList, saveBaseinfo, initUserBaseinfo} from "../../../serve/api";
+    import {selectOptions, getArea, saveBaseinfo, initUserBaseinfo} from "../../../serve/api";
     import areas from '../../../config/area.js'
     import {Toast} from "vant";
     import Moment from "moment";
@@ -279,7 +276,7 @@
                 // 基本信息
                 baseinfo: {
                     // 教育背景
-                    school: 0,
+                    school: '',
                     majorsStudied: 0,
                     highestEducation: 0,
                     schoolSystem: 0,
@@ -338,6 +335,8 @@
             this.modify = this.$route.query.modify
             this.initSelectOptions()
         },
+        mounted() {
+        },
         methods: {
             workingStateChangeHandle(value) {
                 if (value == 2) {
@@ -365,7 +364,58 @@
                 this.currentStep -= 1
             },
             next() {
-                this.currentStep += 1
+                let validated = true
+                if (this.currentStep == 1) {
+                    if (this.baseinfo.school.length == 0) {
+                        validated = false
+                        Toast.fail("毕业学校为必填项!")
+                    } else if (this.baseinfo.majorsStudied == 0) {
+                        validated = false
+                        Toast.fail("所修专业为必填项!")
+                    } else if (this.baseinfo.highestEducation == 0) {
+                        validated = false
+                        Toast.fail("最高学历为必填项!")
+                    } else if (this.baseinfo.schoolSystem == 0) {
+                        validated = false
+                        Toast.fail("所上学制为必填项!")
+                    }
+                } else if (this.currentStep == 2) {
+                    if (this.baseinfo.workingState == 0) {
+                        validated = false
+                        Toast.fail("工作状态为必填项!")
+                    } else if (this.baseinfo.workingState == 1) {
+                        if (this.baseinfo.company.length == 0) {
+                            validated = false
+                            Toast.fail("工作单位为必填项!")
+                        } else if (this.baseinfo.area.length == 0) {
+                            validated = false
+                            Toast.fail("单位地域为必填项!")
+                        } else if (this.baseinfo.jobTitle.length == 0) {
+                            validated = false
+                            Toast.fail("职务职位为必填项!")
+                        } else if (this.baseinfo.serviceType == 0) {
+                            validated = false
+                            Toast.fail("服务模式为必填项!")
+                        } else if (this.baseinfo.income == 0) {
+                            validated = false
+                            Toast.fail("月度收入水平为必填项!")
+                        } else if (this.baseinfo.benefits.length == 0) {
+                            validated = false
+                            Toast.fail("福利待遇情况为必填项!")
+                        }
+                    }
+                    if (this.baseinfo.childType.length == 0) {
+                        validated = false
+                        Toast.fail("儿童类型为必填项!")
+                    } else if (this.baseinfo.childAge == 0) {
+                        validated = false
+                        Toast.fail("儿童年龄段为必填项!")
+                    }
+                } else {
+                }
+                if (validated) {
+                    this.currentStep += 1
+                }
             },
             removeTrainingInfo(index) {
                 this.baseinfo.trainingInfos.splice(index, 1)
@@ -434,7 +484,7 @@
                 this.showServiceTypePopView = false;
             },
             onConfirmArea(value, indexs) {
-                this.areaSelected = value[0].name + "/" + value[1].name + "/" + value[2].name
+                this.areaSelected = value[0].name + value[1].name + value[2].name
                 this.baseinfo.area = value[2].code
                 this.showAreaPopView = false;
             },
@@ -488,20 +538,54 @@
                 obj.benefits = obj.benefits.split(',').map(Number)
                 obj.childType = obj.childType.split(',').map(Number)
                 obj.trainingNumber = obj.trainingNumber.split(',').map(Number)
+                if (obj.area.length > 0) {
+                    this.initAreas(obj.area)
+                }
+                if (!obj.trainingInfos) {
+                    obj.trainingInfos = []
+                }
                 this.baseinfo = obj
-                /*let v = this.$refs.areaSelectPicker;
-                let value = v.getValues();
-                this.areaSelected = value[0].name + "/" + value[1].name + "/" + value[2].name;
-                console.log(this.baseinfo)*/
+
             },
-            async initAreas() {
-                let result = await areaList();
-                this.areaColumns = result.data.provinces
+            async initAreas(id) {
+                let result = await getArea(id);
+                this.areaSelected = result.data.area
             },
             async saveBaseinfo() {
-                let result = await saveBaseinfo(this.baseinfo)
-                Toast.success("保存成功！")
-                this.$router.push({path: "/home"});
+                let validated = true
+                if (this.baseinfo.trainingNumber.length == 0) {
+                    validated = false
+                    Toast.fail("参加培训数量为必填项！")
+                } else if (this.baseinfo.trainingFee == 0) {
+                    validated = false
+                    Toast.fail("我去年在培训上的花费为必填项！")
+                } else if (this.trainingInfos.length > 0) {
+                    this.trainingInfos.forEach((item, index) => {
+                        if (item.trainingCourse == undefined || item.trainingCourse.length == 0) {
+                            Toast.fail("培训" + (index + 1) + ": 培训课程不能为空！")
+                            validated = false
+                            return
+                        } else if (item.beginTimeStr.length == 0) {
+                            Toast.fail("培训" + (index + 1) + ": 开始日期不能为空！")
+                            validated = false
+                            return
+                        } else if (item.endTimeStr.length == 0) {
+                            Toast.fail("培训" + (index + 1) + ": 结束日期不能为空！")
+                            validated = false
+                            return
+                        } else if (item.paymentWayStr.length == 0) {
+                            Toast.fail("培训" + (index + 1) + ": 付费方式不能为空！")
+                            validated = false
+                            return
+                        }
+                    })
+                }
+                if (validated) {
+                    let result = await saveBaseinfo(this.baseinfo)
+                    Toast.success("保存成功！")
+                    this.$router.push({path: "/home"});
+
+                }
             }
         }
     }

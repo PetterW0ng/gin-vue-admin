@@ -3,7 +3,7 @@ package request
 import "time"
 
 type TitUserBaseinfoTraining struct {
-	School           int            `json:"school" form:"school" `
+	School           string         `json:"school" form:"school" `
 	MajorsStudied    int            `json:"majorsStudied" form:"majorsStudied" `
 	HighestEducation int            `json:"highestEducation" form:"highestEducation" `
 	SchoolSystem     int            `json:"schoolSystem" form:"schoolSystem" `

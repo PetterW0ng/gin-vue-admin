@@ -58,3 +58,10 @@ func FindByPid(c *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("查询失败，%v", err), c)
 	}
 }
+
+func Area(c *gin.Context) {
+	id := c.Query("id")
+	area := service.GetAreaById(id).DisplayName
+	response.OkWithData(gin.H{"area": area}, c)
+
+}

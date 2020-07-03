@@ -12,7 +12,6 @@
                         {{index+1}} . {{item.isRequired == 2 ? "【选填】" + (item.topicType == 2 ? "【多选】"+item.title :
                         item.title) : (item.topicType == 2 ? "【多选】"+item.title : item.title)}}
                     </div>
-
                     <van-radio-group v-model="selects.radio" v-if="item.topicType == 1" class="options">
                         <van-radio v-for="(it, ix) in item.options" :name="it.ID" :key="ix" style="padding: 0.3em"
                                    @click="handleShowOthers($event,it.title)">{{it.title}}
@@ -35,14 +34,14 @@
                     <div class="buttonDiv">
                         <van-cell :border="false" style="padding-bottom: 0.1rem"
                                   :value="'当前进度: ' + (index+1) + ' / '+ (topicAndOptions.length)"/>
-                        <van-button class="button" type="info" size="large" @click="toBack(index)" v-if="index != 0">
-                            上一步
+                        <van-button class="button" type="info" size="large" @click="saveUserAnswer(index)"
+                                    v-if="index == (topicAndOptions.length -1)">提 交
                         </van-button>
                         <van-button class="button" type="info" size="large" @click="toNext(index,item.ID)"
                                     v-if="index != (topicAndOptions.length -1)">下一步
                         </van-button>
-                        <van-button class="button" type="info" size="large" @click="saveUserAnswer(index)"
-                                    v-if="index == (topicAndOptions.length -1)">提 交
+                        <van-button class="button" type="info" size="large" @click="toBack(index)" v-if="index != 0">
+                            上一步
                         </van-button>
                     </div>
                 </van-cell-group>
@@ -96,9 +95,9 @@
                         this.selects.others = ""
                     }
                 } else if (tgClassName === "van-checkbox") {
-                    if (title == "其他" && e.currentTarget.ariaChecked === "false") {
+                    if (title == "其他" && e.currentTarget.attributes["aria-checked"].value === "false") {
                         this.othersSelected = true
-                    } else if (title == "其他" && e.currentTarget.ariaChecked === "true") {
+                    } else if (title == "其他" && e.currentTarget.attributes["aria-checked"].value === "true") {
                         this.othersSelected = false
                         this.selects.others = ""
                     }
@@ -114,7 +113,7 @@
                 } else if (topicType == 'jobInfo') {
                     this.businessType = 1
                 } else {
-                    Toast.fail("没有对应的问题哦！")
+                    Toast.fail("没有对应的问题!")
                     return
                 }
 
@@ -180,8 +179,8 @@
                     } else if (topicType == 2 && this.selects.result.length == 0) {// 多选
                         Toast.fail("该题为必填项！")
                         return false;
-                    } else if (topicType == 3 && this.selects.others.length == 0) {// 问答
-                        Toast.fail("该题为必填项！")
+                    } else if ((topicType == 3 && this.selects.others.length == 0) || (this.othersSelected && this.selects.others.length == 0)) {// 问答
+                        Toast.fail("请填写内容！")
                         return false;
                     }
                     if (topicType == 1) {

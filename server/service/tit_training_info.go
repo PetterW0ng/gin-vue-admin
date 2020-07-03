@@ -72,7 +72,7 @@ func GetTitTrainingInfoInfoList(info request.PageInfo) (err error, list interfac
 func BatchAddTrainingInfo(trainingInfos []model.TitTrainingInfo) (err error) {
 	var buffer bytes.Buffer
 	batchInsert := "INSERT INTO `tit_training_infos` (`tit_user_baseinfo_id`,`training_course`,`begin_time`,`end_time`,`payment_way`) values "
-	if _, err = buffer.WriteString(batchInsert); err != nil {
+	if _, err = buffer.WriteString(batchInsert); err != nil || trainingInfos == nil {
 		return
 	}
 	db := global.GVA_DB

@@ -7,32 +7,35 @@
         <div class="mainDiv">
             <!-- 雷达图 -->
             <div id="radarChartDiv" style="width: 100%;height: 400px"></div>
-            <div id="recomand" style="padding:0.2em">
+            <div class="recomand">
                 <!-- 结果分析 -->
-                <div class="title">结果分析</div>
-                <van-cell :value="' 您在 ' + gtStandard + ' 方面的能力已满足职业要求，非常棒。'" v-if="gtStandard.length > 0"/>
-                <van-cell :value="' 您在 '+ ltStandard+' 方面的能力有所欠缺，还不能满足当前工作需要，建议学习以下内容进行提升：'"
+                <div class="mainTitle">结果分析</div>
+                <van-cell :value="' 您在' + gtStandard + ' 方面的能力已满足职业要求，非常棒。'" v-if="gtStandard.length > 0"/>
+                <van-cell :value="' 您在'+ ltStandard+' 方面的能力有所欠缺，还不能满足当前工作需要，建议学习以下内容进行提升：'"
                           v-if="ltStandard.length > 0"/>
                 <!-- 培训课程 -->
                 <div v-if="recommendCourses.length > 0">
                     <div class="title">培训课程</div>
-                    <div v-for="item in recommendCourses">
-                        <van-cell :title="item.recommendObject" icon="star-o" @click="goToStore(item.id)"/>
+                    <div v-for="item in recommendCourses" class="item">
+                        <van-cell :title="item.recommendObject" icon="star-o" is-link
+                                  style="padding-bottom: 0px;padding-top: 0.5rem" @click="goToStore(item.id)"/>
                     </div>
                 </div>
                 <!-- 阅读书籍 -->
                 <div v-if="recommendBooks.length > 0">
                     <div class="title">阅读书籍</div>
-                    <div v-for="item in recommendBooks">
-                        <van-cell :title="item.recommendObject" icon="notes-o"/>
+                    <van-cell-group v-for="item in recommendBooks" class="item">
+                        <van-cell :title="item.recommendObject" :border="false" icon="notes-o"
+                                  style="padding-bottom: 0px;padding-top: 0.5rem"/>
                         <van-cell :value="item.remark"/>
-                    </div>
+                    </van-cell-group>
                 </div>
                 <!-- 干预工具 -->
-                <div v-if="recommendTools.length > 0">
+                <div v-if="recommendTools.length > 0" style="padding-bottom: 1.5rem">
                     <div class="title">干预工具</div>
-                    <div v-for="item in recommendTools">
-                        <van-cell :title="item.recommendObject" icon="setting-o"/>
+                    <div v-for="item in recommendTools" class="item">
+                        <van-cell :title="item.recommendObject" icon="setting-o"
+                                  style="padding-bottom: 0px;padding-top: 0.5rem" is-link @click="goToStore(item.id)"/>
                     </div>
                 </div>
             </div>
@@ -76,12 +79,13 @@
                         }
                     },
                     "tooltip": {
-                        "show": true,
+                        "show": false,
                         "trigger": "item"
                     },
                     "legend": {
                         "show": true,
                         "icon": "circle",
+                        itemHeight: 8,
                         "left": "80%",
                         "top": "4%",
                         "orient": "horizontal",
@@ -93,7 +97,7 @@
                     },
                     "radar": {
                         "center": ["50%", "50%"],
-                        "radius": "70%",
+                        "radius": "60%",
                         "startAngle": 90,
                         "splitNumber": 4,
                         "shape": 'angle', // 拐点的样式，还可以取值'rect','angle'等
@@ -104,7 +108,7 @@
                         },
                         "axisLabel": {
                             "show": false,
-                            "fontSize": 18,
+                            "fontSize": 10,
                             "color": "#fff",
                             "fontStyle": "normal",
                             "fontWeight": "normal"
@@ -139,7 +143,7 @@
                         itemStyle: {
                             color: 'rgba(245, 166, 35, 1)',
                             borderColor: 'rgba(245, 166, 35, 0.3)',
-                            borderWidth: 10,
+                            borderWidth: 5,
                         },
                         "lineStyle": {
                             "normal": {
@@ -160,7 +164,7 @@
                             "normal": {
                                 color: 'rgba(19, 173, 255, 1)',
                                 "borderColor": "rgba(19, 173, 255, 0.4)",
-                                "borderWidth": 10
+                                "borderWidth": 5
                             }
                         },
                         "areaStyle": {
@@ -189,7 +193,15 @@
                 let arr = []
                 this.topicRelatedList.forEach(item => {
                     if (item.recommendType == 1) {//课程推荐
-                        arr.push(item)
+                        let hasV = false
+                        arr.forEach(im => {
+                            if (im.recommendObject == item.recommendObject) {
+                                hasV = true
+                            }
+                        })
+                        if (!hasV) {
+                            arr.push(item)
+                        }
                     }
                 })
                 return arr;
@@ -198,7 +210,15 @@
                 let arr = []
                 this.topicRelatedList.forEach(item => {
                     if (item.recommendType == 2) {//课程推荐
-                        arr.push(item)
+                        let hasV = false
+                        arr.forEach(im => {
+                            if (im.recommendObject == item.recommendObject) {
+                                hasV = true
+                            }
+                        })
+                        if (!hasV) {
+                            arr.push(item)
+                        }
                     }
                 })
                 return arr;
@@ -207,7 +227,15 @@
                 let arr = []
                 this.topicRelatedList.forEach(item => {
                     if (item.recommendType == 3) {//课程推荐
-                        arr.push(item)
+                        let hasV = false
+                        arr.forEach(im => {
+                            if (im.recommendObject == item.recommendObject) {
+                                hasV = true
+                            }
+                        })
+                        if (!hasV) {
+                            arr.push(item)
+                        }
                     }
                 })
                 return arr;
@@ -219,11 +247,10 @@
         methods: {
             async goToStore(relatedId) {
                 let r = await toStore(relatedId)
-                console.info(r + "--------------------")
                 if (r.data.url != "") {
                     location.href = r.data.url
                 } else {
-                    Toast.fail("暂无相关课程")
+                    Toast.fail("暂无相关课程!")
                 }
             },
             async getUserScore() {
@@ -237,7 +264,7 @@
                 }
                 this.topicRelatedList = result.data.topicRelatedList
                 indicator.forEach((e) => {
-                    this.option.radar.indicator.push({name: e, max: 10})
+                    this.option.radar.indicator.push({name: e.substr(0, 6) + "\n" + e.substr(6, e.length), max: 10})
                 })
                 this.option.series[0]["data"].push(result.data.standardScores)
                 this.option.series[1]["data"].push(result.data.userScores)
@@ -255,5 +282,23 @@
 
     .mainDiv {
         padding-top: 3rem;
+
+        .recomand {
+            .mainTitle {
+                padding: 0.4rem 0.75rem;
+                color: #108EE9;
+                font-weight: bold;
+            }
+        ;
+
+            .title {
+                padding: 0.8rem 1rem;
+                font-weight: bold;
+            }
+
+            .item {
+                padding: 0rem 0.85rem;
+            }
+        }
     }
 </style>
