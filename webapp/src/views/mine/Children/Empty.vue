@@ -21,23 +21,6 @@
             <div align="center" class="topicDiv" v-if="this.userInfo.industryNum == 0" @click="goToPage('industry')">
                 《行业观点》
             </div>
-            <!--<van-cell-group class="mainCellGroup">
-                <van-cell-group class="childCellGroup" v-if="this.userInfo.baseinfoId == 0">
-                    <van-button type="info" size="large" plain @click="goToBaseInfo">完善基本信息</van-button>
-                </van-cell-group>
-                &lt;!&ndash; 订单相关&ndash;&gt;
-                <van-cell-group class="childCellGroup" v-if="this.userInfo.jobInfoNum == 0">
-                    <van-button type="info" size="large" plain @click="goToPage('jobInfo')">职业选择和体验</van-button>
-                </van-cell-group>
-
-                <van-cell-group class="childCellGroup" v-if="this.userInfo.perfessionNum == 0">
-                    <van-button type="info" size="large" plain @click="goToPage('perfession')">专业理解</van-button>
-                </van-cell-group>
-
-                <van-cell-group class="childCellGroup" v-if="this.userInfo.industryNum == 0">
-                    <van-button type="info" size="large" plain @click="goToPage('industry')">行业观点</van-button>
-                </van-cell-group>
-            </van-cell-group>-->
         </div>
     </div>
 </template>
@@ -93,7 +76,7 @@
 
         .topicDiv {
             font-size: 18px;
-            colo
+            color: #0F8EE9;
         }
 
         .mainCellGroup {
