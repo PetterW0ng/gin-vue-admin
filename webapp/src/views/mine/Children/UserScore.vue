@@ -26,8 +26,9 @@
                     <div class="title">阅读书籍</div>
                     <van-cell-group v-for="item in recommendBooks" class="item">
                         <van-cell :title="item.recommendObject" :border="false" icon="notes-o"
-                                  style="padding-bottom: 0px;padding-top: 0.5rem"/>
-                        <van-cell :value="item.remark"/>
+                                  style="padding-bottom: 0px;padding-top: 0.7rem"/>
+                        <van-cell :value="item.remark"
+                                  style="font-size: 0.3rem;padding-left: 2.0rem;padding-top: 0.2rem"/>
                     </van-cell-group>
                 </div>
                 <!-- 干预工具 -->

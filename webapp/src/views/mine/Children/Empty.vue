@@ -75,8 +75,9 @@
         }
 
         .topicDiv {
-            font-size: 18px;
+            font-size: 16px;
             color: #0F8EE9;
+            padding-top: 8px;
         }
 
         .mainCellGroup {
