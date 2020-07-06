@@ -18,4 +18,5 @@ type TitUser struct {
 	JobInfoBatchNum             int       `json:"jobInfoNum" form:"jobInfoBatchNum" `
 	PerfessionKnowledgeBatchNum int       `json:"perfessionNum" form:"perfessionKnowledgeBatchNum" `
 	IndustryPerspectiveBatchNum int       `json:"industryNum" form:"industryPerspectiveBatchNum" `
+	IpAddress                   string    `json:"ipAddress" form:"ipAddress"`
 }

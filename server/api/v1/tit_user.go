@@ -134,7 +134,7 @@ func TitUserRegister(c *gin.Context) {
 	// 验证 验证码是否正确
 	cmd := global.GVA_REDIS.Get(rr.Telphone)
 	if cmd.Err() == nil && cmd.Val() == rr.VerificationCode {
-		user := model.TitUser{Username: rr.Username, Telphone: rr.Telphone, Gender: rr.Gender, Birthday: rr.Birthday}
+		user := model.TitUser{Username: rr.Username, Telphone: rr.Telphone, Gender: rr.Gender, Birthday: rr.Birthday, IpAddress: c.ClientIP()}
 		if err := service.CreateTitUser(user); err != nil {
 			global.GVA_LOG.Error("用户注册失败了", err)
 			response.FailWithMessage("手机号已存在", c)

@@ -4,8 +4,7 @@ import {Toast} from 'vant';
 import store from '../../store/store'
 
 const service = axios.create({
-    // baseURL: "/api/tit",
-    baseURL: "http://titserve.pkucarenjk.com/tit",
+    baseURL: process.env.VUE_APP_BASE_API,
     timeout: 6000
 })
 Toast.allowMultiple()
@@ -64,7 +63,7 @@ service.interceptors.response.use(
     },
     error => {
         closeLoading()
-        Toast.fail(error);
+        Toast.fail("接口请求失败，请联系管理员！");
         return Promise.reject(error)
     }
 )

@@ -11,7 +11,6 @@ import (
 // @param     user               model.TitUser
 // @auth                     （2020/04/05  20:22）
 // @return    err             error
-
 func CreateTitUser(user model.TitUser) (err error) {
 	err = global.GVA_DB.Create(&user).Error
 	return err

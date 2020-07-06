@@ -27,6 +27,7 @@ func DBTables() {
 		model.TitTopic{},
 		model.TitTopicOption{},
 		model.TitTopicRelated{},
+		model.TitRelatedClick{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }

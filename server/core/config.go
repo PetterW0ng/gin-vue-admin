@@ -5,16 +5,23 @@ import (
 	"gin-vue-admin/global"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"os"
+	"strings"
 )
 
-const defaultConfigFile = "config.yaml"
+const defaultConfigFile = "config.dev.yaml"
 
 func init() {
 	v := viper.New()
-	v.SetConfigFile(defaultConfigFile)
+	var configFile = defaultConfigFile
+	mode := os.Args[1]
+	if len(mode) > 0 {
+		configFile = strings.Replace(defaultConfigFile, "dev", mode, 1)
+	}
+	v.SetConfigFile(configFile)
 	err := v.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		panic(fmt.Errorf("Fatal error config file: %s , %s \n", configFile, err))
 	}
 	v.WatchConfig()
 
