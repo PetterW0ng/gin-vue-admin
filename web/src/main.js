@@ -14,6 +14,7 @@ import vueParticleLine from 'vue-particle-line'
 import 'vue-particle-line/dist/vue-particle-line.css'
 Vue.use(vueParticleLine)
 
+
 // time line css
 import '../node_modules/timeline-vuejs/dist/timeline-vuejs.css'
 

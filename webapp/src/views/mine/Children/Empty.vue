@@ -5,10 +5,10 @@
                      :border=false
                      style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv">
-            <div align="center"><img src="../../../images/mine/main.png"/></div>
+            <div align="center"><img src="../../../images/mine/main3x.png" style="width:70%"/></div>
             <div align="center" class="gantan"><img src="../../../images/mine/gantan.png"/></div>
             <div align="center" style="padding-top: 10px;font-size: 22px">还有未完成内容</div>
-            <div align="center" style="padding-top: 75px;font-size: 18px;color: #A0A0A0">填写完成后可查看评估结果</div>
+            <div align="center" style="padding-top: 45px;font-size: 18px;color: #A0A0A0">填写完成后可查看评估结果</div>
             <div align="center"><img src="../../../images/mine/xiayibu.png"/></div>
             <div align="center" class="topicDiv" v-if="this.userInfo.baseinfoId == 0" @click="goToBaseInfo">《完善基本信息》
             </div>
@@ -71,7 +71,7 @@
         height: 100%;
 
         .gantan {
-            padding-top: 62px;
+            padding-top: 40px;
         }
 
         .topicDiv {

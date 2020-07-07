@@ -2,7 +2,7 @@
     <div id="login">
         <div class="loginBox">
             <div class="auth-form">
-                <van-tabs v-model="active" animated :border="false">
+                <van-tabs v-model="active" animated :border="false" title-active-color="#108EE9">
                     <!-- 登录 -->
                     <van-tab title="登录">
                         <van-cell-group class="cellGroup" :border="false">
@@ -20,14 +20,14 @@
                                        placeholder="请输入验证码">
                                 <van-button slot="button"
                                             size="small"
-                                            type="primary"
+                                            plain hairline type="info"
                                             v-if="!loginCountDown"
                                             :disabled="loginCaptchaDisable"
                                             @click="sendVerifyCode(true)">发送验证码
                                 </van-button>
                                 <van-button slot="button"
                                             size="small"
-                                            type="primary"
+                                            plain hairline type="info"
                                             disabled=""
                                             v-model="login_captcha"
                                             v-else>已发送 {{loginCountDown}} s
@@ -74,14 +74,14 @@
                                        placeholder="请输入验证码">
                                 <van-button slot="button"
                                             size="small"
-                                            type="primary"
+                                            plain hairline type="info"
                                             v-if="!registerCountDown"
                                             :disabled="registerCaptchaDisable"
                                             @click="sendVerifyCode(false)">发送验证码
                                 </van-button>
                                 <van-button slot="button"
                                             size="small"
-                                            type="primary"
+                                            plain hairline type="info"
                                             disabled=""
                                             v-model="register.verificationCode"
                                             v-else>已发送 {{registerCountDown}} s
@@ -343,12 +343,13 @@
             },
             // 正则验证
             phoneRegex(number) {
-                return (/[1][3,4,5,6,7,8][0-9]{9}$/.test(number));
+                return (/[1][3,4,5,6,7,8,9][0-9]{9}$/.test(number));
             }
         }
     }
 </script>
 <style lang="less" scoped>
+
     #login {
         position: fixed;
         top: 0;
@@ -387,6 +388,11 @@
 
                 .van-tab .van-tab--active {
                     font-size: 22px;
+                    font-width: bold;
+                }
+
+                .van-tabs__line {
+                    background-color: #108EE9;
                 }
             }
 
@@ -419,7 +425,7 @@
 
     .checkBoxS {
         padding: 0.1rem;
-        font-size: 0.425rem;
+        font-size: 0.55rem;
     }
 
 </style>

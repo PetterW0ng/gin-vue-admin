@@ -1,7 +1,9 @@
 <template>
     <div class="mainDiv">
         <div class="topDiv">
-            <div align="left" style="padding-left: 34px;padding-top: 66px;font-size: 16px;color: #FFFFFF;">孤独症康复从业人员
+            <div align="left" style="padding-left: 34px;padding-top: 56px;font-size: 16px;color: #FFFFFF;">孤独症康复从业人员
+                <img src="../../images/home/tuichu3x.png"
+                     style="vertical-align:middle;width: 20px;height: 20px;margin-left: 8rem" @click="logoutHandle"/>
             </div>
             <div align="left" style="padding-left: 34px;padding-top: 10px;font-size: 26px;color: #FFFFFF;">
                 A-PKU职业能力评估系统
@@ -14,31 +16,34 @@
         <div class="container">
             <div class="item1Div" style="background-color: #CEEDFD" @click="goToPage('jobInfo')">
                 <div style="padding-left: 37px;font-size: 18px;font-weight: bold">职业选择和体验 <img
-                        src="../../images/home/link-arrow-blue.png" style="vertical-align:middle"/></div>
-                <div style="padding-left: 37px;color: #000000;padding-top: 6px;font-size: 16px">Career choice and
+                        src="../../images/home/link-arrow-blue3x.png"
+                        style="vertical-align:middle;width: 20px;height: 20px"/></div>
+                <div style="padding-left: 37px;color: #ABB3BB;padding-top: 6px;font-size: 16px">Career choice and
                     experience
                 </div>
             </div>
-            <img src="../../images/home/duigou.png" class="duigou" v-if="this.userInfo.jobInfoNum != 0"/>
+            <img src="../../images/home/duigou3x.png" class="duigou" v-if="this.userInfo.jobInfoNum != 0"/>
         </div>
         <div class="container">
             <div class="item2Div" style="background-color: #FFF4E5" @click="goToPage('perfession')">
                 <div style="padding-left: 37px;font-size: 18px;font-weight: bold">专业理解 <img
-                        src="../../images/home/link-arrow-orange.png" style="vertical-align:middle"/></div>
-                <div style="padding-left: 37px;color: #000000;padding-top: 6px;font-size: 16px">Professional
+                        src="../../images/home/link-arrow-orange3x.png"
+                        style="vertical-align:middle;width: 20px;height: 20px"/></div>
+                <div style="padding-left: 37px;color: #ABB3BB;padding-top: 6px;font-size: 16px">Professional
                     understanding
                 </div>
             </div>
-            <img src="../../images/home/duigou.png" class="duigou" v-if="this.userInfo.perfessionNum != 0"/>
+            <img src="../../images/home/duigou3x.png" class="duigou" v-if="this.userInfo.perfessionNum != 0"/>
         </div>
         <div class="container">
             <div class="item3Div" style="background-color: #D0DAF2" @click="goToPage('industry')">
                 <div style="padding-left: 37px;font-size: 18px;font-weight: bold">行业观点 <img
-                        src="../../images/home/link-arrow-purple.png" style="vertical-align:middle"/></div>
-                <div style="padding-left: 37px;color: #000000;padding-top: 6px;font-size: 16px">Industry point of view
+                        src="../../images/home/link-arrow-purple3x.png"
+                        style="vertical-align:middle;width: 20px;height: 20px"/></div>
+                <div style="padding-left: 37px;color: #ABB3BB;padding-top: 6px;font-size: 16px">Industry point of view
                 </div>
             </div>
-            <img src="../../images/home/duigou.png" class="duigou" v-if="this.userInfo.industryNum != 0"/>
+            <img src="../../images/home/duigou3x.png" class="duigou" v-if="this.userInfo.industryNum != 0"/>
         </div>
         <van-button round type="info" size="large" @click="goToMyScore"
                     style="margin-top: 25px;width: 70%;margin-bottom: 20px" text="查看评估结果"/>
@@ -63,7 +68,7 @@
       this.reloadUser()
     },
     methods: {
-        ...mapActions(['syncuserInfo']),
+        ...mapActions(['syncuserInfo', 'logout']),
         goToPage(topicType) {
             if (this.userInfo[topicType + "Num"] > 0) {
                 this.$router.push({path: `/userTopicAnswer/${topicType}`})
@@ -78,6 +83,10 @@
                 this.$router.push({name: 'userScore'})
             }
         },
+        logoutHandle() {
+            this.logout();
+            this.$router.push({name: 'login'})
+        },
         goToBaseInfo() {
             if (this.userInfo["baseinfoId"] > 0) {
                 this.$router.push({
@@ -87,7 +96,7 @@
                 this.$router.push({
                     'name': 'baseinfo'
                 });
-        }
+            }
       },
       async reloadUser() {
         let result = await loadUserInfo()
@@ -110,6 +119,8 @@
                 position: absolute;
                 top: 0px;
                 right: 22px;
+                width: 42px;
+                height: 27px;
             }
         }
 
@@ -137,7 +148,7 @@
             border-radius: 1em;
             padding-top: 37px;
             padding-bottom: 37px;
-            margin: 2rem 1rem 0rem 1rem;
+            margin: 1rem 1rem 0rem 1rem;
             text-align: left;
             -webkit-box-shadow: 0px 3px 0px #FFF4E5;
             -moz-box-shadow: 0px 3px 0px #FFF4E5;
@@ -149,7 +160,7 @@
             border-radius: 1em;
             padding-top: 37px;
             padding-bottom: 37px;
-            margin: 2rem 1rem 0rem 1rem;
+            margin: 1rem 1rem 0rem 1rem;
             text-align: left;
             -webkit-box-shadow: 0px 3px 0px #D0DAF2;
             -moz-box-shadow: 0px 3px 0px #D0DAF2;

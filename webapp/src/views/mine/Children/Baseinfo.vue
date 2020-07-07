@@ -12,10 +12,23 @@
                 <van-field v-model="baseinfo.school"
                            label="毕业学校"
                            required/>
-                <van-field :value="majorsStudied"
-                           label="所修专业" is-link readonly
-                           @click="showMajorsStudiedView = true"
-                           required/>
+                <!--                <van-field :value="majorsStudied"-->
+                <!--                           label="所修专业" is-link readonly-->
+                <!--                           @click="showMajorsStudiedView = true"-->
+                <!--                           required/>-->
+                <el-form>
+                    <el-form-item label="所修专业" required style="margin: 0px 10px 0px 7px;padding-right: 10px">
+                        <el-select v-model="baseinfo.majorsStudied" filterable clearable placeholder="所修专业"
+                                   style="margin-left:20px;width: 230px;">
+                            <el-option
+                                    v-for="item in majorsStudiedColumns"
+                                    :key="item.propertyValue"
+                                    :label="item.text"
+                                    :value="item.propertyValue">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
                 <van-field :value="highestEducation"
                            label="最高学历"
                            required is-link
@@ -595,7 +608,6 @@
     .van-nav-bar__title {
         font-size: 1rem;
     }
-
     .mainDiv {
         padding: 3.6rem 1rem 1rem 1rem;
 

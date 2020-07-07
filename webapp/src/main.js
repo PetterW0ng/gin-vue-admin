@@ -4,6 +4,7 @@ import router from './router/router'
 import store from './store/store'
 import FastClick from 'fastclick'
 import VTop from './components/backToTop/ToTop.vue'
+import 'element-ui/lib/theme-chalk/index.css';
 import './icons' // icon
 // 解决移动端点击延迟200ms的问题
 if ('addEventListener' in document) {
@@ -19,6 +20,14 @@ Vue.component('v-top', VTop);
 import waterfall from 'vue-waterfall2'
 
 Vue.use(waterfall)
+
+import {Select, Option, FormItem, Form} from 'element-ui'
+
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(FormItem)
+Vue.use(Form)
+
 
 Vue.config.productionTip = false
 

@@ -17,12 +17,15 @@
             <van-cell-group>
                 <van-cell title="" value="" class="title" label="2. 工作单位"/>
                 <van-cell title="工作状态" :value="userBaseinfo.workingState"/>
-                <van-cell title="工作单位" :value="userBaseinfo.company"/>
-                <van-cell title="单位地域" :value="userBaseinfo.area"/>
-                <van-cell title="职务职位" :value="userBaseinfo.jobTitle"/>
-                <van-cell title="所在单位服务模式" :value="userBaseinfo.serviceType"/>
-                <van-cell title="我的月度收入水平" :value="userBaseinfo.income"/>
-                <van-cell title="我的福利待遇情况" :value="userBaseinfo.benefits"/>
+                <div v-if="userBaseinfo.workingState == '在职'">
+                    <van-cell title="工作单位" :value="userBaseinfo.company"/>
+                    <van-cell title="单位地域" :value="userBaseinfo.area"/>
+                    <van-cell title="职务职位" :value="userBaseinfo.jobTitle"/>
+                    <van-cell title="所在单位服务模式" :value="userBaseinfo.serviceType"/>
+                    <van-cell title="我的月度收入水平" :value="userBaseinfo.income"/>
+                    <van-cell title="我的福利待遇情况" :value="userBaseinfo.benefits"/>
+                </div>
+
                 <van-cell title="我目前服务的儿童类型" :value="userBaseinfo.childType"/>
                 <van-cell title="我目前主要服务儿童年龄段" :value="userBaseinfo.childAge"/>
             </van-cell-group>

@@ -88,16 +88,16 @@
             handleShowOthers(e, title) {
                 let tgClassName = e.currentTarget.className;
                 if (tgClassName === "van-radio") {
-                    if (title == "其他") {
+                    if (title == "其他" || title == "比较满意，我希望更好的是") {
                         this.othersSelected = true
                     } else {
                         this.othersSelected = false
                         this.selects.others = ""
                     }
                 } else if (tgClassName === "van-checkbox") {
-                    if (title == "其他" && e.currentTarget.attributes["aria-checked"].value === "false") {
+                    if ((title == "其他" || title == "比较满意，我希望更好的是") && e.currentTarget.attributes["aria-checked"].value === "false") {
                         this.othersSelected = true
-                    } else if (title == "其他" && e.currentTarget.attributes["aria-checked"].value === "true") {
+                    } else if ((title == "其他" || title == "比较满意，我希望更好的是") && e.currentTarget.attributes["aria-checked"].value === "true") {
                         this.othersSelected = false
                         this.selects.others = ""
                     }

@@ -24,11 +24,11 @@
                 <!-- 阅读书籍 -->
                 <div v-if="recommendBooks.length > 0">
                     <div class="title">阅读书籍</div>
-                    <van-cell-group v-for="item in recommendBooks" class="item">
+                    <van-cell-group v-for="(item, index) in recommendBooks" class="item" :key="index">
                         <van-cell :title="item.recommendObject" :border="false" icon="notes-o"
                                   style="padding-bottom: 0px;padding-top: 0.7rem"/>
                         <van-cell :value="item.remark"
-                                  style="font-size: 0.3rem;padding-left: 2.0rem;padding-top: 0.2rem"/>
+                                  style="font-size: 0.55rem;padding-left: 2.0rem;padding-top: 0.2rem"/>
                     </van-cell-group>
                 </div>
                 <!-- 干预工具 -->
@@ -263,7 +263,9 @@
                 if (result.data.ltStandard) {
                     this.ltStandard = result.data.ltStandard
                 }
-                this.topicRelatedList = result.data.topicRelatedList
+                if (result.data.topicRelatedList) {
+                    this.topicRelatedList = result.data.topicRelatedList
+                }
                 indicator.forEach((e) => {
                     this.option.radar.indicator.push({name: e.substr(0, 6) + "\n" + e.substr(6, e.length), max: 10})
                 })

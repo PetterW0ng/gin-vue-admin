@@ -1,5 +1,5 @@
 import {
-    USER_INFO, USER_TOKEN
+    USER_INFO, USER_TOKEN, LOGIN_OUT
 } from './mutation-type'
 import {
     getLocalStore,
@@ -19,6 +19,9 @@ export default {
         commit(USER_TOKEN, {
             token
         });
+    },
+    logout({commit,}) {
+        commit(LOGIN_OUT, {});
     },
     // 2.如果本地存在Token 那么就自动登录
     autoLogin({

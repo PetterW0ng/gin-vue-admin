@@ -111,7 +111,8 @@ export default {
     // 6. 退出登录
     [LOGIN_OUT](state) {
         state.userInfo = {};
-        state.shopCart = {};
+        state.token = ''
         removeLocalStore('userInfo');
+        removeLocalStore('token');
     }
 }
