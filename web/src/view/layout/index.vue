@@ -5,17 +5,14 @@
       <el-aside class="main-cont main-left">
         <div class="tilte">
           <img alt class="logoimg" src="~@/assets/nav_logo.png" />
-          <h2 class="tit-text" v-if="isSider">Gin-Vue-Admin</h2>
+          <h2 class="tit-text" v-if="isSider"></h2>
         </div>
         <Aside class="aside" />
       </el-aside>
       <!-- 分块滑动功能 -->
       <el-main class="main-cont main-right">
         <transition :duration="{ enter: 800, leave: 100 }" mode="out-in" name="el-fade-in-linear">
-          <div
-            :style="{width: `calc(100% - ${isMobile?'0px':isCollapse?'54px':'220px'})`}"
-            class="topfix"
-          >
+          <div :style="{width: `calc(100% - ${isMobile?'0px':isCollapse?'54px':'220px'})`}" class="topfix">
             <el-header class="header-cont">
               <div @click="totalCollapse" class="menu-total">
                 <i class="el-icon-s-unfold" v-if="isCollapse"></i>
@@ -23,9 +20,10 @@
               </div>
               <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item
-                  :key="item.path"
-                  v-for="item in matched.slice(1,matched.length)"
-                >{{item.meta.title}}</el-breadcrumb-item>
+                        :key="item.path"
+                        v-for="item in matched.slice(1,matched.length)"
+                >{{item.meta.title}}
+                </el-breadcrumb-item>
               </el-breadcrumb>
               <div class="fl-right right-box">
                 <Search />
@@ -272,7 +270,7 @@ $mainHight: 100vh;
       // padding: 6px;
       // border-bottom: 1px solid #eee;
     }
-   
+
     &.el-main {
       overflow: auto;
       background: #fff;

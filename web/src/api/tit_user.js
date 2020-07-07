@@ -82,3 +82,12 @@ export const getTitUserList = (params) => {
         params
     })
 }
+
+
+export const findBaseInfo = (params) => {
+    return service({
+        url: "/user/getTitUserBaseInfo",
+        method: 'get',
+        params
+    })
+}

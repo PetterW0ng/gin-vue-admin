@@ -13,6 +13,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"math/rand"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -113,6 +115,86 @@ func GetTitUserList(c *gin.Context) {
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
 		}, c)
+	}
+}
+
+func GetTitUserBaseInfo(c *gin.Context) {
+	titUserId, _ := strconv.Atoi(c.Query("ID"))
+	if err, tu := service.GetTitUser(uint(titUserId)); err == nil {
+		if err, tub := service.GetTitUserBaseinfo(uint(tu.TitUserBaseinfoId)); err == nil {
+			dictGroup := service.GetGroupedDict()
+			var area string
+			if len(tub.Area) > 0 {
+				area = service.GetAreaById(tub.Area).DisplayName
+			} else {
+				area = ""
+			}
+			var benefits, childType, trainingTimes = strings.Split(tub.Benefits, ","), strings.Split(tub.ChildType, ","), strings.Split(tub.TrainingNumber, ",")
+			var benefitsStr, childTypeStr, trainingTimesStr string
+			for inx, v := range benefits {
+				i, _ := strconv.Atoi(v)
+				if inx == len(benefits)-1 {
+					benefitsStr += dictGroup["benefits"][i]
+				} else {
+					benefitsStr += dictGroup["benefits"][i] + "、"
+				}
+			}
+			for inx, v := range trainingTimes {
+				i, _ := strconv.Atoi(v)
+				if inx == len(benefits)-1 {
+					trainingTimesStr += dictGroup["training_number"][i]
+				} else {
+					trainingTimesStr += dictGroup["training_number"][i] + "、"
+				}
+
+			}
+			for inx, v := range childType {
+				i, _ := strconv.Atoi(v)
+				if inx == len(benefits)-1 {
+					childTypeStr += dictGroup["child_type"][i]
+				} else {
+					childTypeStr += dictGroup["child_type"][i] + "、"
+				}
+			}
+
+			tubtR := resp.TitUserBaseinfoTraining{
+				School:           tub.School, // int 转 string
+				MajorsStudied:    dictGroup["study_major"][tub.MajorsStudied],
+				HighestEducation: dictGroup["highest_education"][tub.HighestEducation],
+				SchoolSystem:     dictGroup["school_system"][tub.SchoolSystem],
+				WorkingState:     dictGroup["working_state"][tub.WorkingState],
+				Company:          tub.Company,
+				Area:             area,
+				JobTitle:         tub.JobTitle,
+
+				ServiceType: dictGroup["service_type"][tub.ServiceType],
+				Income:      dictGroup["income"][tub.Income],
+				Benefits:    benefitsStr,
+				ChildType:   childTypeStr,
+				ChildAge:    dictGroup["child_age"][tub.ChildAge],
+
+				TrainingNumber: trainingTimesStr,
+				TrainingFee:    dictGroup["training_fee"][tub.TrainingFee],
+			}
+			// 根据 TitUserBaseinfoId 查询 training 信息
+			trainingInfos := service.QueryTrainingInfoByBaseId(tu.TitUserBaseinfoId)
+			var trainingInfosReturn []resp.TrainingInfo
+			for _, item := range trainingInfos {
+				trainingInfosReturn = append(trainingInfosReturn, resp.TrainingInfo{
+					PaymentWay:     dictGroup["payment_way"][item.PaymentWay],
+					TrainingCourse: item.TrainingCourse,
+					BeginTime:      item.BeginTime,
+					EndTime:        item.EndTime,
+				})
+			}
+			tubtR.TrainingInfos = trainingInfosReturn
+			response.OkWithData(gin.H{"userBaseinfo": tubtR}, c)
+			return
+		} else {
+			response.FailWithMessage("该用户没有填写基本信息", c)
+		}
+	} else {
+		response.FailWithMessage(fmt.Sprintf("用户不存在或已删除，%v", err), c)
 	}
 }
 
@@ -228,7 +310,7 @@ func generateTitUserToke(c *gin.Context, user model.TitUser) {
 		response.FailWithMessage("获取token失败", c)
 		return
 	}
-	// 设置 用户 token 至 redis
+	// 设置用户 token 至 redis ，可以把用户拉入黑名单
 	if err := global.GVA_REDIS.Set(fmt.Sprintf("tit:token:%s", user.Telphone), token, time.Hour*24*7).Err(); err != nil {
 		response.FailWithMessage("设置登录状态失败", c)
 		return
