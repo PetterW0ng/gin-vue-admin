@@ -21,14 +21,6 @@ import waterfall from 'vue-waterfall2'
 
 Vue.use(waterfall)
 
-import {Select, Option, FormItem, Form} from 'element-ui'
-
-Vue.use(Select)
-Vue.use(Option)
-Vue.use(FormItem)
-Vue.use(Form)
-
-
 Vue.config.productionTip = false
 
 // 全局引入UI库 vant

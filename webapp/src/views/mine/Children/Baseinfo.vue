@@ -12,11 +12,11 @@
                 <van-field v-model="baseinfo.school"
                            label="毕业学校"
                            required/>
-                <!--                <van-field :value="majorsStudied"-->
-                <!--                           label="所修专业" is-link readonly-->
-                <!--                           @click="showMajorsStudiedView = true"-->
-                <!--                           required/>-->
-                <el-form>
+                <van-field :value="majorsStudied"
+                           label="所修专业" is-link readonly
+                           @click="showMajorsStudiedView = true"
+                           required/>
+                <!--<el-form>
                     <el-form-item label="所修专业" required style="margin: 0px 10px 0px 7px;padding-right: 10px">
                         <el-select v-model="baseinfo.majorsStudied" filterable clearable placeholder="所修专业"
                                    style="margin-left:20px;width: 230px;">
@@ -28,7 +28,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                </el-form>
+                </el-form>-->
                 <van-field :value="highestEducation"
                            label="最高学历"
                            required is-link
@@ -47,8 +47,9 @@
                 <van-field name="radio" required label="工作状态">
                     <template #input>
                         <van-radio-group v-model="baseinfo.workingState" @change="workingStateChangeHandle"
-                                         direction="horizontal" style="display:inline-block">
-                            <van-radio v-for="(item, index) in workingStateOption" :name="item.propertyValue"
+                                         direction="horizontal">
+                            <van-radio v-for="(item, index) in workingStateOption" style="width: 100px"
+                                       :name="item.propertyValue"
                                        :value="item.propertyValue" :key="item.propertyValue">{{item.text}}
                             </van-radio>
                         </van-radio-group>

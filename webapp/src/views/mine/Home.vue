@@ -3,7 +3,7 @@
         <div class="topDiv">
             <div align="left" style="padding-left: 34px;padding-top: 56px;font-size: 16px;color: #FFFFFF;">孤独症康复从业人员
                 <img src="../../images/home/tuichu3x.png"
-                     style="vertical-align:middle;width: 20px;height: 20px;margin-left: 8rem" @click="logoutHandle"/>
+                     style="vertical-align:middle;width: 20px;height: 20px;margin-left: 9rem" @click="logoutHandle"/>
             </div>
             <div align="left" style="padding-left: 34px;padding-top: 10px;font-size: 26px;color: #FFFFFF;">
                 A-PKU职业能力评估系统
@@ -14,10 +14,10 @@
             </div>
         </div>
         <div class="container">
-            <div class="item1Div" style="background-color: #CEEDFD" @click="goToPage('jobInfo')">
+            <div class="item1Div" style="background-color: #CEEDFD;" @click="goToPage('jobInfo')">
                 <div style="padding-left: 37px;font-size: 18px;font-weight: bold">职业选择和体验 <img
                         src="../../images/home/link-arrow-blue3x.png"
-                        style="vertical-align:middle;width: 20px;height: 20px"/></div>
+                        style="vertical-align:middle;width: 20px;height: 20px;padding-bottom: 5px"/></div>
                 <div style="padding-left: 37px;color: #ABB3BB;padding-top: 6px;font-size: 16px">Career choice and
                     experience
                 </div>
@@ -28,7 +28,7 @@
             <div class="item2Div" style="background-color: #FFF4E5" @click="goToPage('perfession')">
                 <div style="padding-left: 37px;font-size: 18px;font-weight: bold">专业理解 <img
                         src="../../images/home/link-arrow-orange3x.png"
-                        style="vertical-align:middle;width: 20px;height: 20px"/></div>
+                        style="vertical-align:middle;width: 20px;height: 20px;padding-bottom: 5px"/></div>
                 <div style="padding-left: 37px;color: #ABB3BB;padding-top: 6px;font-size: 16px">Professional
                     understanding
                 </div>
@@ -39,7 +39,7 @@
             <div class="item3Div" style="background-color: #D0DAF2" @click="goToPage('industry')">
                 <div style="padding-left: 37px;font-size: 18px;font-weight: bold">行业观点 <img
                         src="../../images/home/link-arrow-purple3x.png"
-                        style="vertical-align:middle;width: 20px;height: 20px"/></div>
+                        style="vertical-align:middle;width: 20px;height: 20px;padding-bottom: 5px"/></div>
                 <div style="padding-left: 37px;color: #ABB3BB;padding-top: 6px;font-size: 16px">Industry point of view
                 </div>
             </div>
