@@ -3,7 +3,7 @@
         <div class="topDiv">
             <div align="left" style="padding-left: 34px;padding-top: 56px;font-size: 16px;color: #FFFFFF;">孤独症康复从业人员
                 <img src="../../images/home/tuichu3x.png"
-                     style="vertical-align:middle;width: 20px;height: 20px;margin-left: 9rem" @click="logoutHandle"/>
+                     style="vertical-align:middle;width: 20px;height: 20px;margin-left: 9.8rem" @click="logoutHandle"/>
             </div>
             <div align="left" style="padding-left: 34px;padding-top: 10px;font-size: 26px;color: #FFFFFF;">
                 A-PKU职业能力评估系统

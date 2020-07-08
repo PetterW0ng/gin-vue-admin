@@ -55,24 +55,24 @@
                         </van-radio-group>
                     </template>
                 </van-field>
-                <van-field v-model="baseinfo.company" :disabled="disabled"
+                <van-field v-model="baseinfo.company" :disabled="disabled" v-if="!disabled"
                            label="工作单位"
                            required/>
-                <van-field v-model="areaSelected" :disabled="disabled"
+                <van-field v-model="areaSelected" :disabled="disabled" v-if="!disabled"
                            label="单位地域"
                            @click="showAreaPopViewH"
                            required readonly is-link/>
-                <van-field v-model="baseinfo.jobTitle" :disabled="disabled"
+                <van-field v-model="baseinfo.jobTitle" :disabled="disabled" v-if="!disabled"
                            label="职务职位" required/>
-                <van-field v-model="serviceType" :disabled="disabled"
+                <van-field v-model="serviceType" :disabled="disabled" v-if="!disabled"
                            label="所在单位服务模式"
                            @click="showServiceTypePopViewH"
                            required readonly is-link/>
-                <van-field v-model="income" :disabled="disabled"
+                <van-field v-model="income" :disabled="disabled" v-if="!disabled"
                            label="我的月度收入水平"
                            @click="showIncomePopViewH"
                            required readonly is-link/>
-                <van-field name="benefits" label="我的福利待遇情况" required>
+                <van-field name="benefits" label="我的福利待遇情况" required v-if="!disabled">
                     <template #input>
                         <van-checkbox-group v-model="baseinfo.benefits" :disabled="disabled" direction="horizontal">
                             <van-checkbox v-for="(item, index) in benefitsOption" :name="item.propertyValue"
@@ -549,8 +549,17 @@
                 let result = await initUserBaseinfo()
                 // 组装数据
                 let obj = result.data.userBaseinfo
-                obj.benefits = obj.benefits.split(',').map(Number)
-                obj.childType = obj.childType.split(',').map(Number)
+                if (obj.benefits == '0') {
+                    obj.benefits = []
+                } else {
+                    obj.benefits = obj.benefits.split(',').map(Number)
+                }
+                if (obj.childType == '0') {
+                    obj.childType = []
+                } else {
+                    obj.childType = obj.childType.split(',').map(Number)
+                }
+
                 obj.trainingNumber = obj.trainingNumber.split(',').map(Number)
                 if (obj.area.length > 0) {
                     this.initAreas(obj.area)

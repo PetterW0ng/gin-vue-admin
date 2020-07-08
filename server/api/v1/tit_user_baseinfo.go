@@ -219,7 +219,7 @@ func QueryTitUserBaseinfo(c *gin.Context) {
 			}
 			for inx, v := range trainingTimes {
 				i, _ := strconv.Atoi(v)
-				if inx == len(benefits)-1 {
+				if inx == len(trainingTimes)-1 {
 					trainingTimesStr += dictGroup["training_number"][i]
 				} else {
 					trainingTimesStr += dictGroup["training_number"][i] + "、"
@@ -228,7 +228,7 @@ func QueryTitUserBaseinfo(c *gin.Context) {
 			}
 			for inx, v := range childType {
 				i, _ := strconv.Atoi(v)
-				if inx == len(benefits)-1 {
+				if inx == len(childType)-1 {
 					childTypeStr += dictGroup["child_type"][i]
 				} else {
 					childTypeStr += dictGroup["child_type"][i] + "、"
