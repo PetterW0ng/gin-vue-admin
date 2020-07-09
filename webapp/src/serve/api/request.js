@@ -63,7 +63,7 @@ service.interceptors.response.use(
     },
     error => {
         closeLoading()
-        Toast.fail("接口请求失败，请联系管理员！");
+        Toast.fail("网络超时，请稍后重试！");
         return Promise.reject(error)
     }
 )

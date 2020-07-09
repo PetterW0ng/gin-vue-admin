@@ -118,7 +118,7 @@
             .duigou {
                 position: absolute;
                 top: 0px;
-                right: 22px;
+                right: 21px;
                 width: 42px;
                 height: 27px;
             }
