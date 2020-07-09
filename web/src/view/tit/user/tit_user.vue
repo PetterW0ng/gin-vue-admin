@@ -29,6 +29,9 @@
 
             <el-table-column label="手机号" prop="telphone" width="120"></el-table-column>
 
+            <el-table-column label="换工作意向" prop="changeJobOption" width="120"
+                             :formatter="jobInfoFormat"></el-table-column>
+
             <el-table-column label="按钮组">
                 <template slot-scope="scope">
                     <el-popover placement="top" width="160" v-model="scope.row.visible">
@@ -163,6 +166,7 @@
                     gender: null,
                     birthday: null,
                     telphone: null,
+                    changeJobOption: null,
                 },
                 userBaseinfo: {}
             };
@@ -178,6 +182,7 @@
             }
         },
         methods: {
+
             async updateTitUser(row) {
                 const res = await findTitUser({ID: row.ID});
                 this.type = "update";
@@ -195,6 +200,9 @@
             },
             genderFormat(row) {
                 return row.gender == 1 ? "男" : "女"
+            },
+            jobInfoFormat(row) {
+                return row.changeJobOption == 0 ? "未知" : (row.changeJobOption == 61 ? "不考虑" : (row.changeJobOption == 62 ? "考虑换其他单位" : "考虑换其他行业"))
             },
             birthdayFormat(row) {
                 return formatTimeToStr(row.birthday, "yyyy-MM-dd");
@@ -250,6 +258,18 @@
 </script>
 
 <style>
+    .el-table .warning-row {
+        background: orange;
+    }
+
+    .el-table .success-row {
+        background: green;
+    }
+
+    .el-table .error-row {
+        background: red;
+    }
+
     .baseInfoItem {
         padding-bottom: 0px;
         padding-top: 0px;
