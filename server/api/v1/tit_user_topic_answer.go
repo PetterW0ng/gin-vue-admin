@@ -157,7 +157,7 @@ func ToStore(c *gin.Context) {
 	if err == nil {
 		url = related.ObjectLink
 		global.GVA_LOG.Info(currentUser.Telphone, "访问了连接:", url)
-		service.CreateTitRelatedClick(model.TitRelatedClick{TitUserId: currentUser.ID, UserPhone: currentUser.Telphone, TitRelatedId: ID, RecommendURL: url})
+		service.CreateTitRelatedClick(model.TitRelatedClick{TitUserId: currentUser.ID, UserPhone: currentUser.Telphone, TitRelatedId: ID, RecommendURL: url, RecommendObject: related.RecommendObject})
 		//c.Redirect(http.StatusMovedPermanently, url)
 		response.OkWithData(gin.H{"url": url}, c)
 	} else {
