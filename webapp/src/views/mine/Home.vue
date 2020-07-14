@@ -134,7 +134,7 @@
         .item1Div {
             width: 90%;
             border-radius: 1em;
-            padding-top: 37px;
+            padding-top: 33px;
             padding-bottom: 37px;
             margin: -3rem 1rem 0rem 1rem;
             text-align: left;
@@ -146,7 +146,7 @@
         .item2Div {
             width: 90%;
             border-radius: 1em;
-            padding-top: 37px;
+            padding-top: 33px;
             padding-bottom: 37px;
             margin: 1rem 1rem 0rem 1rem;
             text-align: left;
@@ -158,7 +158,7 @@
         .item3Div {
             width: 90%;
             border-radius: 1em;
-            padding-top: 37px;
+            padding-top: 33px;
             padding-bottom: 37px;
             margin: 1rem 1rem 0rem 1rem;
             text-align: left;
