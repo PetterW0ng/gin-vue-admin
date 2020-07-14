@@ -10,12 +10,12 @@
             <div class="recomand">
                 <!-- 结果分析 -->
                 <div class="mainTitle">结果分析</div>
-                <van-cell :value="' 您在' + gtStandard + ' 方面的能力已满足职业要求，非常棒。'" v-if="gtStandard.length > 0"/>
-                <van-cell :value="' 您在'+ ltStandard+' 方面的能力有所欠缺，还不能满足当前工作需要，建议学习以下内容进行提升：'"
+                <van-cell :value="' 您在' + gtStandardStr + ' 方面的能力已满足职业要求，非常棒。'" v-if="gtStandard.length > 0"/>
+                <van-cell :value="' 您在'+ ltStandardStr +' 方面的能力有所欠缺，还不能满足当前工作需要，建议学习以下内容进行提升：'"
                           v-if="ltStandard.length > 0"/>
                 <!-- 培训课程 -->
                 <div v-if="recommendCourses.length > 0">
-                    <div class="title">培训课程</div>
+                    <div class="title">建议培训课程</div>
                     <div v-for="item in recommendCourses" class="item">
                         <van-cell :title="item.recommendObject" icon="star-o" is-link
                                   style="padding-bottom: 0px;padding-top: 0.5rem" @click="goToStore(item.id)"/>
@@ -23,7 +23,7 @@
                 </div>
                 <!-- 阅读书籍 -->
                 <div v-if="recommendBooks.length > 0">
-                    <div class="title">阅读书籍</div>
+                    <div class="title">建议阅读书籍</div>
                     <van-cell-group v-for="(item, index) in recommendBooks" class="item" :key="index">
                         <van-cell :title="item.recommendObject" :border="false" icon="notes-o"
                                   style="padding-bottom: 0px;padding-top: 0.7rem"/>
@@ -33,7 +33,7 @@
                 </div>
                 <!-- 干预工具 -->
                 <div v-if="recommendTools.length > 0" style="padding-bottom: 1.5rem">
-                    <div class="title">干预工具</div>
+                    <div class="title">建议干预工具</div>
                     <div v-for="item in recommendTools" class="item">
                         <van-cell :title="item.recommendObject" icon="setting-o"
                                   style="padding-bottom: 0px;padding-top: 0.5rem" is-link @click="goToStore(item.id)"/>
@@ -206,6 +206,12 @@
                     }
                 })
                 return arr;
+            },
+            gtStandardStr() {
+                return this.gtStandard.join("，");
+            },
+            ltStandardStr() {
+                return this.ltStandard.join("，")
             },
             recommendBooks() {
                 let arr = []
