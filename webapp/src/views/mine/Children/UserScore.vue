@@ -6,7 +6,7 @@
                      style="height: 2.5rem;padding-top:0.5rem"/>
         <div class="mainDiv" v-show="!dialogTableVisible">
             <!-- 雷达图 -->
-            <div id="radarChartDiv" style="width: 100%;height: 400px"></div>
+            <div id="radarChartDiv" style="width: 100%;height: 380px"></div>
             <div class="recomand">
                 <!-- 结果分析 -->
                 <div class="mainTitle">结果分析</div>
@@ -123,7 +123,7 @@
                     },
                     "radar": {
                         "center": ["50%", "50%"],
-                        "radius": "60%",
+                        "radius": "53%",
                         "startAngle": 90,
                         "splitNumber": 4,
                         "shape": 'angle', // 拐点的样式，还可以取值'rect','angle'等
@@ -213,7 +213,7 @@
                 option1: {
                     backgroundColor: 'white',
                     "normal": {
-                        "top": 200,
+                        "top": 210,
                         "left": 300,
                         "width": 500,
                         "height": 400,
@@ -240,9 +240,9 @@
                     "legend": {
                         "show": true,
                         "icon": "circle",
-                        itemHeight: 8,
+                        itemHeight: 4,
                         "left": "80%",
-                        "top": "4%",
+                        "top": "0",
                         "orient": "horizontal",
                         "textStyle": {
                             "fontSize": 8,
@@ -252,7 +252,7 @@
                     },
                     "radar": {
                         "center": ["50%", "50%"],
-                        "radius": "63%",
+                        "radius": "60%",
                         "startAngle": 90,
                         "splitNumber": 4,
                         "shape": 'angle', // 拐点的样式，还可以取值'rect','angle'等
@@ -486,8 +486,8 @@
 
     .radarChartDiv2 {
         position: absolute;
-        width: 335px;
-        height: 270px;
+        width: 84%;
+        height: 35%;
         z-index: 1;
         top: 50%;
         left: 50%;
