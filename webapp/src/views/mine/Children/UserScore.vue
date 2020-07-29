@@ -442,7 +442,7 @@
                 let that = this;
                 setTimeout(function () {
                     that.showImageWrapper = false;
-                }, 500);
+                }, 1000);
             },
             drawPng() {
                 html2canvas(this.$refs.imageWrapper).then(canvas => {
