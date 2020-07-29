@@ -487,7 +487,8 @@
     .radarChartDiv2 {
         position: absolute;
         width: 84%;
-        height: 35%;
+        /*height: 35%;*/
+        height: 230px;
         z-index: 1;
         top: 50%;
         left: 50%;
