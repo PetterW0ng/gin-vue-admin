@@ -4,7 +4,7 @@
                      :fixed=true
                      :border=false
                      style="height: 2.5rem;padding-top:0.5rem"/>
-        <div class="mainDiv" v-show="!showImageWrapper">
+        <div class="mainDiv" v-show="!dialogTableVisible">
             <!-- 雷达图 -->
             <div id="radarChartDiv" style="width: 100%;height: 400px"></div>
             <div class="recomand">
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div ref="imageWrapper" class="shareBgDiv" v-show="!showImageWrapper">
+        <div ref="imageWrapper" class="shareBgDiv" v-show="showImageWrapper">
             <!-- 背景图 -->
             <div style="height: 100%;width: 100%">
                 <img src="../../../images/mine/shareQr.jpg" style="height: 100%;width: 100%"/>
@@ -51,11 +51,16 @@
                 <div id="radarChartDiv2" style="position: relative;height: 100%"></div>
             </div>
         </div>
-        <div v-show="dialogTableVisible">
+        <div v-show="dialogTableVisible" align="center">
+            <div style="align-content: center;padding-top: 3.5rem; padding-bottom: 1rem; font-size: 0.8rem">
+                长按图片保存您的评估结果
+            </div>
+            <div style="align-content: center;"><img src="../../../images/mine/arrow.png"
+                                                     style="width: 20px; height: 20px"/></div>
             <img :src="imgUrl" width="100%"/>
         </div>
-        <van-button v-show="!showImageWrapper" class="button" type="info" size="large" @click="toImage()">
-            生成图片
+        <van-button v-show="!dialogTableVisible" class="button" type="info" size="large" @click="toImage()">
+            点击下载分享结果
         </van-button>
     </div>
 </template>
@@ -71,7 +76,7 @@
         data() {
             return {
                 imgUrl: '',
-                showImageWrapper: false,
+                showImageWrapper: true,
                 dialogTableVisible: false,
                 gtStandard: [],
                 ltStandard: [],
@@ -434,20 +439,35 @@
                 radarChart.setOption(this.option)
                 let radarChart2 = echarts.init(document.getElementById("radarChartDiv2"))
                 radarChart2.setOption(this.option1)
+                let that = this;
+                setTimeout(function () {
+                    that.showImageWrapper = false;
+                }, 500);
             },
-            toImage() {
-                window.pageYOffset = 0;
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
-                // this.showImageWrapper = true;
+            drawPng() {
                 html2canvas(this.$refs.imageWrapper).then(canvas => {
                     let dataURL = canvas.toDataURL("image/png");
                     this.imgUrl = dataURL;
                     if (this.imgUrl !== "") {
                         this.dialogTableVisible = true;
-                        this.showImageWrapper = true;
+                        this.showImageWrapper = false;
                     }
                 });
+            },
+            toImage() {
+                window.pageYOffset = 0;
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+                this.showImageWrapper = true;
+                Toast({
+                    message: "努力加载中...\n",
+                    duration: 800
+                })
+                let that = this;
+                setTimeout(function () {
+                    that.drawPng();
+                }, 500);
+
             }
         }
     }
@@ -470,8 +490,8 @@
         height: 270px;
         z-index: 1;
         top: 50%;
-        left: 10%;
-        transform: translateY(-50%);
+        left: 50%;
+        transform: translateY(-50%) translateX(-50%);
     }
 
     .mainDiv {
