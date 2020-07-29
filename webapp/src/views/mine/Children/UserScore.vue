@@ -459,15 +459,15 @@
                 document.documentElement.scrollTop = 0;
                 document.body.scrollTop = 0;
                 this.showImageWrapper = true;
-                Toast({
-                    message: "努力加载中...\n",
-                    duration: 800
-                })
                 let that = this;
                 setTimeout(function () {
                     that.drawPng();
-                }, 500);
-
+                }, 1000);
+                Toast.loading({
+                    duration: 1000, // 持续展示 toast
+                    forbidClick: true,
+                    message: 'loading...',
+                });
             }
         }
     }
