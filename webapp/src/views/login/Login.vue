@@ -96,7 +96,7 @@
                         </p>
                         <van-button type="info"
                                     size="large"
-                                    style="margin-top:4rem"
+                                    style="margin-top:1rem"
                                     @click='handleRegister'>注册
                         </van-button>
                     </van-tab>
@@ -412,7 +412,7 @@
         line-height: 1rem;
         color: #767676;
         font-size: 0.867rem;
-        padding-top: 2rem;
+        padding-top: 1rem;
 
         .agreement-box {
             color: blue;
