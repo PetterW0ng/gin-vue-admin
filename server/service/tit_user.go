@@ -65,7 +65,7 @@ func GetTitUserInfoList(info request.PageInfo) (err error, list interface{}, tot
 	var titUser []model.TitUser
 	err = db.Find(&titUser).Count(&total).Error
 	//err = db.Order("created_at desc").Limit(limit).Offset(offset).Find(&users).Error
-	err = db.Order("u.created_at desc").Limit(limit).Offset(offset).Table("tit_users u").Select("u.id, u.created_at, u.username, u.gender, u.birthday, u.telphone, uta.topic_option_ids change_job_option").Joins("left join tit_user_topic_answers uta on u.id = uta.tit_user_id and u.job_info_batch_num = uta.batch_num and uta.tit_topic_id = 12").Where("u.deleted_at is null").Scan(&users).Error
+	err = db.Order("u.created_at desc").Limit(limit).Offset(offset).Table("tit_users u").Select("distinct u.id, u.created_at, u.username, u.gender, u.birthday, u.telphone, uta.topic_option_ids change_job_option").Joins("left join tit_user_topic_answers uta on u.id = uta.tit_user_id and u.job_info_batch_num = uta.batch_num and uta.tit_topic_id = 12").Where("u.deleted_at is null").Scan(&users).Error
 	return err, users, total
 }
 

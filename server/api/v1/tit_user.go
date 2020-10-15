@@ -300,9 +300,9 @@ func generateTitUserToke(c *gin.Context, user model.TitUser) {
 		ID:       user.ID,
 		Telphone: user.Telphone,
 		StandardClaims: jwt.StandardClaims{
-			NotBefore: time.Now().Unix() - 1000,       // 签名生效时间
-			ExpiresAt: time.Now().Unix() + 60*60*24*7, // 过期时间 一周
-			Issuer:    "wq",                           // 签名的发行者
+			NotBefore: time.Now().Unix() - 1000,        // 签名生效时间
+			ExpiresAt: time.Now().Unix() + 60*60*24*15, // 过期时间 一周
+			Issuer:    "wq",                            // 签名的发行者
 		},
 	}
 	token, err := j.CreateTitUserToken(clams)
@@ -311,7 +311,7 @@ func generateTitUserToke(c *gin.Context, user model.TitUser) {
 		return
 	}
 	// 设置用户 token 至 redis ，可以把用户拉入黑名单
-	if err := global.GVA_REDIS.Set(fmt.Sprintf("tit:token:%s", user.Telphone), token, time.Hour*24*7).Err(); err != nil {
+	if err := global.GVA_REDIS.Set(fmt.Sprintf("tit:token:%s", user.Telphone), token, time.Hour*24*15).Err(); err != nil {
 		response.FailWithMessage("设置登录状态失败", c)
 		return
 	} else {
