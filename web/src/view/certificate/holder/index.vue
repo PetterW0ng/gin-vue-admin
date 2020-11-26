@@ -20,7 +20,8 @@
             <el-table-column label="发证单位" prop="issuingUnit"></el-table-column>
             <el-table-column label="按钮组" width="150">
                 <template slot-scope="scope">
-                    <el-button @click="updateHolder(scope.row)" size="small" type="text">变更</el-button>
+                    <el-button @click="updateHolder(scope.row)" size="small" type="text">查看证书</el-button>
+                    <el-button @click="updateHolder(scope.row)" size="small" type="text">修改</el-button>
                     <el-popover placement="top" width="160" v-model="scope.row.visible">
                         <p>确定要删除吗？</p>
                         <div style="text-align: right; margin: 0">
@@ -57,7 +58,15 @@
                 <el-button @click="closeDialog">取 消</el-button>
                 <el-button @click="enterDialog" type="primary">确 定</el-button>
             </div>
-        </el-dialog>在资源权限中将此角色的资源权限清空 或者不包含创建者的角色 即可屏蔽此客户资源的显示
+        </el-dialog>
+        <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="查看证书图片">
+            <el-form :inline="true" :model="form" label-width="500px">
+                <img :src="ss"/>
+            </el-form>
+            <div class="dialog-footer" slot="footer">
+                <el-button @click="closeImgViewDialog">关 闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -74,11 +83,12 @@
             return {
                 listApi: getCertHolderList,
                 dialogFormVisible: false,
+                imgViewDialog: false,
                 visible: false,
                 type: "",
                 form: {
-                    customerName:"",
-                    customerPhoneData:""
+                    customerName: "",
+                    customerPhoneData: ""
                 }
             }
         },
@@ -108,9 +118,12 @@
                     customerPhoneData: ""
                 };
             },
+            closeImgViewDialog() {
+                this.imgViewDialog = false;
+            },
             async deleteHolder(row) {
                 this.visible = false;
-                const res = await deleteCertHolder({ ID: row.ID });
+                const res = await deleteCertHolder({ID: row.ID});
                 if (res.code == 0) {
                     this.$message({
                         type: "success",

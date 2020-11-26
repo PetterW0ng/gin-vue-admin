@@ -21,7 +21,7 @@ func RunWindowsServer() {
 		Handler:        Router,
 		ReadTimeout:    30 * time.Second,
 		WriteTimeout:   30 * time.Second,
-		MaxHeaderBytes: 1 << 20,
+		MaxHeaderBytes: 1 << 20, // header 大小为1M
 	}
 	// 保证文本顺序输出
 	// In order to ensure that the text order output can be deleted

@@ -68,9 +68,9 @@ func GetSysDictInfoList(info request.PageInfo) (err error, list interface{}, tot
 }
 
 // 根据 SysDictExample 查找列表
-func FindByCode(code string) (err error, dicts []model.SysDict) {
+func FindByCode(code model.DictType) (err error, dicts []model.SysDict) {
 	db := global.GVA_DB
-	err = db.Order("seq_number").Where(" code = ? ", code).Find(&dicts).Error
+	err = db.Select("parent_id, property_name, property_value, code, code_name").Order("seq_number").Where(" code = ? ", code.Value()).Find(&dicts).Error
 	return err, dicts
 }
 

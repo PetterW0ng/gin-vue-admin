@@ -1,17 +1,26 @@
 package config
 
 type Server struct {
-	Mysql   Mysql   `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
-	Sqlite  Sqlite  `mapstructure:"sqlite" json:"sqlite" yaml:"sqlite"`
-	Qiniu   Qiniu   `mapstructure:"qiniu" json:"qiniu" yaml:"qiniu"`
-	Casbin  Casbin  `mapstructure:"casbin" json:"casbin" yaml:"casbin"`
-	Redis   Redis   `mapstructure:"redis" json:"redis" yaml:"redis"`
-	System  System  `mapstructure:"system" json:"system" yaml:"system"`
-	JWT     JWT     `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
-	Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
-	Log     Log     `mapstructure:"log" json:"log" yaml:"log"`
-	Mongo   Mongo   `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
-	Dayu    Dayu    `mapstructure:"dayu" json:"dayu" yaml:"dayu"`
+	Mysql     Mysql     `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	Sqlite    Sqlite    `mapstructure:"sqlite" json:"sqlite" yaml:"sqlite"`
+	Qiniu     Qiniu     `mapstructure:"qiniu" json:"qiniu" yaml:"qiniu"`
+	Casbin    Casbin    `mapstructure:"casbin" json:"casbin" yaml:"casbin"`
+	Redis     Redis     `mapstructure:"redis" json:"redis" yaml:"redis"`
+	System    System    `mapstructure:"system" json:"system" yaml:"system"`
+	JWT       JWT       `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
+	Captcha   Captcha   `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
+	Log       Log       `mapstructure:"log" json:"log" yaml:"log"`
+	Mongo     Mongo     `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
+	Dayu      Dayu      `mapstructure:"dayu" json:"dayu" yaml:"dayu"`
+	XiaoETong XiaoETong `mapstructure:"xiaoETong" json:"xiaoETong" yaml:"xiaoetong"`
+}
+
+type XiaoETong struct {
+	AppId        string `mapstructure:"app_id" json:"app_id" yaml:"app_id"`
+	GrantType    string `mapstructure:"grant_type" json:"grant_type" yaml:"grant_type"`
+	ClientSecret string `mapstructure:"client_secret" json:"secret_key" yaml:"client_secret"`
+	ClientId     string `mapstructure:"client_id" json:"client_id" yaml:"client_id"`
+	URL          string `mapstructure:"url" json:"url" yaml:"url"`
 }
 
 type System struct {
@@ -20,6 +29,7 @@ type System struct {
 	Addr          int    `mapstructure:"addr" json:"addr" yaml:"addr"`
 	DbType        string `mapstructure:"db-type" json:"dbType" yaml:"db-type"`
 	EnabledMongo  bool   `mapstructure:"enabled-mongo" json:"enabledMongo" yaml:"enabled-mongo"`
+	CertURL       string `mapstructure:"cert-url" json:"certURL" yaml:"cert-url"`
 }
 
 type JWT struct {

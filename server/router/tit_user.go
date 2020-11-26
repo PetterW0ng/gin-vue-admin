@@ -22,6 +22,7 @@ func InitTitUserBaseRouter(Router *gin.RouterGroup) {
 	TitUserRouter := Router.Group("user")
 	{
 		TitUserRouter.POST("register", v1.TitUserRegister)             // tit 用户注册
+		TitUserRouter.POST("register2", v1.RegisterCustomer)           // 小鹅通 用户注册
 		TitUserRouter.POST("login", v1.TitUserLogin)                   // tit 用户登录
 		TitUserRouter.POST("verificationCode", v1.GetVerificationCode) // 获取验证码
 	}

@@ -44,6 +44,7 @@ func Routers() *gin.Engine {
 		router.InitTitTrainingInfoRouter(ApiGroup)       // 人才盘点 用户基础信息 -- 培训信息
 		router.InitTitTopicRouter(ApiGroup)              // 人才盘点题库
 		router.InitTitTopicOptionRouter(ApiGroup)        // 人才盘点题库选项
+		router.InitSysCustomerRouter(ApiGroup)
 	}
 
 	// 人才盘点对应的路由

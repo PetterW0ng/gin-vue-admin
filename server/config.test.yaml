@@ -44,7 +44,7 @@ system:
   addr: 8888
   db-type: "mysql"  # support mysql/sqlite
   enabled-mongo: false # if true, need config mongo
-
+  cert-url: "http://certificate.pkucarenjk.com:9001/" # 证书图片系统地址
 # captcha configuration
 captcha:
   key-long: 4

@@ -121,7 +121,7 @@ func FindByCode(c *gin.Context) {
 		response.FailWithMessage("参数错误", c)
 		return
 	}
-	err, SysDictList := service.FindByCode(code)
+	err, SysDictList := service.FindByCode(model.DictType(code))
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("查询失败，%v", err), c)
 	} else {

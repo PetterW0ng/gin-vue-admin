@@ -3,6 +3,7 @@ module gin-vue-admin
 go 1.12
 
 require (
+	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/casbin/casbin v1.9.1
 	github.com/casbin/gorm-adapter v1.0.0
@@ -48,5 +49,5 @@ require (
 	golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd // indirect
 	golang.org/x/tools v0.0.0-20200324003944-a576cf524670 // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
-	qiniupkg.com/x v7.0.8+incompatible // indirect
+	qiniupkg.com/x v7.0.8+incompatible
 )

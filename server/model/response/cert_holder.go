@@ -1,4 +1,4 @@
-package model
+package response
 
 type Holder struct {
 	UserName        string `json:"userName" bson:"userName"`
@@ -6,8 +6,6 @@ type Holder struct {
 	CertificateName string `json:"certificateName" bson:"certificateName"`
 	IssueTime       string `json:"issueTime" bson:"issueTime"`
 	IssuingUnit     string `json:"issuingUnit" bson:"issuingUnit"`
-	IdCard          string `json:"idCard" bson:"idCard"`
-	Phone           string `json:"phone" bson:"phone"`
-	CreateTime      string `json:"createTime" bson:"createTime"`
-	FileName        string `json:"fileName" bson:"fileName"`
+	CertificateImg  string `json:"certificateImg" bson:"certificateImg"`
+	CustomerTag     int    `json:"customerTag" bson:"customerTag"`
 }
