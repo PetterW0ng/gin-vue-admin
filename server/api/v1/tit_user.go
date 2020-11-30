@@ -291,6 +291,29 @@ func GetVerificationCode(c *gin.Context) {
 	}
 }
 
+// GetVerificationCode, 登录或注册时获取验证码逻辑
+func GetVerificationCode2(c *gin.Context) {
+	// 如果是注册 需要首先对手机号判断是否注册验证
+	var param struct {
+		Phone string `json:"phone"`
+	}
+	if e := c.BindJSON(&param); e != nil {
+		global.GVA_LOG.Error("绑定参数失败了", e)
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+
+	code := fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
+	error := utils.SendShotMessage(param.Phone, code)
+	if error != nil {
+		response.FailWithMessage("验证码发送失败了", c)
+	} else {
+		global.GVA_REDIS.Set(param.Phone, code, time.Minute*15)
+		global.GVA_LOG.Info("%s 的验证码下发成功 code= %s", param.Phone, code)
+		response.OkWithMessage("验证码发送成功", c)
+	}
+}
+
 // 登录以后签发jwt
 func generateTitUserToke(c *gin.Context, user model.TitUser) {
 	j := &middleware.JWT{
