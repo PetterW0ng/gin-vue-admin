@@ -10,6 +10,7 @@ import (
 	"gin-vue-admin/service"
 	"gin-vue-admin/utils"
 	"github.com/gin-gonic/gin"
+	"qiniupkg.com/x/log.v7"
 )
 
 // @Tags SysCustomer
@@ -23,7 +24,7 @@ import (
 func CreateSysCustomer(c *gin.Context) {
 	var customer model.SysCustomer
 	_ = c.ShouldBindJSON(&customer)
-	err := service.CreateSysCustomer(customer)
+	err := service.CreateSysCustomer(&customer)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
 	} else {
@@ -101,6 +102,8 @@ type RegisterCustomerStruct struct {
 	Telphone         string `json:"telphone"`
 	VerificationCode string `json:"verificationCode"`
 	CourseType       int    `json:"courseType"`
+	EntryPoint       int    `json:"entryPoint"`
+	Source           int    `json:"source"`
 }
 
 func RegisterCustomer(c *gin.Context) {
@@ -119,17 +122,14 @@ func RegisterCustomer(c *gin.Context) {
 	// 验证 验证码是否正确
 	cmd := global.GVA_REDIS.Get(rr.Telphone)
 	if cmd.Err() == nil && cmd.Val() == rr.VerificationCode {
-		customer := model.SysCustomer{Phone: rr.Telphone, CourseType: rr.CourseType, IsEvaluate: false}
-		if err := service.CreateSysCustomer(customer); err != nil {
-			global.GVA_LOG.Error("用户注册失败了", err)
-			response.FailWithMessage("手机号已存在", c)
+		customer := model.SysCustomer{Phone: rr.Telphone, CourseType: rr.CourseType, EntryPoint: rr.EntryPoint, Source: rr.Source, IsEvaluate: false}
+		if err := service.CreateSysCustomer(&customer); err != nil {
+			log.Info("已经注册过了但也返回，注册成功", err)
+			response.OkWithMessage("注册成功", c)
 		} else {
 			response.OkWithMessage("注册成功", c)
-			/*if err, u := service.FindTitUserByPhone(rr.Telphone); err == nil {
-				generateTitUserToke(c, u)
-			} else {
-				response.Fail(c)
-			}*/
+			// 向小鹅通注册用户数据
+			go service.RegisterToXiaoet(customer)
 		}
 	} else {
 		response.FailWithMessage("验证码不正确", c)
@@ -146,7 +146,7 @@ func RegisterCustomer(c *gin.Context) {
 // @Router /customer/getSysCustomerList [get]
 func GetSysCustomerList(c *gin.Context) {
 	var sysCustomerQuery request.PaginatedSysCustomer
-	_ = c.ShouldBindQuery(&sysCustomerQuery)
+	_ = c.ShouldBindJSON(&sysCustomerQuery)
 	err, list, total := service.GetSysCustomerInfoList(sysCustomerQuery)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)

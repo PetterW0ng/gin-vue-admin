@@ -10,7 +10,15 @@ import (
 
 func Mongo() {
 	mgoConfig := global.GVA_CONFIG.Mongo
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://" + mgoConfig.Username + ":" + mgoConfig.Password + "@" + mgoConfig.Host + ":" + mgoConfig.Port + "/" + mgoConfig.DbName))
+	var (
+		mongoURL string
+	)
+	if mgoConfig.Username == "" {
+		mongoURL = "mongodb://" + mgoConfig.Host + ":" + mgoConfig.Port + "/" + mgoConfig.DbName
+	} else {
+		mongoURL = "mongodb://" + mgoConfig.Username + ":" + mgoConfig.Password + "@" + mgoConfig.Host + ":" + mgoConfig.Port + "/" + mgoConfig.DbName
+	}
+	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURL))
 
 	if err != nil {
 		global.GVA_LOG.Fatal(err)

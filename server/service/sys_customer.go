@@ -12,7 +12,7 @@ import (
 // @auth      weiqin
 // @return    err             error
 
-func CreateSysCustomer(customer model.SysCustomer) (err error) {
+func CreateSysCustomer(customer *model.SysCustomer) (err error) {
 	err = global.GVA_DB.Create(&customer).Error
 	return err
 }

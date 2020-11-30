@@ -43,8 +43,17 @@ system:
   env: 'public'  # Change to "develop" to skip authentication for development mode
   addr: 8888
   db-type: "mysql"  # support mysql/sqlite
-  enabled-mongo: false # if true, need config mongo
+  enabled-mongo: true # if true, need config mongo
   cert-url: "http://certificate.pkucarenjk.com:9001/" # 证书图片系统地址
+
+# 小鹅通账号
+xiaoetong:
+  app_id: 'appiXguJDJJ6027'
+  client_id: 'xop9mopWWtY4451'
+  client_secret: 'aVEc9kVjfchkoJWTst9Q8C8giRXlHWgO'
+  grant_type: 'client_credential'
+  url: 'https://api.xiaoe-tech.com'
+
 # captcha configuration
 captcha:
   key-long: 4
