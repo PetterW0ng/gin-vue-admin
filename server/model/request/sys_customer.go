@@ -12,7 +12,7 @@ type PaginatedSysCustomer struct {
 	Birthday          time.Time `json:"birthday" form:"birthday" `
 	Source            int       `json:"source" form:"source" `
 	EntryPoint        int       `json:"entryPoint" form:"entryPoint" `
-	IsEvaluate        bool      `json:"isEvaluate" form:"isEvaluate" `
+	IsEvaluate        int       `json:"isEvaluate" form:"isEvaluate" `
 	Query             string    `json:"queryStr" form:"queryStr"`
 	PageInfo
 }

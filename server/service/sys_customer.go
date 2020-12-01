@@ -67,27 +67,32 @@ func GetSysCustomerInfoList(info request.PaginatedSysCustomer) (err error, list 
 	db.LogMode(true)
 	var customers []model.SysCustomer
 	if info.Gender != 0 {
-		db.Where("gender = ?", info.Gender)
+		db = db.Where("gender = ?", info.Gender)
 	}
 	if info.EntryPoint != 0 {
-		db.Where("entry_point = ?", info.EntryPoint)
+		db = db.Where("entry_point = ?", info.EntryPoint)
 	}
 	if info.Source != 0 {
-		db.Where("source = ?", info.Source)
+		db = db.Where("source = ?", info.Source)
 	}
 	if !info.RegisterTimeBegin.IsZero() {
-		db.Where("register_time >= ?", info.RegisterTimeBegin)
+		db = db.Where("register_time >= ?", info.RegisterTimeBegin)
 	}
 	if !info.RegisterTimeEnd.IsZero() {
-		db.Where("register_time <= ?", info.RegisterTimeEnd)
+		db = db.Where("register_time <= ?", info.RegisterTimeEnd)
 	}
 	if !info.Birthday.IsZero() {
-		db.Where("birthday = ?", info.Birthday)
+		db = db.Where("birthday = ?", info.Birthday)
 	}
 	if info.Query != "" {
-		db.Where("(name = ? or nickname = ? or phone = ?)", info.Query, info.Query, info.Query)
+		db = db.Where("(name = ? or nickname = ? or phone = ?)", info.Query, info.Query, info.Query)
 	}
-	db.Where("is_evaluate = ?", info.IsEvaluate)
+	if info.IsEvaluate == 1 {
+		db.Where("is_evaluate = ?", true)
+	}
+	if info.IsEvaluate == 2 {
+		db.Where("is_evaluate = ?", false)
+	}
 
 	err = db.Model(&customers).Count(&total).Error
 	// Related 和 Preload 的使用
