@@ -161,12 +161,12 @@ func GetSysCustomerList(c *gin.Context) {
 			var respSysCustomer = resp.SysCustomer{}
 			respSysCustomer.SetValueFromDBModel(customerInfo)
 			respSysCustomer.Source = sourceMap[customerInfo.Source]
-			respSysCustomer.EntryPoint = evaluateMap[customerInfo.EntryPoint]
+			respSysCustomer.EntryPoint = entryPoinMap[customerInfo.EntryPoint]
 			respSysCustomer.Gender = genderMap[customerInfo.Gender]
 			if customerInfo.IsEvaluate {
-				respSysCustomer.EntryPoint = entryPoinMap[1]
+				respSysCustomer.IsEvaluate = evaluateMap[1]
 			} else {
-				respSysCustomer.EntryPoint = entryPoinMap[2]
+				respSysCustomer.IsEvaluate = evaluateMap[2]
 			}
 			var respTags = make([]resp.SysCusTag, len(customerInfo.SysCusTags))
 			for j, tag := range customerInfo.SysCusTags {
