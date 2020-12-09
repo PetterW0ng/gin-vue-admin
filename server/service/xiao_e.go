@@ -7,6 +7,7 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	resp "gin-vue-admin/model/response"
+	"github.com/mitchellh/mapstructure"
 	"io/ioutil"
 	"net/http"
 	"qiniupkg.com/x/log.v7"
@@ -77,7 +78,11 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 			data := userOrderResponse.Data.(map[string]interface{})
 			orderOuterList := data["list"].([]interface{})
 			for _, item := range orderOuterList {
-				it := item.(resp.XetOrderOuter)
+				//it := item.(resp.XetOrderOuter)
+				var it resp.XetOrderOuter
+				if err := mapstructure.Decode(item, &it); err != nil {
+					return fmt.Errorf("向小鹅通发起了获取order 请求成功，但数据转换失败了"), nil
+				}
 				xetOrder := resp.XetOrder{}
 				xetOrder.SetValues(it)
 				xetOrder.PaymentType = paymentTypeMap[it.PaymentType]

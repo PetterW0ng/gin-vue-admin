@@ -88,10 +88,10 @@ func GetSysCustomerInfoList(info request.PaginatedSysCustomer) (err error, list 
 		db = db.Where("(name = ? or nickname = ? or phone = ?)", info.Query, info.Query, info.Query)
 	}
 	if info.IsEvaluate == 1 {
-		db.Where("is_evaluate = ?", true)
+		db = db.Where("is_evaluate = ?", true)
 	}
 	if info.IsEvaluate == 2 {
-		db.Where("is_evaluate = ?", false)
+		db = db.Where("is_evaluate = ?", false)
 	}
 
 	err = db.Model(&customers).Count(&total).Error

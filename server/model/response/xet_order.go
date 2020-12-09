@@ -19,18 +19,18 @@ type XetOrder struct {
 }
 
 type XetOrderOuter struct {
-	UserId       string `json:"user_id" bson:"userId"`
-	PaymentType  int    `json:"payment_type" bson:"paymentType"`
-	ResourceType int    `json:"resource_type" bson:"resourceType"`
-	ProductId    string `json:"product_id" bson:"productId"`
-	PurchaseName string `json:"purchase_name" bson:"purchaseName"`
-	Price        int    `json:"price" bson:"price"`
-	OrderState   int    `json:"order_state" bson:"orderState"`
-	OutOrderId   string `json:"out_order_id" bson:"outOrderId"`
-	WxAppType    int    `json:"wx_app_type" bson:"wxAppType"`
-	Period       int    `json:"period" bson:"period"`
-	PayTime      string `json:"pay_time" bson:"payTime"`
-	CreatedAt    string `json:"created_at" bson:"createdAt"`
+	UserId       string `mapstructure:"user_id" bson:"userId"`
+	PaymentType  int    `mapstructure:"payment_type" bson:"paymentType"`
+	ResourceType int    `mapstructure:"resource_type" bson:"resourceType"`
+	ProductId    string `mapstructure:"product_id" bson:"productId"`
+	PurchaseName string `mapstructure:"purchase_name" bson:"purchaseName"`
+	Price        int    `mapstructure:"price" bson:"price"`
+	OrderState   int    `mapstructure:"order_state" bson:"orderState"`
+	OutOrderId   string `mapstructure:"out_order_id" bson:"outOrderId"`
+	WxAppType    int    `mapstructure:"wx_app_type" bson:"wxAppType"`
+	Period       int    `mapstructure:"period" bson:"period"`
+	PayTime      string `mapstructure:"pay_time" bson:"payTime"`
+	CreatedAt    string `mapstructure:"created_at" bson:"createdAt"`
 }
 
 func (xetOrder *XetOrder) SetValues(outer XetOrderOuter) {
