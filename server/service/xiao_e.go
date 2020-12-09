@@ -88,7 +88,7 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 				xetOrder.PaymentType = paymentTypeMap[it.PaymentType]
 				xetOrder.OrderState = orderStateMap[it.OrderState]
 				xetOrder.WxAppType = wxAppTypeMap[it.WxAppType]
-				xetOrder.ResourceType = wxAppTypeMap[it.ResourceType]
+				xetOrder.ResourceType = resourceTypeMap[it.ResourceType]
 				list = append(list, xetOrder)
 			}
 			return
