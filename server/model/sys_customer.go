@@ -22,4 +22,5 @@ type SysCustomer struct {
 	IsEvaluate   bool        `json:"isEvaluate" form:"isEvaluate" `
 	CourseType   int         `json:"courseType" form:"courseType"`
 	SysCusTags   []SysCusTag `json:"tags" form:"tags" `
+	UserType     int         `json:"userType" form:"userType"`
 }

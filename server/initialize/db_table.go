@@ -28,6 +28,8 @@ func DBTables() {
 		model.TitTopicOption{},
 		model.TitTopicRelated{},
 		model.TitRelatedClick{},
+		model.SysWxUser{},
+		model.SysCusScore{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }

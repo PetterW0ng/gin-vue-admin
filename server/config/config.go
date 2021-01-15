@@ -13,6 +13,7 @@ type Server struct {
 	Mongo     Mongo     `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
 	Dayu      Dayu      `mapstructure:"dayu" json:"dayu" yaml:"dayu"`
 	XiaoETong XiaoETong `mapstructure:"xiaoETong" json:"xiaoETong" yaml:"xiaoetong"`
+	WeiXin    WeiXin    `mapstructure:"wx" json:"wx" yaml:"wx"`
 }
 
 type XiaoETong struct {
@@ -21,6 +22,13 @@ type XiaoETong struct {
 	ClientSecret string `mapstructure:"client_secret" json:"secret_key" yaml:"client_secret"`
 	ClientId     string `mapstructure:"client_id" json:"client_id" yaml:"client_id"`
 	URL          string `mapstructure:"url" json:"url" yaml:"url"`
+}
+
+type WeiXin struct {
+	Url         string `mapstructure:"url" json:"url" yaml:"url"`
+	SecretKey   string `mapstructure:"secretKey" json:"secretKey" yaml:"secretKey"`
+	Appkey      string `mapstructure:"appkey" json:"appkey" yaml:"appkey"`
+	RedirectUrl string `mapstructure:"redirectUrl" json:"redirectUrl" yaml:"redirectUrl"`
 }
 
 type System struct {

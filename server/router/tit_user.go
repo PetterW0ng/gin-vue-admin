@@ -22,12 +22,15 @@ func InitTitUserBaseRouter(Router *gin.RouterGroup) {
 	TitUserRouter := Router.Group("user")
 	{
 		TitUserRouter.POST("register", v1.TitUserRegister)               // tit 用户注册
-		TitUserRouter.POST("register2", v1.RegisterCustomer)             // 小鹅通 用户注册
+		TitUserRouter.POST("register2", v1.RegisterCustomer)             // tit 小鹅通 微信账号 用户注册
 		TitUserRouter.POST("login", v1.TitUserLogin)                     // tit 用户登录
 		TitUserRouter.POST("verificationCode", v1.GetVerificationCode)   // 获取验证码
 		TitUserRouter.POST("verificationCode2", v1.GetVerificationCode2) // 获取验证码
+		TitUserRouter.GET("wxCallback", v1.DoWxCallback)
+		TitUserRouter.GET("getStudyReport", v1.GetStudyReport)
 	}
 
 	TitUserRouter2 := Router.Group("user").Use(middleware.JWTTitAuth())
 	TitUserRouter2.GET("", v1.TitUser)
+	TitUserRouter2.GET("studyReport", v1.MyStudyReport)
 }

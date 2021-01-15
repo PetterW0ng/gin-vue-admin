@@ -69,9 +69,7 @@ log:
 
 # mongoDB configuration e.g. mongodb://username:password@host:port/dbname
 mongo:
-  username: certificateUser
-  password: laoW0ng
-  host: localhost
+  host: mongodbtest.njk.com
   port: 27017
   db-name: certificate
 
@@ -79,3 +77,10 @@ dayu:
   signName: '北医脑健康'
   secretKey: 'd47ae0eec39bd5d6abb631ef7e56b21f'
   appkey: '23296309'
+
+# wx_config
+wx:
+  appkey: 'wx34bc1191fb3c0145'
+  secretKey: 'cb6f729af934431ae120a33aa1636358'
+  url: 'https://api.weixin.qq.com'
+  redirectUrl: 'http://test.tit.pkucarenjk.com/#/Summarizing?openId=%v&state=%v&wxToken=%v&token=%v'

@@ -22,6 +22,7 @@ type SysCustomer struct {
 	EntryPoint   string      `json:"entryPoint" form:"entryPoint" `
 	IsEvaluate   string      `json:"isEvaluate" form:"isEvaluate" `
 	Tags         []SysCusTag `json:"tags" form:"tags"`
+	UserType     string      `json:"userType" form:"userType"`
 }
 
 // 设置不需要转换的 properties from model.SysCustomer

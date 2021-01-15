@@ -51,6 +51,11 @@ func GetSysCustomer(id uint) (err error, customer model.SysCustomer) {
 	return
 }
 
+func GetSysCustomerByPhone(phone string) (err error, customer model.SysCustomer) {
+	err = global.GVA_DB.Where("phone = ?", phone).First(&customer).Error
+	return
+}
+
 // @title    GetSysCustomerInfoList
 // @description   get SysCustomer list by pagination, 分页获取客户列表
 // @auth      weiqin

@@ -15,6 +15,8 @@ func RunWindowsServer() {
 	}
 	Router := initialize.Routers()
 	Router.Static("/form-generator", "./resource/page")
+	// 设置 静态文件访问路径
+	Router.StaticFile("/MP_verify_h0cLD7HLadxHZUGK.txt", "./resource/MP_verify_h0cLD7HLadxHZUGK.txt")
 	address := fmt.Sprintf(":%d", global.GVA_CONFIG.System.Addr)
 	s := &http.Server{
 		Addr:           address,

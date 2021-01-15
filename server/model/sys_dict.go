@@ -42,4 +42,5 @@ const (
 	IS_EVALUATE     DictType = "is_evaluate"
 	WORK_INTENTION  DictType = "work_intention"
 	CUSTOMER_TAG    DictType = "customer_tag"
+	USER_TYPE       DictType = "user_type"
 )

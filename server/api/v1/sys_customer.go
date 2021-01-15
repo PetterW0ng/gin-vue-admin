@@ -10,7 +10,6 @@ import (
 	"gin-vue-admin/service"
 	"gin-vue-admin/utils"
 	"github.com/gin-gonic/gin"
-	"qiniupkg.com/x/log.v7"
 )
 
 // @Tags SysCustomer
@@ -104,6 +103,10 @@ type RegisterCustomerStruct struct {
 	CourseType       int    `json:"courseType"`
 	EntryPoint       int    `json:"entryPoint"`
 	Source           int    `json:"source"`
+	OpenId           string `json:"openId"`
+	State            string `json:"state"`
+	WxToken          string `json:"wxToken"`
+	UserType         int    `json:"userType"`
 }
 
 func RegisterCustomer(c *gin.Context) {
@@ -113,6 +116,8 @@ func RegisterCustomer(c *gin.Context) {
 		"Telphone":         {utils.NotEmpty()},
 		"VerificationCode": {utils.NotEmpty()},
 		"CourseType":       {utils.NotEmpty()},
+		"OpenId":           {utils.NotEmpty()},
+		"UserType":         {utils.NotEmpty()},
 	}
 	customerVerifyErr := utils.Verify(rr, CustomerVerify)
 	if customerVerifyErr != nil {
@@ -120,17 +125,29 @@ func RegisterCustomer(c *gin.Context) {
 		return
 	}
 	// 验证 验证码是否正确
-	cmd := global.GVA_REDIS.Get(rr.Telphone)
+	cmd := global.GVA_REDIS.Get("code:" + rr.Telphone)
 	if cmd.Err() == nil && cmd.Val() == rr.VerificationCode {
-		customer := model.SysCustomer{Phone: rr.Telphone, CourseType: rr.CourseType, EntryPoint: rr.EntryPoint, Source: rr.Source, IsEvaluate: false}
-		if err := service.CreateSysCustomer(&customer); err != nil {
-			log.Info("已经注册过了但也返回，注册成功", err)
-			response.OkWithMessage("注册成功", c)
-		} else {
-			response.OkWithMessage("注册成功", c)
+		customer := model.SysCustomer{Phone: rr.Telphone, CourseType: rr.CourseType, EntryPoint: rr.EntryPoint, Source: rr.Source, IsEvaluate: false, UserType: rr.UserType}
+		// 查看是否注册了 sysCustomer
+		if err, _ := service.GetSysCustomerByPhone(rr.Telphone); err != nil {
+			service.CreateSysCustomer(&customer)
 			// 向小鹅通注册用户数据
-			go service.RegisterToXiaoet(customer)
+			go service.RegisterToXiaoet(&customer)
 		}
+		// 查看是否注册了 tit
+		if err, _ := service.FindTitUserByPhone(rr.Telphone); err != nil {
+			service.CreateTitUser(model.TitUser{Telphone: rr.Telphone, OpenId: rr.OpenId})
+		}
+		// 绑定微信
+		if err, wxUser := service.GetSysWxUserByOpenId(rr.OpenId); err == nil {
+			if wxUser.Phone != rr.Telphone {
+				wxUser.Phone = rr.Telphone
+				service.UpdateSysWxUser(&wxUser)
+			}
+		}
+		// 自动登录
+		_, u := service.FindTitUserByPhone(rr.Telphone)
+		GenerateTitUserToke(c, u)
 	} else {
 		response.FailWithMessage("验证码不正确", c)
 	}
@@ -153,7 +170,7 @@ func GetSysCustomerList(c *gin.Context) {
 	} else {
 		groupedDict := service.GetGroupedDict()
 		var (
-			genderMap, sourceMap, entryPoinMap, evaluateMap = groupedDict[model.GENDER.Value()], groupedDict[model.SOURCE.Value()], groupedDict[model.ENTRY_POINT.Value()], groupedDict[model.IS_EVALUATE.Value()]
+			genderMap, sourceMap, entryPoinMap, evaluateMap, userTypeMap = groupedDict[model.GENDER.Value()], groupedDict[model.SOURCE.Value()], groupedDict[model.ENTRY_POINT.Value()], groupedDict[model.IS_EVALUATE.Value()], groupedDict[model.USER_TYPE.Value()]
 		)
 		// 由 dbModel 转换成
 		var respSysCustomerList = make([]resp.SysCustomer, len(list))
@@ -163,6 +180,8 @@ func GetSysCustomerList(c *gin.Context) {
 			respSysCustomer.Source = sourceMap[customerInfo.Source]
 			respSysCustomer.EntryPoint = entryPoinMap[customerInfo.EntryPoint]
 			respSysCustomer.Gender = genderMap[customerInfo.Gender]
+			respSysCustomer.UserType = userTypeMap[customerInfo.UserType]
+
 			if customerInfo.IsEvaluate {
 				respSysCustomer.IsEvaluate = evaluateMap[1]
 			} else {

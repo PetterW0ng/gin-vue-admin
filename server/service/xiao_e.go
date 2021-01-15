@@ -100,7 +100,7 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 	}
 }
 
-func RegisterToXiaoet(customer model.SysCustomer) (err error) {
+func RegisterToXiaoet(customer *model.SysCustomer) (err error) {
 	toaken, err := getToken()
 	if err != nil {
 		log.Error("请求用户订单时，获取token出错了", err)
@@ -125,7 +125,7 @@ func RegisterToXiaoet(customer model.SysCustomer) (err error) {
 			eid := data["user_id"].(string)
 			// 跟新 customer 表
 			customer.EID = eid
-			if err := UpdateSysCustomer(&customer); err != nil {
+			if err := UpdateSysCustomer(customer); err != nil {
 				log.Error("修改用户EID失败了，", err)
 			}
 			return
@@ -157,8 +157,8 @@ func queryAndSetToken() (token string, err error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
-	log.Info("向小鹅通发起了获取token 的请求， response= s%", resp.Body)
 	body, _ := ioutil.ReadAll(resp.Body)
+	log.Info("向小鹅通发起了获取token 的请求， response= ", string(body))
 	var tokenResponse commonResponse
 	if err = json.Unmarshal(body, &tokenResponse); err == nil {
 		if tokenResponse.Code == 0 {
