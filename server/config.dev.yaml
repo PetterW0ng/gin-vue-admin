@@ -2,49 +2,48 @@
 
 # casbin configuration
 casbin:
-  model-path: './resource/rbac_model.conf'
+    model-path: './resource/rbac_model.conf'
 
 # jwt configuration
 jwt:
-  signing-key: 'wangqin_1@163.com'
+    signing-key: 'wangqin_1@163.com'
 
 # mysql connect configuration
 mysql:
-  username: root
-  password: 'PetterW0ng'
-  path: '127.0.0.1:3306'
-  db-name: 'bdylms'
-  config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  max-idle-conns: 10
-  max-open-conns: 10
-  log-mode: true
+    username: root
+    password: 'PetterW0ng'
+    path: '127.0.0.1:3306'
+    db-name: 'bdylms'
+    config: 'charset=utf8mb4&parseTime=True&loc=Local'
+    max-idle-conns: 10
+    max-open-conns: 10
+    log-mode: true
 
 #sqlite 配置
 sqlite:
-  path: db.db
-  log-mode: true
-  config: 'loc=Asia/Shanghai'
+    path: db.db
+    log-mode: true
+    config: 'loc=Asia/Shanghai'
 
 # oss configuration
 qiniu:
-  access-key: '25j8dYBZ2wuiy0yhwShytjZDTX662b8xiFguwxzZ'
-  secret-key: 'pgdbqEsf7ooZh7W3xokP833h3dZ_VecFXPDeG5JY'
-  bucket: 'qm-plus-img'
-  img-path: 'http://qmplusimg.henrongyi.top'
+    access-key: '25j8dYBZ2wuiy0yhwShytjZDTX662b8xiFguwxzZ'
+    secret-key: 'pgdbqEsf7ooZh7W3xokP833h3dZ_VecFXPDeG5JY'
+    bucket: 'qm-plus-img'
+    img-path: 'http://qmplusimg.henrongyi.top'
 # redis configuration
 redis:
-  addr: '127.0.0.1:6379'
-  password: ''
-  db: 0
+    addr: '127.0.0.1:6379'
+    password: ''
+    db: 0
 
 # system configuration
 system:
-  use-multipoint: true
-  env: 'public'  # Change to "develop" to skip authentication for development mode
-  addr: 8888
-  db-type: "mysql"  # support mysql/sqlite
-  enabled-mongo: true # if true, need config mongo
-  cert-urls: "http://certificate.pkucarenjk.com:9001/" # 证书图片系统地址
+    use-multipoint: true
+    env: 'public'  # Change to "develop" to skip authentication for development mode
+    addr: 8888
+    db-type: "mysql"  # support mysql/sqlite
+    enabled-mongo: false # if true, need config mongo
 
 # 小鹅通账号
 xiaoetong:
@@ -56,26 +55,33 @@ xiaoetong:
 
 # captcha configuration
 captcha:
-  key-long: 4
-  img-width: 120
-  img-height: 40
+    key-long: 4
+    img-width: 120
+    img-height: 40
 
 # logger configuration
 log:
-  prefix: '[WCY_INVENTORY]'
-  log-file: true
-  stdout: 'DEBUG'
-  file: 'DEBUG'
+    prefix: '[WCY_INVENTORY]'
+    log-file: true
+    stdout: 'DEBUG'
+    file: 'DEBUG'
 
 # mongoDB configuration e.g. mongodb://username:password@host:port/dbname
 mongo:
-  username: certificateUser
-  password: laoW0ng
-  host: localhost
-  port: 27017
-  db-name: certificate
+    username: certificateUser
+    password: laoW0ng
+    host: localhost
+    port: 27017
+    db-name: certificate
 
 dayu:
-  signName: '北医脑健康'
-  secretKey: 'd47ae0eec39bd5d6abb631ef7e56b21f'
-  appkey: '23296309'
+    signName: '北医脑健康'
+    secretKey: 'd47ae0eec39bd5d6abb631ef7e56b21f'
+    appkey: '23296309'
+
+# wx_config
+wx:
+    appkey: 'wx34bc1191fb3c0145'
+    secretKey: 'cb6f729af934431ae120a33aa1636358'
+    url: 'https://api.weixin.qq.com'
+    redirectUrl: 'http://test.tit.pkucarenjk.com/#/Summarizing?openId=%v&state=%v&wxToken=%v&token=%v'
