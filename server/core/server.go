@@ -9,10 +9,7 @@ import (
 )
 
 func RunWindowsServer() {
-	if global.GVA_CONFIG.System.UseMultipoint {
-		// 初始化redis服务
-		initialize.Redis()
-	}
+
 	Router := initialize.Routers()
 	Router.Static("/form-generator", "./resource/page")
 	// 设置 静态文件访问路径

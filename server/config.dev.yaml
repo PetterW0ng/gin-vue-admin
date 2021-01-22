@@ -43,7 +43,7 @@ system:
     env: 'public'  # Change to "develop" to skip authentication for development mode
     addr: 8888
     db-type: "mysql"  # support mysql/sqlite
-    enabled-mongo: false # if true, need config mongo
+    enabled-mongo: true # if true, need config mongo
 
 # 小鹅通账号
 xiaoetong:
@@ -84,4 +84,4 @@ wx:
     appkey: 'wx34bc1191fb3c0145'
     secretKey: 'cb6f729af934431ae120a33aa1636358'
     url: 'https://api.weixin.qq.com'
-    redirectUrl: 'http://test.tit.pkucarenjk.com/#/Summarizing?openId=%v&state=%v&wxToken=%v&token=%v'
+    redirectUrl: 'http://test.tit.pkucarenjk.com'

@@ -27,6 +27,13 @@ func main() {
 	if global.GVA_CONFIG.System.EnabledMongo {
 		initialize.Mongo()
 	}
+	if global.GVA_CONFIG.System.UseMultipoint {
+		// 初始化redis服务
+		initialize.Redis()
+	}
+	if global.GVA_CONFIG.System.EnabledMongo && global.GVA_CONFIG.System.UseMultipoint {
+		initialize.InitUserCertCache()
+	}
 	// 程序结束前关闭数据库链接
 	defer global.GVA_DB.Close()
 

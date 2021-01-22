@@ -33,4 +33,5 @@ func InitTitUserBaseRouter(Router *gin.RouterGroup) {
 	TitUserRouter2 := Router.Group("user").Use(middleware.JWTTitAuth())
 	TitUserRouter2.GET("", v1.TitUser)
 	TitUserRouter2.GET("studyReport", v1.MyStudyReport)
+	TitUserRouter2.POST("getSignatureConfig", v1.GetSignatureConfig)
 }

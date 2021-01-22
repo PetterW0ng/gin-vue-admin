@@ -13,7 +13,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"math/rand"
-	"net/http"
 	"qiniupkg.com/x/log.v7"
 	"strconv"
 	"strings"
@@ -234,34 +233,37 @@ func TitUserRegister(c *gin.Context) {
 	}
 }
 
+type WxCallbackResponse struct {
+	OpenId string `json:"openId"`
+	Token  string `json:"token"`
+}
+
 // 微信服务回调的接口 获取openId 和 token
 func DoWxCallback(c *gin.Context) {
 	// 获取 code , state
 	code := c.Query("code")
 	state := c.Query("state")
-	var redirectUrl string
+	log.Info("微信回调参数 code=%s , state=%s", code, state)
 	var weixinServer service.WeixinServer
 	if server, err := service.WxServerNew(code); err == nil {
 		weixinServer = server
 		openId := weixinServer.GetOpenId()
-		wxToken := weixinServer.GetToken()
-		log.Debug("openId")
+		log.Debug("openId", openId)
 		// 判断是否已经绑定
 		if err, wxUser := service.GetSysWxUserByOpenId(openId); err != nil {
 			// 微信用户不存在， 录入微信用户信息
 			if wxUserInfo, err := weixinServer.GetUserInfo(); err == nil {
 				service.CreateSysWxUser(wxUserInfo)
+				response.OkWithData(WxCallbackResponse{OpenId: openId, Token: ""}, c)
+				return
 			} else {
 				log.Error("微信接口回调出错了", err)
+				response.FailWithMessage("获取微信OpenId出错了", c)
 			}
-			redirectUrl = fmt.Sprintf(global.GVA_CONFIG.WeiXin.RedirectUrl, openId, state, wxToken, 0)
-			c.Redirect(http.StatusMovedPermanently, redirectUrl)
-			return
 		} else {
 			if err, u := service.FindTitUserByPhone(wxUser.Phone); err == nil {
 				if token, err := createUserToken(u); err == nil {
-					redirectUrl = fmt.Sprintf(global.GVA_CONFIG.WeiXin.RedirectUrl, openId, 0, 0, token)
-					c.Redirect(http.StatusMovedPermanently, redirectUrl)
+					response.OkWithData(WxCallbackResponse{OpenId: openId, Token: token}, c)
 					return
 				} else {
 					log.Error("微信接口回调出错了", err)
@@ -269,8 +271,7 @@ func DoWxCallback(c *gin.Context) {
 			} else {
 				log.Warn("根据手机号查找时 titUser 出错了", wxUser.Phone, err)
 			}
-			redirectUrl = fmt.Sprintf(global.GVA_CONFIG.WeiXin.RedirectUrl, openId, state, wxToken, 0)
-			c.Redirect(http.StatusMovedPermanently, redirectUrl)
+			response.OkWithData(WxCallbackResponse{OpenId: openId, Token: ""}, c)
 		}
 	} else {
 		log.Error("微信接口回调出错了", err)
@@ -418,12 +419,16 @@ func GetStudyReport(c *gin.Context) {
 func generateStudyReport(c *gin.Context, phone string) {
 	customerStudy := resp.CustomerStudy{}
 	err, customer := service.GetSysCustomerByPhone(phone)
+	year2020, _ := time.Parse("2006-01-02 15:04:05", "2020-01-01 00:00:00")
 	if err == nil {
 		// 查找xiaoe订单, 筛选
 		if err, xetOrderArray := service.QueryUserOrder(customer.EID); err == nil {
-			xetOrder := make([]resp.XeOrder, len(xetOrderArray))
-			for i, item := range xetOrderArray {
-				xetOrder[i] = resp.XeOrder{item.PurchaseName, item.PayTime, item.Price}
+			xetOrder := make([]resp.XeOrder, 0, len(xetOrderArray))
+			for _, item := range xetOrderArray {
+				paytime, err := time.Parse("2006-01-02 15:04:05", item.PayTime)
+				if err == nil && year2020.Before(paytime) {
+					xetOrder = append(xetOrder, resp.XeOrder{item.PurchaseName, item.PayTime, item.Price})
+				}
 			}
 			customerStudy.XeOrderArray = xetOrder
 		}
@@ -438,14 +443,28 @@ func generateStudyReport(c *gin.Context, phone string) {
 		customerStudy.StudyRank = sCusScore.StudyRank
 	}
 	if err, holderArray := service.GetCertByPhone(customer.Phone); err == nil {
-		certArray := make([]resp.Cert, len(holderArray))
-		for i, item := range holderArray {
-			certArray[i] = resp.Cert{item.CertificateName, item.IssueTime}
+		certArray := make([]resp.Cert, 0, len(holderArray))
+		for _, item := range holderArray {
+			issueTimeArr := strings.Split(item.IssueTime, ".")
+			if len(issueTimeArr[1]) == 1 {
+				issueTimeArr[1] = "0" + issueTimeArr[1]
+			}
+			if len(issueTimeArr[2]) == 1 {
+				issueTimeArr[2] = "0" + issueTimeArr[2]
+			}
+			issueTimeStr := strings.Join(issueTimeArr, "-")
+			issueTime, err := time.Parse("2006-01-02", issueTimeStr)
+			// 转换日期 然后判断 2020年证书
+			if err == nil && year2020.Before(issueTime) {
+				certArray = append(certArray, resp.Cert{item.CertificateName, issueTimeStr})
+			}
 		}
 		customerStudy.CertArray = certArray
 	}
-	// todo 证书排名
-	customerStudy.CertNumRank = "12%"
+	cmd := global.GVA_REDIS.HGet("cert:user", phone)
+	if cmd.Err() == nil {
+		customerStudy.CertNumRank = cmd.Val() + "%"
+	}
 	response.OkWithData(customerStudy, c)
 }
 
@@ -453,4 +472,18 @@ func MyStudyReport(c *gin.Context) {
 	claims, _ := c.Get("claims")
 	currentUser := claims.(*request.TitUserClaims)
 	generateStudyReport(c, currentUser.Telphone)
+}
+
+func GetSignatureConfig(c *gin.Context) {
+	openId := c.PostForm("openId")
+	url := c.PostForm("url")
+	if len(openId) < 1 {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+	if config, err := service.GetSignatureConfig(openId, url); err != nil {
+		response.FailWithMessage("获取签名信息错误，联系管理员", c)
+	} else {
+		response.OkWithData(config, c)
+	}
 }
