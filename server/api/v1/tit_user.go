@@ -475,8 +475,8 @@ func MyStudyReport(c *gin.Context) {
 }
 
 func GetSignatureConfig(c *gin.Context) {
-	openId := c.PostForm("openId")
-	url := c.PostForm("url")
+	openId := c.Query("openId")
+	url := c.Query("url")
 	if len(openId) < 1 {
 		response.FailWithMessage("参数错误", c)
 		return

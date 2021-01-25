@@ -134,7 +134,7 @@ func getWxJsapiTicket() (jsapiTicket string, err error) {
 }
 
 func GetSignatureConfig(openId, url string) (config response.WXConfigData, err error) {
-	nonceStr := RandStringRunes(7)
+	nonceStr := RandStringRunes(16)
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 	if ticket, err := getWxJsapiTicket(); err != nil {
 		log.Error("获取微信 ticket 出错了", err)
