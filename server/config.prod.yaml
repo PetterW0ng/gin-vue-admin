@@ -10,14 +10,16 @@ jwt:
 
 # mysql connect configuration
 mysql:
-  username: root
-  password: 'founder@NJK'
-  path: '192.168.100.236:3306'
+  username: pkucbh
+  password: 'founder@pkuc'
+  path: 'mysql.njkcluster.com:3306'
   db-name: 'bdylms'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
   max-idle-conns: 10
   max-open-conns: 10
   log-mode: true
+
+
 
 #sqlite 配置
 sqlite:
@@ -33,7 +35,7 @@ qiniu:
   img-path: 'http://qmplusimg.henrongyi.top'
 # redis configuration
 redis:
-  addr: '192.168.100.236:6379'
+  addr: 'redis.njkcluster.com:6379'
   password: 'foobared123'
   db: 0
 
@@ -69,9 +71,9 @@ log:
 
 # mongoDB configuration e.g. mongodb://username:password@host:port/dbname
 mongo:
-  username: certificateUser
-  password: laoW0ng
-  host: localhost
+  username:
+  password:
+  host: mongo.njkcluster.com
   port: 27017
   db-name: certificate
 
@@ -85,4 +87,4 @@ wx:
   appkey: 'wx031c58989e81ab49'
   secretKey: '96f9152dd95bf991922a40fb062b582b'
   url: 'https://api.weixin.qq.com'
-  redirectUrl: 'http://192.168.100.30:8082/#/Summarizing?openId=%v&state=%v&wxToken=%v&token=%v'
+  redirectUrl: 'https://tit.pkucarenjk.com'
