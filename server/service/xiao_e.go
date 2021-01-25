@@ -10,7 +10,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"io/ioutil"
 	"net/http"
-	"qiniupkg.com/x/log.v7"
 	"sync"
 	"time"
 )
@@ -58,7 +57,7 @@ type userRegisterRequest struct {
 func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 	toaken, err := getToken()
 	if err != nil {
-		log.Error("请求用户订单时，获取token出错了", err)
+		global.GVA_LOG.Error("请求用户订单时，获取token出错了", err)
 		return
 	}
 	userOrderRequest := userOrderRequest{toaken, eid}
@@ -103,7 +102,7 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 func RegisterToXiaoet(customer *model.SysCustomer) (err error) {
 	toaken, err := getToken()
 	if err != nil {
-		log.Error("请求用户订单时，获取token出错了", err)
+		global.GVA_LOG.Error("请求用户订单时，获取token出错了", err)
 		return
 	}
 	requestData := userRegisterData{customer.Phone}
@@ -126,7 +125,7 @@ func RegisterToXiaoet(customer *model.SysCustomer) (err error) {
 			// 跟新 customer 表
 			customer.EID = eid
 			if err := UpdateSysCustomer(customer); err != nil {
-				log.Error("修改用户EID失败了，", err)
+				global.GVA_LOG.Error("修改用户EID失败了，", err)
 			}
 			return
 		} else {
@@ -158,7 +157,7 @@ func queryAndSetToken() (token string, err error) {
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Info("向小鹅通发起了获取token 的请求， response= ", string(body))
+	global.GVA_LOG.Info("向小鹅通发起了获取token 的请求， response= ", string(body))
 	var tokenResponse commonResponse
 	if err = json.Unmarshal(body, &tokenResponse); err == nil {
 		if tokenResponse.Code == 0 {
@@ -169,7 +168,7 @@ func queryAndSetToken() (token string, err error) {
 			if cmd.Err() == nil {
 				return token.(string), nil
 			} else {
-				log.Warn("向小鹅通发起了获取token 请求成功，缓存时失败了")
+				global.GVA_LOG.Warning("向小鹅通发起了获取token 请求成功，缓存时失败了")
 				return token.(string), cmd.Err()
 			}
 		} else {

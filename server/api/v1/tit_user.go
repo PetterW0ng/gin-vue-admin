@@ -243,12 +243,12 @@ func DoWxCallback(c *gin.Context) {
 	// 获取 code , state
 	code := c.Query("code")
 	state := c.Query("state")
-	log.Info("微信回调参数 code=%s , state=%s", code, state)
+	global.GVA_LOG.Info("微信回调参数 code=%s , state=%s", code, state)
 	var weixinServer service.WeixinServer
 	if server, err := service.WxServerNew(code); err == nil {
 		weixinServer = server
 		openId := weixinServer.GetOpenId()
-		log.Debug("openId", openId)
+		global.GVA_LOG.Debug("openId", openId)
 		// 判断是否已经绑定
 		if err, wxUser := service.GetSysWxUserByOpenId(openId); err != nil {
 			// 微信用户不存在， 录入微信用户信息
@@ -257,7 +257,7 @@ func DoWxCallback(c *gin.Context) {
 				response.OkWithData(WxCallbackResponse{OpenId: openId, Token: ""}, c)
 				return
 			} else {
-				log.Error("微信接口回调出错了", err)
+				global.GVA_LOG.Error("微信接口回调出错了", err)
 				response.FailWithMessage("获取微信OpenId出错了", c)
 			}
 		} else {
@@ -266,15 +266,15 @@ func DoWxCallback(c *gin.Context) {
 					response.OkWithData(WxCallbackResponse{OpenId: openId, Token: token}, c)
 					return
 				} else {
-					log.Error("微信接口回调出错了", err)
+					global.GVA_LOG.Error("微信接口回调出错了", err)
 				}
 			} else {
-				log.Warn("根据手机号查找时 titUser 出错了", wxUser.Phone, err)
+				global.GVA_LOG.Warn("根据手机号查找时 titUser 出错了", wxUser.Phone, err)
 			}
 			response.OkWithData(WxCallbackResponse{OpenId: openId, Token: ""}, c)
 		}
 	} else {
-		log.Error("微信接口回调出错了", err)
+		global.GVA_LOG.Error("微信接口回调出错了", err)
 		response.FailWithMessage("接口出错了, 请稍后再试！", c)
 	}
 }

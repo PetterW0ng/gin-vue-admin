@@ -44,7 +44,7 @@ func GetCertByPhone(c *gin.Context) {
 		}
 		response.OkWithData(list, c)
 	} else {
-		log.Error("证书查找失败", err)
+		global.GVA_LOG.Error("证书查找失败", err)
 		response.FailWithMessage(fmt.Sprintf("证书查找失败，%v", err), c)
 	}
 }

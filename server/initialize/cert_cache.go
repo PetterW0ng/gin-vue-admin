@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"qiniupkg.com/x/log.v7"
 	"time"
 )
 
@@ -40,7 +39,7 @@ func InitUserCertCache() {
 		rMap[item["_id"].(string)] = fmt.Sprintf("%.2f", float64((size-i)*100)/float64(size))
 	}
 	global.GVA_REDIS.HMSet(UserCertKey, rMap)
-	log.Debug("证书数据缓存成功！！！")
+	global.GVA_LOG.Debug("证书数据缓存成功！！！")
 }
 
 type userRank struct {

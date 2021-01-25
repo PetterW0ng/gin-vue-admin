@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
-	"qiniupkg.com/x/log.v7"
 	"strconv"
 	"sync"
 	"time"
@@ -60,7 +59,7 @@ func WxServerNew(code string) (wxSer *WxService, err error) {
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	//body := []byte("{\"access_token\":\"41_YAwEPj5ToMNNyVD5duN917XgKrx_8aoOMFeQj-qg3rbWpJ_zfOGaTJgK0YlmDSKM4P5g8YKfNvpS53gw0WHhHA\",\"expires_in\":7200,\"refresh_token\":\"41_zdUUz0WUh9B6pBzjAOgbvRbMTtj0Ky-ffGs8tsdGZC6-3wUgoTSraT9zsnIkwmGEwYhePClNuG2Gd9HrMFFehw\",\"openid\":\"oezDYvpOC--3PEOUB2yIzRIEe6-8\",\"scope\":\"snsapi_userinfo\"}")
-	log.Info("向微信发起了获取 token 的请求， response= ", string(body))
+	global.GVA_LOG.Info("向微信发起了获取 token 的请求， response= ", string(body))
 	var respMap map[string]interface{}
 	if err := json.Unmarshal(body, &respMap); err != nil {
 		return nil, err
@@ -83,7 +82,7 @@ func (wxSer *WxService) GetUserInfo() (wxUserInfo model.SysWxUser, err error) {
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Info("向微信发起了获取 userInfo 的请求， response= ", string(body))
+	global.GVA_LOG.Info("向微信发起了获取 userInfo 的请求， response= ", string(body))
 	err = json.Unmarshal(body, &wxUserInfo)
 	return
 }
@@ -116,7 +115,7 @@ func getWxJsapiTicket() (jsapiTicket string, err error) {
 			resp, err := client.Do(req)
 			defer resp.Body.Close()
 			body, _ := ioutil.ReadAll(resp.Body)
-			log.Info("向微信发起了获取jsapiTicket 的请求， response= ", string(body))
+			global.GVA_LOG.Info("向微信发起了获取jsapiTicket 的请求， response= ", string(body))
 			var respMap map[string]interface{}
 			if err := json.Unmarshal(body, &respMap); err != nil {
 				return "", err
@@ -137,12 +136,12 @@ func GetSignatureConfig(openId, url string) (config response.WXConfigData, err e
 	nonceStr := RandStringRunes(16)
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 	if ticket, err := getWxJsapiTicket(); err != nil {
-		log.Error("获取微信 ticket 出错了", err)
+		global.GVA_LOG.Error("获取微信 ticket 出错了", err)
 		return config, err
 	} else {
 		//keys := []string{"nonceStr", "url", "timestamp"}
 		longstr := "jsapi_ticket=" + ticket + "&noncestr=" + nonceStr + "&timestamp=" + timestamp + "&url=" + url
-		log.Info(longstr)
+		global.GVA_LOG.Info(longstr)
 		h := sha1.New()
 		h.Write([]byte(longstr))
 		signature := fmt.Sprintf("%x", h.Sum(nil))
@@ -175,7 +174,7 @@ func queryAndSetWXToken() (token string, err error) {
 		resp, err := client.Do(req)
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
-		log.Info("向微信发起了获取token 的请求， response= ", string(body))
+		global.GVA_LOG.Info("向微信发起了获取token 的请求， response= ", string(body))
 		var respMap map[string]interface{}
 		if err := json.Unmarshal(body, &respMap); err != nil {
 			return "", err
