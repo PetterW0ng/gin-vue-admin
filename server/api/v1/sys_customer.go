@@ -115,7 +115,6 @@ func RegisterCustomer(c *gin.Context) {
 	CustomerVerify := utils.Rules{
 		"Telphone":         {utils.NotEmpty()},
 		"VerificationCode": {utils.NotEmpty()},
-		"CourseType":       {utils.NotEmpty()},
 		"OpenId":           {utils.NotEmpty()},
 		"UserType":         {utils.NotEmpty()},
 	}

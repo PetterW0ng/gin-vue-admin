@@ -145,7 +145,8 @@ func GetSignatureConfig(openId, url string) (config response.WXConfigData, err e
 		h := sha1.New()
 		h.Write([]byte(longstr))
 		signature := fmt.Sprintf("%x", h.Sum(nil))
-		return response.WXConfigData{NonceStr: nonceStr, Timestamp: timestamp, AppId: global.GVA_CONFIG.WeiXin.Appkey, Signature: signature, JsApiList: []string{"updateTimelineShareData", "onMenuShareAppMessage"}}, nil
+		shareUrl := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx031c58989e81ab49&redirect_uri=https%3a%2f%2ftit.pkucarenjk.com%2f%23%2fSummarizing&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
+		return response.WXConfigData{NonceStr: nonceStr, Timestamp: timestamp, AppId: global.GVA_CONFIG.WeiXin.Appkey, Signature: signature, ShareURL: shareUrl, JsApiList: []string{"updateTimelineShareData", "onMenuShareAppMessage"}}, nil
 	}
 
 }

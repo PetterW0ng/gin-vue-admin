@@ -13,7 +13,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"math/rand"
-	"qiniupkg.com/x/log.v7"
 	"strconv"
 	"strings"
 	"time"
@@ -269,7 +268,7 @@ func DoWxCallback(c *gin.Context) {
 					global.GVA_LOG.Error("微信接口回调出错了", err)
 				}
 			} else {
-				global.GVA_LOG.Warn("根据手机号查找时 titUser 出错了", wxUser.Phone, err)
+				global.GVA_LOG.Warning("根据手机号查找时 titUser 出错了", wxUser.Phone, err)
 			}
 			response.OkWithData(WxCallbackResponse{OpenId: openId, Token: ""}, c)
 		}

@@ -9,7 +9,6 @@ import (
 	"gin-vue-admin/service"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/gin-gonic/gin"
-	"qiniupkg.com/x/log.v7"
 	"regexp"
 	"strconv"
 )
