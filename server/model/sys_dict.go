@@ -43,4 +43,5 @@ const (
 	WORK_INTENTION  DictType = "work_intention"
 	CUSTOMER_TAG    DictType = "customer_tag"
 	USER_TYPE       DictType = "user_type"
+	SELL_COURSE     DictType = "sell_course"
 )

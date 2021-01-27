@@ -27,11 +27,12 @@ func InitTitUserBaseRouter(Router *gin.RouterGroup) {
 		TitUserRouter.POST("verificationCode", v1.GetVerificationCode)   // 获取验证码
 		TitUserRouter.POST("verificationCode2", v1.GetVerificationCode2) // 获取验证码
 		TitUserRouter.GET("wxCallback", v1.DoWxCallback)
-		TitUserRouter.GET("getStudyReport", v1.GetStudyReport)
+		TitUserRouter.GET("getRedirectURL", v1.GetRedirectURL)
 	}
 
 	TitUserRouter2 := Router.Group("user").Use(middleware.JWTTitAuth())
 	TitUserRouter2.GET("", v1.TitUser)
 	TitUserRouter2.GET("studyReport", v1.MyStudyReport)
 	TitUserRouter2.POST("getSignatureConfig", v1.GetSignatureConfig)
+	TitUserRouter2.GET("getStudyReport", v1.GetStudyReport)
 }

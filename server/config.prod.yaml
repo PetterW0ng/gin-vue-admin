@@ -87,4 +87,4 @@ wx:
   appkey: 'wx031c58989e81ab49'
   secretKey: '96f9152dd95bf991922a40fb062b582b'
   url: 'https://api.weixin.qq.com'
-  redirectUrl: 'https://tit.pkucarenjk.com'
+  redirectUrl: 'https://tit.pkucarenjk.com/?openId=%v#/Redirect'

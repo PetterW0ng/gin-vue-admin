@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"fmt"
 	"gin-vue-admin/global"
 	"gin-vue-admin/global/response"
@@ -237,6 +238,12 @@ type WxCallbackResponse struct {
 	Token  string `json:"token"`
 }
 
+func GetRedirectURL(c *gin.Context) {
+	openId := c.Query("openId")
+	global.GVA_LOG.Info(fmt.Sprintf("%v 分享的链接被点击了！！！", openId))
+	response.OkWithData("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx031c58989e81ab49&redirect_uri=https%3a%2f%2ftit.pkucarenjk.com%2f%23%2fSummarizing&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect", c)
+}
+
 // 微信服务回调的接口 获取openId 和 token
 func DoWxCallback(c *gin.Context) {
 	// 获取 code , state
@@ -419,13 +426,18 @@ func generateStudyReport(c *gin.Context, phone string) {
 	customerStudy := resp.CustomerStudy{}
 	err, customer := service.GetSysCustomerByPhone(phone)
 	year2020, _ := time.Parse("2006-01-02 15:04:05", "2020-01-01 00:00:00")
+	err, sysDictList := service.FindByCode(model.SELL_COURSE)
+	courseMap := make(map[string]struct{}, len(sysDictList))
+	for _, item := range sysDictList {
+		courseMap[item.PropertyName] = struct{}{}
+	}
 	if err == nil {
 		// 查找xiaoe订单, 筛选
 		if err, xetOrderArray := service.QueryUserOrder(customer.EID); err == nil {
 			xetOrder := make([]resp.XeOrder, 0, len(xetOrderArray))
 			for _, item := range xetOrderArray {
-				paytime, err := time.Parse("2006-01-02 15:04:05", item.PayTime)
-				if err == nil && year2020.Before(paytime) {
+				//paytime, err := time.Parse("2006-01-02 15:04:05", item.PayTime)
+				if _, ok := courseMap[item.PurchaseName]; ok {
 					xetOrder = append(xetOrder, resp.XeOrder{item.PurchaseName, item.PayTime, item.Price})
 				}
 			}
@@ -455,6 +467,32 @@ func generateStudyReport(c *gin.Context, phone string) {
 			issueTime, err := time.Parse("2006-01-02", issueTimeStr)
 			// 转换日期 然后判断 2020年证书
 			if err == nil && year2020.Before(issueTime) {
+				if len(certArray) == 0 {
+					if "ABA孤独症康复专业技能培训证书" == item.CertificateName {
+						customerStudy.PersistenceDay = 15
+					} else if "高级行为干预师实操证书" == item.CertificateName {
+						customerStudy.PersistenceDay = 4
+					} else if "A-PKU志愿者证书" == item.CertificateName {
+						customerStudy.PersistenceDay = 180
+					} else {
+						courses := utils.CertNameToCourses(item.CertificateName)
+						for _, courseName := range courses {
+							b := false
+							for i := len(customerStudy.XeOrderArray) - 1; i >= 0; i-- {
+								if courseName == customerStudy.XeOrderArray[i].CourseName {
+									payTime, _ := time.Parse("2006-01-02 15:04:05", customerStudy.XeOrderArray[i].PayTime)
+									d := issueTime.Sub(payTime)
+									customerStudy.PersistenceDay = int(d.Hours() / 24)
+									b = true
+									break
+								}
+							}
+							if b {
+								break
+							}
+						}
+					}
+				}
 				certArray = append(certArray, resp.Cert{item.CertificateName, issueTimeStr})
 			}
 		}
@@ -474,8 +512,11 @@ func MyStudyReport(c *gin.Context) {
 }
 
 func GetSignatureConfig(c *gin.Context) {
-	openId := c.Query("openId")
-	url := c.Query("url")
+	decoder := json.NewDecoder(c.Request.Body)
+	var params map[string]string
+	decoder.Decode(&params)
+	openId := params["openId"]
+	url := params["url"]
 	if len(openId) < 1 {
 		response.FailWithMessage("参数错误", c)
 		return

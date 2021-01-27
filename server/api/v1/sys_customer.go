@@ -131,7 +131,10 @@ func RegisterCustomer(c *gin.Context) {
 		if err, _ := service.GetSysCustomerByPhone(rr.Telphone); err != nil {
 			service.CreateSysCustomer(&customer)
 			// 向小鹅通注册用户数据
-			go service.RegisterToXiaoet(&customer)
+			err := service.RegisterToXiaoet(&customer)
+			if err != nil {
+				global.GVA_LOG.Error("向小鹅通注册用户失败了", err)
+			}
 		}
 		// 查看是否注册了 tit
 		if err, _ := service.FindTitUserByPhone(rr.Telphone); err != nil {

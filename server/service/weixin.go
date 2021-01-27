@@ -139,13 +139,12 @@ func GetSignatureConfig(openId, url string) (config response.WXConfigData, err e
 		global.GVA_LOG.Error("获取微信 ticket 出错了", err)
 		return config, err
 	} else {
-		//keys := []string{"nonceStr", "url", "timestamp"}
 		longstr := "jsapi_ticket=" + ticket + "&noncestr=" + nonceStr + "&timestamp=" + timestamp + "&url=" + url
 		global.GVA_LOG.Info(longstr)
 		h := sha1.New()
 		h.Write([]byte(longstr))
 		signature := fmt.Sprintf("%x", h.Sum(nil))
-		shareUrl := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx031c58989e81ab49&redirect_uri=https%3a%2f%2ftit.pkucarenjk.com%2f%23%2fSummarizing&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
+		shareUrl := fmt.Sprintf(global.GVA_CONFIG.WeiXin.RedirectUrl, openId)
 		return response.WXConfigData{NonceStr: nonceStr, Timestamp: timestamp, AppId: global.GVA_CONFIG.WeiXin.Appkey, Signature: signature, ShareURL: shareUrl, JsApiList: []string{"updateTimelineShareData", "onMenuShareAppMessage"}}, nil
 	}
 
