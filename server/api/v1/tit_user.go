@@ -425,7 +425,8 @@ func GetStudyReport(c *gin.Context) {
 func generateStudyReport(c *gin.Context, phone string) {
 	customerStudy := resp.CustomerStudy{}
 	err, customer := service.GetSysCustomerByPhone(phone)
-	year2020, _ := time.Parse("2006-01-02 15:04:05", "2020-01-01 00:00:00")
+	year2019, _ := time.Parse("2006-01-02 15:04:05", "2019-12-30 23:59:59")
+	year2021, _ := time.Parse("2006-01-02 15:04:05", "2021-01-01 00:00:00")
 	err, sysDictList := service.FindByCode(model.SELL_COURSE)
 	courseMap := make(map[string]struct{}, len(sysDictList))
 	for _, item := range sysDictList {
@@ -436,7 +437,6 @@ func generateStudyReport(c *gin.Context, phone string) {
 		if err, xetOrderArray := service.QueryUserOrder(customer.EID); err == nil {
 			xetOrder := make([]resp.XeOrder, 0, len(xetOrderArray))
 			for _, item := range xetOrderArray {
-				//paytime, err := time.Parse("2006-01-02 15:04:05", item.PayTime)
 				if _, ok := courseMap[item.PurchaseName]; ok {
 					xetOrder = append(xetOrder, resp.XeOrder{item.PurchaseName, item.PayTime, item.Price})
 				}
@@ -466,7 +466,7 @@ func generateStudyReport(c *gin.Context, phone string) {
 			issueTimeStr := strings.Join(issueTimeArr, "-")
 			issueTime, err := time.Parse("2006-01-02", issueTimeStr)
 			// 转换日期 然后判断 2020年证书
-			if err == nil && year2020.Before(issueTime) {
+			if err == nil && issueTime.After(year2019) && issueTime.Before(year2021) {
 				if len(certArray) == 0 {
 					if "ABA孤独症康复专业技能培训证书" == item.CertificateName {
 						customerStudy.PersistenceDay = 15
@@ -498,6 +498,14 @@ func generateStudyReport(c *gin.Context, phone string) {
 		}
 		customerStudy.CertArray = certArray
 	}
+	for i := 0; i < len(customerStudy.XeOrderArray); i++ {
+		paytime, _ := time.Parse("2006-01-02 15:04:05", customerStudy.XeOrderArray[i].PayTime)
+		if paytime.Before(year2019) {
+			customerStudy.XeOrderArray = append(customerStudy.XeOrderArray[:i], customerStudy.XeOrderArray[i+1:]...)
+			i--
+		}
+	}
+
 	cmd := global.GVA_REDIS.HGet("cert:user", phone)
 	if cmd.Err() == nil {
 		customerStudy.CertNumRank = cmd.Val() + "%"

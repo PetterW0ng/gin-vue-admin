@@ -20,6 +20,7 @@ var (
 	xiaoe_token_expire = time.Second * 7200 // second
 	uri_token          = "/token"
 	uri_user_order     = "/xe.get.user.orders/1.0.0"
+	uri_user_info      = "/xe.user.info.get/1.0.0"
 	uri_user_register  = "/xe.user.register/1.0.0"
 	orderStateMap      = map[int]string{0: "未支付", 1: "支付成功", 2: "支付失败", 6: "订单过期", 10: "退款成功"}
 	paymentTypeMap     = map[int]string{2: "单笔", 3: "付费产品包", 4: "团购", 5: "单笔的购买赠送", 6: "产品包的购买赠送", 7: "问答提问", 8: "问答偷听", 11: "付费活动报名", 12: "打赏类型", 13: "拼团单个资源", 14: "拼团产品包", 15: "超级会员"}
@@ -34,8 +35,26 @@ type commonResponse struct {
 }
 
 type userOrderRequest struct {
-	AccessToken string `json:"access_token"`
-	UserId      string `json:"user_id"`
+	AccessToken string        `json:"access_token"`
+	UserId      string        `json:"user_id"`
+	Data        userOrderData `json:"data"`
+}
+
+type userOrderData struct {
+	OrderState int    `json:"order_state"`
+	PageSize   int    `json:"page_size"`
+	PageIndex  int    `json:"page_index"`
+	EndTime    string `json:"end_time"`
+	OrderBy    string `json:"order_by"`
+}
+
+type userInfoRequest struct {
+	AccessToken string       `json:"access_token"`
+	Data        userInfoData `json:"data"`
+}
+type userInfoData struct {
+	Phone     string   `json:"phone"`
+	FieldList []string `json:"field_list"`
 }
 
 type userOrderResponse struct {
@@ -60,7 +79,7 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 		global.GVA_LOG.Error("请求用户订单时，获取token出错了", err)
 		return
 	}
-	userOrderRequest := userOrderRequest{toaken, eid}
+	userOrderRequest := userOrderRequest{toaken, eid, userOrderData{OrderState: 1, PageSize: 30, PageIndex: 0, EndTime: "2021-01-01 00:00:00", OrderBy: "created_at:asc"}}
 	requestBody, _ := json.Marshal(userOrderRequest)
 	req, err := http.NewRequest("POST", global.GVA_CONFIG.XiaoETong.URL+uri_user_order, bytes.NewBuffer(requestBody))
 	if err != nil {
@@ -91,6 +110,9 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 				list = append(list, xetOrder)
 			}
 			return
+		} else if userOrderResponse.Code == 2008 {
+			queryAndSetToken()
+			return QueryUserOrder(eid)
 		} else {
 			return fmt.Errorf("向小鹅通发起了获取order 请求失败了，原因：s%", userOrderResponse.Msg), nil
 		}
@@ -99,7 +121,36 @@ func QueryUserOrder(eid string) (err error, list []resp.XetOrder) {
 	}
 }
 
-func RegisterToXiaoet(customer *model.SysCustomer) (err error) {
+func QueryXiaoetUserInfo(customer *model.SysCustomer) {
+	toaken, _ := getToken()
+	userInfoRequest := userInfoRequest{AccessToken: toaken, Data: userInfoData{Phone: customer.Phone, FieldList: []string{"phone"}}}
+	requestBody, _ := json.Marshal(userInfoRequest)
+	req, err := http.NewRequest("POST", global.GVA_CONFIG.XiaoETong.URL+uri_user_info, bytes.NewBuffer(requestBody))
+	if err != nil {
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	httpResp, err := client.Do(req)
+	defer httpResp.Body.Close()
+	body, _ := ioutil.ReadAll(httpResp.Body)
+	var commonResponse commonResponse
+	if err = json.Unmarshal(body, &commonResponse); err == nil {
+		if commonResponse.Code == 0 {
+			data := commonResponse.Data.(map[string]interface{})
+			eid := data["user_id"].(string)
+			// 跟新 customer 表
+			customer.EID = eid
+			if err := UpdateSysCustomer(customer); err != nil {
+				global.GVA_LOG.Error("修改用户EID失败了，", err)
+			}
+		} else {
+			global.GVA_LOG.Error("向小鹅通发起了 getUserInfo 请求失败了，原因：s%，", commonResponse.Msg)
+		}
+	}
+}
+
+func RegisterToXiaoet(customer *model.SysCustomer) {
 	toaken, err := getToken()
 	if err != nil {
 		global.GVA_LOG.Error("请求用户订单时，获取token出错了", err)
@@ -127,12 +178,12 @@ func RegisterToXiaoet(customer *model.SysCustomer) (err error) {
 			if err := UpdateSysCustomer(customer); err != nil {
 				global.GVA_LOG.Error("修改用户EID失败了，", err)
 			}
-			return
+		} else if commonResponse.Code == 2504 {
+			// 用户已经存在 获取用户信息
+			QueryXiaoetUserInfo(customer)
 		} else {
-			return fmt.Errorf("向小鹅通发起了 register 请求失败了，原因：s%", commonResponse.Msg)
+			global.GVA_LOG.Error("向小鹅通发起了 register 请求失败了，原因：s%，", commonResponse.Msg)
 		}
-	} else {
-		return err
 	}
 }
 
